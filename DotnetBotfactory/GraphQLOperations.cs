@@ -9,6 +9,33 @@ namespace DotnetBotfactory;
 
 public static partial class GraphQLOperations
 {
+    public static GetConfigurationData GetConfiguration()
+    {
+        var request = new GraphQLRequest<GetConfigurationVariables>
+        {
+            Query =
+                @"
+            query GetConfiguration {
+  configuration {
+    id
+    projectName
+    outputPath
+    minimalWorkingExample
+  }
+},
+            ",
+            OperationName = "GetConfiguration",
+            Variables = new GetConfigurationVariables() { },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
+            response,
+            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+        );
+        return result?.Data;
+    }
+
     public static GetFilesData GetFiles(List<string>? whitelist, List<string>? blacklist)
     {
         var request = new GraphQLRequest<GetFilesVariables>
@@ -34,18 +61,22 @@ public static partial class GraphQLOperations
         return result?.Data;
     }
 
-    public static GetFileContentsData GetFileContents(string textFilePath)
+    public static GetFileContentsData GetFileContents(string textFilePath, FileVersion fileVersion)
     {
         var request = new GraphQLRequest<GetFileContentsVariables>
         {
             Query =
                 @"
-            query GetFileContents($textFilePath: String!) {
-  readTextFile(textFilePath: $textFilePath)
+            query GetFileContents($textFilePath: String!, $fileVersion: FileVersion) {
+  readTextFile(textFilePath: $textFilePath, fileVersion: $fileVersion)
 },
             ",
             OperationName = "GetFileContents",
-            Variables = new GetFileContentsVariables() { TextFilePath = textFilePath },
+            Variables = new GetFileContentsVariables()
+            {
+                TextFilePath = textFilePath,
+                FileVersion = fileVersion,
+            },
         };
 
         var response = Imports.GraphQL(request);
@@ -220,33 +251,6 @@ public static partial class GraphQLOperations
         );
         return result?.Data;
     }
-
-    public static GetConfigurationData GetConfiguration()
-    {
-        var request = new GraphQLRequest<GetConfigurationVariables>
-        {
-            Query =
-                @"
-            query GetConfiguration {
-  configuration {
-    id
-    projectName
-    outputPath
-    minimalWorkingExample
-  }
-},
-            ",
-            OperationName = "GetConfiguration",
-            Variables = new GetConfigurationVariables() { },
-        };
-
-        var response = Imports.GraphQL(request);
-        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
-            response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
-        );
-        return result?.Data;
-    }
 }
 
 public class GraphQLResponse<T>
@@ -295,6 +299,29 @@ public class CaretTagInput
     public string Value { get; set; }
 }
 
+public class GetConfigurationData
+{
+    [JsonPropertyName("configuration")]
+    public GetConfiguration Configuration { get; set; }
+}
+
+public class GetConfigurationVariables { }
+
+public class GetConfiguration
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+
+    [JsonPropertyName("projectName")]
+    public string ProjectName { get; set; }
+
+    [JsonPropertyName("outputPath")]
+    public string OutputPath { get; set; }
+
+    [JsonPropertyName("minimalWorkingExample")]
+    public bool MinimalWorkingExample { get; set; }
+}
+
 public class GetFilesData
 {
     [JsonPropertyName("files")]
@@ -330,6 +357,10 @@ public class GetFileContentsVariables
 {
     [JsonPropertyName("textFilePath")]
     public string TextFilePath { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonPropertyName("fileVersion")]
+    public FileVersion FileVersion { get; set; }
 }
 
 public class AddFileData
@@ -460,27 +491,4 @@ public class LogVariables
 
     [JsonPropertyName("arguments")]
     public List<string>? Arguments { get; set; }
-}
-
-public class GetConfigurationData
-{
-    [JsonPropertyName("configuration")]
-    public GetConfiguration Configuration { get; set; }
-}
-
-public class GetConfigurationVariables { }
-
-public class GetConfiguration
-{
-    [JsonPropertyName("id")]
-    public string Id { get; set; }
-
-    [JsonPropertyName("projectName")]
-    public string ProjectName { get; set; }
-
-    [JsonPropertyName("outputPath")]
-    public string OutputPath { get; set; }
-
-    [JsonPropertyName("minimalWorkingExample")]
-    public bool MinimalWorkingExample { get; set; }
 }
