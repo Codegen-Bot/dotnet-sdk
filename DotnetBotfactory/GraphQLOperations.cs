@@ -229,7 +229,10 @@ public static partial class GraphQLOperations
                 @"
             query GetConfiguration {
   configuration {
+    id
+    projectName
     outputPath
+    minimalWorkingExample
   }
 },
             ",
@@ -469,6 +472,15 @@ public class GetConfigurationVariables { }
 
 public class GetConfiguration
 {
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+
+    [JsonPropertyName("projectName")]
+    public string ProjectName { get; set; }
+
     [JsonPropertyName("outputPath")]
     public string OutputPath { get; set; }
+
+    [JsonPropertyName("minimalWorkingExample")]
+    public bool MinimalWorkingExample { get; set; }
 }
