@@ -26,9 +26,8 @@ public class Exports
             // Create all our minibots here
             IMiniBot[] miniBots =
             [
-                // TODO - remove the ExampleMiniBot entry from this list because it creates a hello world file
-                // that won't be useful in real life.
-                new ExampleMiniBot(),
+                new CSharpBot(),
+                
             ];
 
             // Run each minibot in order

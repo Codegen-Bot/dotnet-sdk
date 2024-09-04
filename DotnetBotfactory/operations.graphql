@@ -1,5 +1,8 @@
-query GetConfiguration() {
+query GetConfiguration {
     configuration {
+        id
+        projectName
         outputPath
+        minimalWorkingExample
     }
 }

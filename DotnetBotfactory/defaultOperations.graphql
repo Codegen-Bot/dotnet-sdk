@@ -5,8 +5,8 @@ query GetFiles($whitelist: [String!]! $blacklist: [String!]!) {
     }
 }
 
-query GetFileContents($textFilePath: String!) {
-    readTextFile(textFilePath: $textFilePath)
+query GetFileContents($textFilePath: String! $fileVersion: FileVersion) {
+    readTextFile(textFilePath: $textFilePath fileVersion: $fileVersion)
 }
 
 mutation AddFile($filePath: String! $textAndCarets: String!) {

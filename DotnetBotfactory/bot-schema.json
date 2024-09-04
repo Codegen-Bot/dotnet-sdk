@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "readme": {
+      "type": "string"
+    },
+    "configurationSchema": {
+      "type": "string"
+    },
+    "stitchSchema": {
+      "type": "string"
+    },
+    "dependenciesSchema": {
+      "type": "string"
+    },
+    "excludeConfigurationFromDependenciesSchema": {
+      "type": "boolean"
+    },
+    "dependentSchema": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "private": {
+      "type": "boolean"
+    }
+  }
+}
