@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using CodegenBot;
 using Humanizer;
@@ -122,14 +123,14 @@ public class GraphQLOperationsBot : IMiniBot
         foreach (var operation in metadata.Operations)
         {
             GraphQLOperations.AddText(operations.Id,
-                $$"""
+                $$""""
                    public static {{operation.Name.Pascalize()}}Data {{operation.Name}}({{CaretRef.New(out var parameters, separator: ", ")}})
                    {
                        var request = new GraphQLRequest<{{operation.Name.Pascalize()}}Variables>
                        {
-                           Query = @"
-                               {{operation.Text}},
-                               ",
+                           Query = """
+                               {{CaretRef.New(out var queryText, separator: "", indentation: "            ")}}
+                               """,
                            OperationName = "{{operation.Name}}",
                            Variables = new {{operation.Name.Pascalize()}}Variables()
                            {
@@ -141,7 +142,9 @@ public class GraphQLOperationsBot : IMiniBot
                        var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
                        return result?.Data;
                    }
-                   """);
+                   """");
+
+            GraphQLOperations.AddText(queryText.Id, operation.Text);
 
             GraphQLOperations.AddText(typeDefinitions.Id,
                 $$"""

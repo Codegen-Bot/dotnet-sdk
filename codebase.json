@@ -15,10 +15,6 @@
       "botVersion": "1.0.0"
     },
     {
-      "botId": "bot://core/schema",
-      "botVersion": "1.0.0"
-    },
-    {
       "botId": "bot://hub/.gitignore",
       "botVersion": "0.0.1-alpha1",
       "configuration": {
@@ -62,7 +58,7 @@
     },
     {
       "botId": "bot://hub/dotnet/botfactory",
-      "botVersion": "0.0.1-alpha3",
+      "botVersion": "0.0.1-alpha9",
       "configuration": {
         "id": "bot://hub/dotnet/botfactory",
         "outputPath": "DotnetBotfactory",
@@ -82,9 +78,6 @@
         {
           "targetPath": ".",
           "botId": "bot://core/log"
-        },
-        {
-          "botId": "bot://core/schema"
         },
         {
           "botId": "bot://hub/.gitignore"

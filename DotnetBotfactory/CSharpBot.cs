@@ -26,6 +26,16 @@ public class CSharpBot : IMiniBot
             
             """);
         
+        GraphQLOperations.AddFile($"{configuration.OutputPath}/global.json",
+            """
+            {
+              "sdk": {
+                "version": "8.0.300",
+                "rollForward": "latestFeature"
+              }
+            }
+            """);
+
         GraphQLOperations.AddFile($"{configuration.OutputPath}/{configuration.ProjectName}.csproj",
             $$"""
               <Project Sdk="Microsoft.NET.Sdk">

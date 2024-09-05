@@ -3,4 +3,5 @@ type Configuration {
     outputPath: String!
     projectName: String!
     minimalWorkingExample: Boolean!
+    buildWithoutDocker: Boolean
 }

@@ -4,5 +4,6 @@ query GetConfiguration {
         projectName
         outputPath
         minimalWorkingExample
+        buildWithoutDocker
     }
 }
