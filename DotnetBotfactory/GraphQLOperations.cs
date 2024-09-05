@@ -9,46 +9,18 @@ namespace DotnetBotfactory;
 
 public static partial class GraphQLOperations
 {
-    public static GetConfigurationData GetConfiguration()
-    {
-        var request = new GraphQLRequest<GetConfigurationVariables>
-        {
-            Query =
-                @"
-            query GetConfiguration {
-  configuration {
-    id
-    projectName
-    outputPath
-    minimalWorkingExample
-  }
-},
-            ",
-            OperationName = "GetConfiguration",
-            Variables = new GetConfigurationVariables() { },
-        };
-
-        var response = Imports.GraphQL(request);
-        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
-            response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
-        );
-        return result?.Data;
-    }
-
     public static GetFilesData GetFiles(List<string>? whitelist, List<string>? blacklist)
     {
         var request = new GraphQLRequest<GetFilesVariables>
         {
-            Query =
-                @"
-            query GetFiles($whitelist: [String!]!, $blacklist: [String!]!) {
-  files(whitelist: $whitelist, blacklist: $blacklist) {
-    path
-    kind
-  }
-},
-            ",
+            Query = """
+                query GetFiles($whitelist: [String!]!, $blacklist: [String!]!) {
+                  files(whitelist: $whitelist, blacklist: $blacklist) {
+                    path
+                    kind
+                  }
+                }
+                """,
             OperationName = "GetFiles",
             Variables = new GetFilesVariables() { Whitelist = whitelist, Blacklist = blacklist },
         };
@@ -65,12 +37,11 @@ public static partial class GraphQLOperations
     {
         var request = new GraphQLRequest<GetFileContentsVariables>
         {
-            Query =
-                @"
-            query GetFileContents($textFilePath: String!, $fileVersion: FileVersion) {
-  readTextFile(textFilePath: $textFilePath, fileVersion: $fileVersion)
-},
-            ",
+            Query = """
+                query GetFileContents($textFilePath: String!, $fileVersion: FileVersion) {
+                  readTextFile(textFilePath: $textFilePath, fileVersion: $fileVersion)
+                }
+                """,
             OperationName = "GetFileContents",
             Variables = new GetFileContentsVariables()
             {
@@ -91,14 +62,13 @@ public static partial class GraphQLOperations
     {
         var request = new GraphQLRequest<AddFileVariables>
         {
-            Query =
-                @"
-            mutation AddFile($filePath: String!, $textAndCarets: String!) {
-  addFile(filePath: $filePath, textAndCarets: $textAndCarets) {
-    id
-  }
-},
-            ",
+            Query = """
+                mutation AddFile($filePath: String!, $textAndCarets: String!) {
+                  addFile(filePath: $filePath, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
             OperationName = "AddFile",
             Variables = new AddFileVariables()
             {
@@ -119,14 +89,13 @@ public static partial class GraphQLOperations
     {
         var request = new GraphQLRequest<AddTextVariables>
         {
-            Query =
-                @"
-            mutation AddText($caretId: String!, $textAndCarets: String!) {
-  addText(caretId: $caretId, textAndCarets: $textAndCarets) {
-    id
-  }
-},
-            ",
+            Query = """
+                mutation AddText($caretId: String!, $textAndCarets: String!) {
+                  addText(caretId: $caretId, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
             OperationName = "AddText",
             Variables = new AddTextVariables() { CaretId = caretId, TextAndCarets = textAndCarets },
         };
@@ -143,14 +112,13 @@ public static partial class GraphQLOperations
     {
         var request = new GraphQLRequest<AddKeyedTextVariables>
         {
-            Query =
-                @"
-            mutation AddKeyedText($key: String!, $caretId: String!, $textAndCarets: String!) {
-  addKeyedText(key: $key, caretId: $caretId, textAndCarets: $textAndCarets) {
-    id
-  }
-},
-            ",
+            Query = """
+                mutation AddKeyedText($key: String!, $caretId: String!, $textAndCarets: String!) {
+                  addKeyedText(key: $key, caretId: $caretId, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
             OperationName = "AddKeyedText",
             Variables = new AddKeyedTextVariables()
             {
@@ -172,14 +140,13 @@ public static partial class GraphQLOperations
     {
         var request = new GraphQLRequest<AddTextByTagsVariables>
         {
-            Query =
-                @"
-            mutation AddTextByTags($tags: [CaretTagInput!]!, $textAndCarets: String!) {
-  addTextByTags(tags: $tags, textAndCarets: $textAndCarets) {
-    id
-  }
-},
-            ",
+            Query = """
+                mutation AddTextByTags($tags: [CaretTagInput!]!, $textAndCarets: String!) {
+                  addTextByTags(tags: $tags, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
             OperationName = "AddTextByTags",
             Variables = new AddTextByTagsVariables() { Tags = tags, TextAndCarets = textAndCarets },
         };
@@ -200,14 +167,13 @@ public static partial class GraphQLOperations
     {
         var request = new GraphQLRequest<AddKeyedTextByTagsVariables>
         {
-            Query =
-                @"
-            mutation AddKeyedTextByTags($key: String!, $tags: [CaretTagInput!]!, $textAndCarets: String!) {
-  addKeyedTextByTags(key: $key, tags: $tags, textAndCarets: $textAndCarets) {
-    id
-  }
-},
-            ",
+            Query = """
+                mutation AddKeyedTextByTags($key: String!, $tags: [CaretTagInput!]!, $textAndCarets: String!) {
+                  addKeyedTextByTags(key: $key, tags: $tags, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
             OperationName = "AddKeyedTextByTags",
             Variables = new AddKeyedTextByTagsVariables()
             {
@@ -229,12 +195,11 @@ public static partial class GraphQLOperations
     {
         var request = new GraphQLRequest<LogVariables>
         {
-            Query =
-                @"
-            mutation Log($severity: LogSeverity!, $message: String!, $arguments: [String!]) {
-  log(severity: $severity, message: $message, arguments: $arguments)
-},
-            ",
+            Query = """
+                mutation Log($severity: LogSeverity!, $message: String!, $arguments: [String!]) {
+                  log(severity: $severity, message: $message, arguments: $arguments)
+                }
+                """,
             OperationName = "Log",
             Variables = new LogVariables()
             {
@@ -246,6 +211,33 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<LogData>>(
+            response,
+            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+        );
+        return result?.Data;
+    }
+
+    public static GetConfigurationData GetConfiguration()
+    {
+        var request = new GraphQLRequest<GetConfigurationVariables>
+        {
+            Query = """
+                query GetConfiguration {
+                  configuration {
+                    id
+                    projectName
+                    outputPath
+                    minimalWorkingExample
+                    buildWithoutDocker
+                  }
+                }
+                """,
+            OperationName = "GetConfiguration",
+            Variables = new GetConfigurationVariables() { },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
             response,
             new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
         );
@@ -297,29 +289,6 @@ public class CaretTagInput
 
     [JsonPropertyName("value")]
     public string Value { get; set; }
-}
-
-public class GetConfigurationData
-{
-    [JsonPropertyName("configuration")]
-    public GetConfiguration Configuration { get; set; }
-}
-
-public class GetConfigurationVariables { }
-
-public class GetConfiguration
-{
-    [JsonPropertyName("id")]
-    public string Id { get; set; }
-
-    [JsonPropertyName("projectName")]
-    public string ProjectName { get; set; }
-
-    [JsonPropertyName("outputPath")]
-    public string OutputPath { get; set; }
-
-    [JsonPropertyName("minimalWorkingExample")]
-    public bool MinimalWorkingExample { get; set; }
 }
 
 public class GetFilesData
@@ -491,4 +460,30 @@ public class LogVariables
 
     [JsonPropertyName("arguments")]
     public List<string>? Arguments { get; set; }
+}
+
+public class GetConfigurationData
+{
+    [JsonPropertyName("configuration")]
+    public GetConfiguration Configuration { get; set; }
+}
+
+public class GetConfigurationVariables { }
+
+public class GetConfiguration
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+
+    [JsonPropertyName("projectName")]
+    public string ProjectName { get; set; }
+
+    [JsonPropertyName("outputPath")]
+    public string OutputPath { get; set; }
+
+    [JsonPropertyName("minimalWorkingExample")]
+    public bool MinimalWorkingExample { get; set; }
+
+    [JsonPropertyName("buildWithoutDocker")]
+    public bool BuildWithoutDocker { get; set; }
 }
