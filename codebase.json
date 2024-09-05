@@ -58,13 +58,14 @@
     },
     {
       "botId": "bot://hub/dotnet/botfactory",
-      "botVersion": "0.0.1-alpha10",
+      "botVersion": "0.0.1-alpha13",
       "configuration": {
         "id": "bot://hub/dotnet/botfactory",
         "outputPath": "DotnetBotfactory",
         "projectName": "DotnetBotfactory",
         "language": "CSHARP",
-        "minimalWorkingExample": false
+        "minimalWorkingExample": false,
+        "buildWithoutDocker": true
       },
       "dependencies": [
         {
