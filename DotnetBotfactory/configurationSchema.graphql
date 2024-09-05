@@ -1,7 +1,34 @@
 type Configuration {
+    """
+    All bots have an ID. They all start with `bot://`. Here are some examples of bot IDs being used:
+    
+    # To use a bot to generate code:
+    bot install bot://hub/dotnet/botfactory
+    # When building a custom bot, add a dependency on another bot:
+    bot add bot://hub/statesmith
+    
+    Generally if the bot generates source code in a specific language,
+    then the bot ID should be grouped using the language name (e.g. the `/dotnet/` above)
+    but if the bot generates code in multiple languages or is language agnostic,
+    it's fine to leave that out.
+    """
     id: String!
+    """
+    The directory that will contain the C# project
+    """
     outputPath: String!
+    """
+    The name of the C# project (the project file will be this plus `.csproj`)
+    """
     projectName: String!
+    """
+    If true, generates a minimal working example. Great for learning how to build bots!
+    If false or null, includes a few nice tidbits for making bots a little easier in the long run.
+    """
     minimalWorkingExample: Boolean!
+    """
+    If true, excludes the bits for building without docker.
+    If this is false or null then those bits are included.
+    """
     buildWithoutDocker: Boolean
 }

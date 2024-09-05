@@ -82,7 +82,7 @@ public class CSharpBot : IMiniBot
               """);
 
          GraphQLOperations.AddFile($"{configuration.OutputPath}/configurationSchema.graphql",
-           $$"""
+           $$""""
              # This is where we put all configuration settings that are needed by this bot.
              # This file can contain any number of types, but it is best to keep configuration simple
              # and prefer convention over configuration. That helps keep bots easy to use, focused,
@@ -91,10 +91,14 @@ public class CSharpBot : IMiniBot
              # This is a special type. A non-nullable field of this type called "configuration" will be
              # inserted in the query root type, so that this bot can access its configuration values.
              type Configuration {
+                 """
+                 It's best to add documentation strings for your fields, because they are displayed
+                 when codegen.bot prompts the bot user for each value.
+                 """
                  outputPath: String!
              }
 
-             """);
+             """");
 
         GraphQLOperations.AddFile($"{configuration.OutputPath}/bot.json",
             $$"""
