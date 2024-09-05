@@ -319,7 +319,7 @@ public class GetFiles
 public class GetFileContentsData
 {
     [JsonPropertyName("readTextFile")]
-    public string ReadTextFile { get; set; }
+    public string? ReadTextFile { get; set; }
 }
 
 public class GetFileContentsVariables
@@ -485,5 +485,5 @@ public class GetConfiguration
     public bool MinimalWorkingExample { get; set; }
 
     [JsonPropertyName("buildWithoutDocker")]
-    public bool BuildWithoutDocker { get; set; }
+    public bool? BuildWithoutDocker { get; set; }
 }
