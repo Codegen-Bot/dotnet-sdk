@@ -1,16 +1,23 @@
 type Configuration {
     """
-    All bots have an ID. They all start with `bot://`. Here are some examples of bot IDs being used:
+    All community bots have an ID which starts with `bot://hub/`. Here are some examples of bot IDs being used:
     
+    ```
     # To use a bot to generate code:
     bot install bot://hub/dotnet/botfactory
     # When building a custom bot, add a dependency on another bot:
     bot add bot://hub/statesmith
+    ```
     
-    Generally if the bot generates source code in a specific language,
-    then the bot ID should be grouped using the language name (e.g. the `/dotnet/` above)
-    but if the bot generates code in multiple languages or is language agnostic,
-    it's fine to leave that out.
+    Tips for choosing a bot ID:
+    
+    - If the bot generates source code in a specific language or VM, it should have that in the URL.
+      E.g. the `/dotnet/` in the bot ID `bot://hub/dotnet/botfactory` implies the bot generates code
+      relevant only to the Microsoft .NET platform.
+    - Some bots generate code in multiple languages; these shouldn't have a specific language or VM
+      in their ID.
+    - Choose a bot ID that starts with bot://hub/. Other bot ID prefixes, like bot://core/,
+      are reserved for future Codegen Bot releases.
     """
     id: String!
     """
