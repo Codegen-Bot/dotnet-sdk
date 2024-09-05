@@ -301,17 +301,17 @@ public class GraphQLOperationsBot : IMiniBot
 
                 if (type.Name == "String")
                 {
-                    return "string";
+                    return "string?";
                 }
 
                 if (type.Name == "Boolean")
                 {
-                    return "bool";
+                    return "bool?";
                 }
 
                 if (type.Name == "Integer")
                 {
-                    return "int";
+                    return "int?";
                 }
 
                 var enumType = metadata.Enumerations.FirstOrDefault(enumType => enumType.Name == type.Name);
@@ -338,7 +338,7 @@ public class GraphQLOperationsBot : IMiniBot
                         AddSelectionText(properties, path + " " + (selection.Alias ?? selection.Name), objectType, subselection);
                     }
                     
-                    return path.Pascalize();
+                    return path.Pascalize() + "?";
                 }
 
                 GraphQLOperations.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
