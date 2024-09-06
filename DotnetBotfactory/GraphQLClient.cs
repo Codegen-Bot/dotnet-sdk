@@ -89,7 +89,10 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetConfigurationData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException(
+                "Received null data for request GetConfiguration."
+            );
     }
 
     public static GetFilesData GetFiles(List<string>? whitelist, List<string>? blacklist)
@@ -113,7 +116,8 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFilesData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request GetFiles.");
     }
 
     public static GetFileContentsData GetFileContents(string textFilePath, FileVersion fileVersion)
@@ -138,7 +142,10 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFileContentsData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException(
+                "Received null data for request GetFileContents."
+            );
     }
 
     public static AddFileData AddFile(string filePath, string textAndCarets)
@@ -165,7 +172,8 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddFileData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddFile.");
     }
 
     public static AddTextData AddText(string caretId, string textAndCarets)
@@ -188,7 +196,8 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddText.");
     }
 
     public static AddKeyedTextData AddKeyedText(string key, string caretId, string textAndCarets)
@@ -216,7 +225,8 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddKeyedText.");
     }
 
     public static AddTextByTagsData AddTextByTags(List<CaretTagInput>? tags, string textAndCarets)
@@ -239,7 +249,8 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextByTagsData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddTextByTags.");
     }
 
     public static AddKeyedTextByTagsData AddKeyedTextByTags(
@@ -271,7 +282,10 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextByTagsData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException(
+                "Received null data for request AddKeyedTextByTags."
+            );
     }
 
     public static LogData Log(LogSeverity severity, string message, List<string>? arguments)
@@ -297,7 +311,8 @@ public static partial class GraphQLOperations
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseLogData
         );
-        return result?.Data;
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request Log.");
     }
 }
 
@@ -378,7 +393,7 @@ public class GetFiles
     [JsonPropertyName("path")]
     public required string Path { get; set; }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter<FileKind>))]
     [JsonPropertyName("kind")]
     public required FileKind Kind { get; set; }
 }
@@ -394,7 +409,7 @@ public class GetFileContentsVariables
     [JsonPropertyName("textFilePath")]
     public required string TextFilePath { get; set; }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter<FileVersion>))]
     [JsonPropertyName("fileVersion")]
     public required FileVersion FileVersion { get; set; }
 }
@@ -518,7 +533,7 @@ public class LogData
 
 public class LogVariables
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter<LogSeverity>))]
     [JsonPropertyName("severity")]
     public required LogSeverity Severity { get; set; }
 
