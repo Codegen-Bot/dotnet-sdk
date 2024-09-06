@@ -26,6 +26,7 @@ public class GraphQLError
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
+[JsonSerializable(typeof(BotDependencyInput))]
 [JsonSerializable(typeof(CaretTagInput))]
 [JsonSerializable(typeof(AddFileVariables))]
 [JsonSerializable(typeof(AddFileData))]
@@ -58,6 +59,9 @@ public class GraphQLError
 [JsonSerializable(typeof(GetFilesData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
 [JsonSerializable(typeof(GetFiles))]
+[JsonSerializable(typeof(GetSchemaVariables))]
+[JsonSerializable(typeof(GetSchemaData))]
+[JsonSerializable(typeof(GraphQLResponse<GetSchemaData>))]
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
@@ -288,6 +292,28 @@ public static partial class GraphQLOperations
             ?? throw new InvalidOperationException("Received null data for request GetFiles.");
     }
 
+    public static GetSchemaData GetSchema(string botFilePath)
+    {
+        var request = new GraphQLRequest<GetSchemaVariables>
+        {
+            Query = """
+                query GetSchema($botFilePath: String!) {
+                  botSchema(botFilePath: $botFilePath)
+                }
+                """,
+            OperationName = "GetSchema",
+            Variables = new GetSchemaVariables() { BotFilePath = botFilePath },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetSchemaData>>(
+            response,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetSchemaData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request GetSchema.");
+    }
+
     public static LogData Log(LogSeverity severity, string message, List<string>? arguments)
     {
         var request = new GraphQLRequest<LogVariables>
@@ -336,6 +362,15 @@ public enum LogSeverity
     WARNING,
     ERROR,
     CRITICAL,
+}
+
+public class BotDependencyInput
+{
+    [JsonPropertyName("botId")]
+    public required string BotId { get; set; }
+
+    [JsonPropertyName("botVersion")]
+    public required string BotVersion { get; set; }
 }
 
 public class CaretTagInput
@@ -523,6 +558,18 @@ public class GetFiles
     [JsonConverter(typeof(JsonStringEnumConverter<FileKind>))]
     [JsonPropertyName("kind")]
     public required FileKind Kind { get; set; }
+}
+
+public class GetSchemaData
+{
+    [JsonPropertyName("botSchema")]
+    public string? BotSchema { get; set; }
+}
+
+public class GetSchemaVariables
+{
+    [JsonPropertyName("botFilePath")]
+    public required string BotFilePath { get; set; }
 }
 
 public class LogData
