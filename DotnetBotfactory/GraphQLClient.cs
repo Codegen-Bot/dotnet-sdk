@@ -27,10 +27,6 @@ public class GraphQLError
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
 [JsonSerializable(typeof(CaretTagInput))]
-[JsonSerializable(typeof(GetConfigurationVariables))]
-[JsonSerializable(typeof(GetConfigurationData))]
-[JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
-[JsonSerializable(typeof(GetConfiguration))]
 [JsonSerializable(typeof(GetFilesVariables))]
 [JsonSerializable(typeof(GetFilesData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
@@ -61,40 +57,14 @@ public class GraphQLError
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
+[JsonSerializable(typeof(GetConfigurationVariables))]
+[JsonSerializable(typeof(GetConfigurationData))]
+[JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
+[JsonSerializable(typeof(GetConfiguration))]
 public partial class GraphQLOperationsJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLOperations
 {
-    public static GetConfigurationData GetConfiguration()
-    {
-        var request = new GraphQLRequest<GetConfigurationVariables>
-        {
-            Query = """
-                query GetConfiguration {
-                  configuration {
-                    id
-                    projectName
-                    outputPath
-                    minimalWorkingExample
-                    buildWithoutDocker
-                  }
-                }
-                """,
-            OperationName = "GetConfiguration",
-            Variables = new GetConfigurationVariables() { },
-        };
-
-        var response = Imports.GraphQL(request);
-        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
-            response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetConfigurationData
-        );
-        return result?.Data
-            ?? throw new InvalidOperationException(
-                "Received null data for request GetConfiguration."
-            );
-    }
-
     public static GetFilesData GetFiles(List<string>? whitelist, List<string>? blacklist)
     {
         var request = new GraphQLRequest<GetFilesVariables>
@@ -314,6 +284,36 @@ public static partial class GraphQLOperations
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request Log.");
     }
+
+    public static GetConfigurationData GetConfiguration()
+    {
+        var request = new GraphQLRequest<GetConfigurationVariables>
+        {
+            Query = """
+                query GetConfiguration {
+                  configuration {
+                    id
+                    projectName
+                    outputPath
+                    minimalWorkingExample
+                    buildWithoutDocker
+                  }
+                }
+                """,
+            OperationName = "GetConfiguration",
+            Variables = new GetConfigurationVariables() { },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
+            response,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetConfigurationData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException(
+                "Received null data for request GetConfiguration."
+            );
+    }
 }
 
 public enum FileKind
@@ -345,32 +345,6 @@ public class CaretTagInput
 
     [JsonPropertyName("value")]
     public required string Value { get; set; }
-}
-
-public class GetConfigurationData
-{
-    [JsonPropertyName("configuration")]
-    public required GetConfiguration Configuration { get; set; }
-}
-
-public class GetConfigurationVariables { }
-
-public class GetConfiguration
-{
-    [JsonPropertyName("id")]
-    public required string Id { get; set; }
-
-    [JsonPropertyName("projectName")]
-    public required string ProjectName { get; set; }
-
-    [JsonPropertyName("outputPath")]
-    public required string OutputPath { get; set; }
-
-    [JsonPropertyName("minimalWorkingExample")]
-    public required bool MinimalWorkingExample { get; set; }
-
-    [JsonPropertyName("buildWithoutDocker")]
-    public bool? BuildWithoutDocker { get; set; }
 }
 
 public class GetFilesData
@@ -542,4 +516,30 @@ public class LogVariables
 
     [JsonPropertyName("arguments")]
     public List<string>? Arguments { get; set; }
+}
+
+public class GetConfigurationData
+{
+    [JsonPropertyName("configuration")]
+    public required GetConfiguration Configuration { get; set; }
+}
+
+public class GetConfigurationVariables { }
+
+public class GetConfiguration
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    [JsonPropertyName("projectName")]
+    public required string ProjectName { get; set; }
+
+    [JsonPropertyName("outputPath")]
+    public required string OutputPath { get; set; }
+
+    [JsonPropertyName("minimalWorkingExample")]
+    public required bool MinimalWorkingExample { get; set; }
+
+    [JsonPropertyName("buildWithoutDocker")]
+    public bool? BuildWithoutDocker { get; set; }
 }
