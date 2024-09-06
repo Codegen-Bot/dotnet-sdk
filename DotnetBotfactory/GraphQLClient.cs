@@ -26,6 +26,7 @@ public class GraphQLError
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
+[JsonSerializable(typeof(BotDependencyInput))]
 [JsonSerializable(typeof(CaretTagInput))]
 [JsonSerializable(typeof(AddFileVariables))]
 [JsonSerializable(typeof(AddFileData))]
@@ -47,9 +48,6 @@ public class GraphQLError
 [JsonSerializable(typeof(AddTextByTagsData))]
 [JsonSerializable(typeof(GraphQLResponse<AddTextByTagsData>))]
 [JsonSerializable(typeof(AddTextByTags))]
-[JsonSerializable(typeof(GetBotSpecVariables))]
-[JsonSerializable(typeof(GetBotSpecData))]
-[JsonSerializable(typeof(GraphQLResponse<GetBotSpecData>))]
 [JsonSerializable(typeof(GetConfigurationVariables))]
 [JsonSerializable(typeof(GetConfigurationData))]
 [JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
@@ -64,6 +62,7 @@ public class GraphQLError
 [JsonSerializable(typeof(GetSchemaVariables))]
 [JsonSerializable(typeof(GetSchemaData))]
 [JsonSerializable(typeof(GraphQLResponse<GetSchemaData>))]
+[JsonSerializable(typeof(GetSchema))]
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
@@ -211,30 +210,6 @@ public static partial class GraphQLOperations
             ?? throw new InvalidOperationException("Received null data for request AddTextByTags.");
     }
 
-    public static GetBotSpecData GetBotSpec(string botFilePath)
-    {
-        var request = new GraphQLRequest<GetBotSpecVariables>
-        {
-            Query = """
-                query GetBotSpec($botFilePath: String!) {
-                  botSpec(botFilePath: $botFilePath) {
-                    dependenciesSchemaPath
-                  }
-                }
-                """,
-            OperationName = "GetBotSpec",
-            Variables = new GetBotSpecVariables() { BotFilePath = botFilePath },
-        };
-
-        var response = Imports.GraphQL(request);
-        var result = JsonSerializer.Deserialize<GraphQLResponse<GetBotSpecData>>(
-            response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetBotSpecData
-        );
-        return result?.Data
-            ?? throw new InvalidOperationException("Received null data for request GetBotSpec.");
-    }
-
     public static GetConfigurationData GetConfiguration()
     {
         var request = new GraphQLRequest<GetConfigurationVariables>
@@ -325,6 +300,9 @@ public static partial class GraphQLOperations
             Query = """
                 query GetSchema($botFilePath: String!) {
                   botSchema(botFilePath: $botFilePath)
+                  botSpec(botFilePath: $botFilePath) {
+                    dependenciesSchemaPath
+                  }
                 }
                 """,
             OperationName = "GetSchema",
@@ -388,6 +366,15 @@ public enum LogSeverity
     WARNING,
     ERROR,
     CRITICAL,
+}
+
+public class BotDependencyInput
+{
+    [JsonPropertyName("botId")]
+    public required string BotId { get; set; }
+
+    [JsonPropertyName("botVersion")]
+    public required string BotVersion { get; set; }
 }
 
 public class CaretTagInput
@@ -510,14 +497,6 @@ public class AddTextByTags
     public required string Id { get; set; }
 }
 
-public class GetBotSpecData { }
-
-public class GetBotSpecVariables
-{
-    [JsonPropertyName("botFilePath")]
-    public required string BotFilePath { get; set; }
-}
-
 public class GetConfigurationData
 {
     [JsonPropertyName("configuration")]
@@ -585,12 +564,25 @@ public class GetFiles
     public required FileKind Kind { get; set; }
 }
 
-public class GetSchemaData { }
+public class GetSchemaData
+{
+    [JsonPropertyName("botSchema")]
+    public string? BotSchema { get; set; }
+
+    [JsonPropertyName("botSpec")]
+    public GetSchema? BotSpec { get; set; }
+}
 
 public class GetSchemaVariables
 {
     [JsonPropertyName("botFilePath")]
     public required string BotFilePath { get; set; }
+}
+
+public class GetSchema
+{
+    [JsonPropertyName("dependenciesSchemaPath")]
+    public string? DependenciesSchemaPath { get; set; }
 }
 
 public class LogData

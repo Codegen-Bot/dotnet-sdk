@@ -3,6 +3,18 @@ schema {
   mutation: Mutation
 }
 
+type BotSpec @source(name: "BotSpec", schema: "schema") {
+  unparse: String!
+  readMePath: String
+  configurationSchemaPath: String
+  stitchSchemaPath: String
+  dependenciesSchemaPath: String
+  excludeConfigurationFromDependenciesSchema: Boolean
+  dependentSchemaPath: String
+  dependencies: [KeyValuePairOfStringAndString!]!
+  private: Boolean
+}
+
 type Caret @source(name: "Caret", schema: "output") {
   separator: String!
   string: String!
@@ -27,6 +39,11 @@ type File @source(name: "File", schema: "filesystem") {
   kind: FileKind!
 }
 
+type KeyValuePairOfStringAndString @source(name: "KeyValuePairOfStringAndString", schema: "schema") {
+  key: String!
+  value: String!
+}
+
 type Mutation {
   noop: String
   setCaretSeparator(caretId: String! separator: String!): Caret! @delegate(schema: "output", path: "setCaretSeparator")
@@ -48,7 +65,15 @@ type Query {
   readTextFile(textFilePath: String! fileVersion: FileVersion): String @delegate(schema: "filesystem", path: "readTextFile")
   files(whitelist: [String!] blacklist: [String!]): [File!]! @delegate(schema: "filesystem", path: "files")
   logNoop: Boolean! @delegate(schema: "log", path: "logNoop")
+  botSpec(botFilePath: String!): BotSpec @delegate(schema: "schema", path: "botSpec")
+  botSchema(botFilePath: String!): String @delegate(schema: "schema", path: "botSchema")
+  hypotheticalBotSchema(configurationSchema: String dependencies: [BotDependencyInput!]! deduplicateConfigurationSchema: Boolean!): String @delegate(schema: "schema", path: "hypotheticalBotSchema")
   configuration: Configuration! @delegate(schema: "Configuration", path: "configuration")
+}
+
+input BotDependencyInput @source(name: "BotDependencyInput", schema: "schema") {
+  botId: String!
+  botVersion: String!
 }
 
 input CaretTagInput @source(name: "CaretTagInput", schema: "output") {
