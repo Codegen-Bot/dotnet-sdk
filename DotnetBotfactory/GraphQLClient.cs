@@ -23,7 +23,6 @@ public class GraphQLError
 }
 
 [JsonSerializable(typeof(GraphQLError))]
-[JsonSerializable(typeof(DotNetVersion))]
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
@@ -348,11 +347,6 @@ public static partial class GraphQLOperations
     }
 }
 
-public enum DotNetVersion
-{
-    NET8,
-}
-
 public enum FileKind
 {
     BINARY,
@@ -529,9 +523,8 @@ public class GetConfiguration
     [JsonPropertyName("buildWithoutDocker")]
     public bool? BuildWithoutDocker { get; set; }
 
-    [JsonConverter(typeof(JsonStringEnumConverter<DotNetVersion>))]
     [JsonPropertyName("dotnetVersion")]
-    public required DotNetVersion DotnetVersion { get; set; }
+    public required string DotnetVersion { get; set; }
 }
 
 public class GetFileContentsData
