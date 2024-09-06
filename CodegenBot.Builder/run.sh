@@ -5,9 +5,12 @@ if [ ! -f /src/bot.json ]; then
   exit 1
 fi
 
-echo "[INFORMATION] [codegen.bot] Copying bot source"
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+echo "[$TIMESTAMP] [INFORMATION] [codegen.bot] Copying bot source"
 cp /src /tmp-src -r
-echo "[INFORMATION] [codegen.bot] Building"
-dotnet build /tmp-src -c Release -r wasi-wasm -o /tmp-bin
-echo "[INFORMATION] [codegen.bot] Copying built wasm file"
-cp /tmp-bin/AppBundle/*.wasm /src
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+echo "[$TIMESTAMP] [INFORMATION] [codegen.bot] Building"
+dotnet build /tmp-src -c Release -r wasi-wasm
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+echo "[$TIMESTAMP] [INFORMATION] [codegen.bot] Copying built wasm file to bin/Release/net8.0/wasi-wasm/AppBundle/"
+cp /tmp-src/bin/Release/net8.0/wasi-wasm/AppBundle/*.wasm /src/bin/Release/net8.0/wasi-wasm/AppBundle/

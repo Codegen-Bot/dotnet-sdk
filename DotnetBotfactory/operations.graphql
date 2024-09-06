@@ -5,6 +5,7 @@ query GetConfiguration {
         outputPath
         minimalWorkingExample
         buildWithoutDocker
+        dotnetVersion
     }
 }
 

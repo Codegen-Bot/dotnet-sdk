@@ -38,4 +38,12 @@ type Configuration {
     If this is false or null then those bits are included.
     """
     buildWithoutDocker: Boolean
+    """
+    The version of .NET to use in this bot
+    """
+    dotnetVersion: DotNetVersion!
+}
+
+enum DotNetVersion {
+    NET8
 }

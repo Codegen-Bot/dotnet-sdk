@@ -112,7 +112,7 @@ public class CSharpBot : IMiniBot
                 "readme": "Bot.md",
                 "configurationSchema": "configurationSchema.graphql",
                 "dependenciesSchema": "schema.graphql",
-                "wasm": "{{configuration.ProjectName}}.wasm",
+                "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/{{configuration.ProjectName}}.wasm",
                 "deduplicateConfigurationSchema": true,
                 "dependencies": {
                   "bot://core/output": "1.0.0",
