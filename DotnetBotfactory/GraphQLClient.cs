@@ -23,6 +23,7 @@ public class GraphQLError
 }
 
 [JsonSerializable(typeof(GraphQLError))]
+[JsonSerializable(typeof(DotNetVersion))]
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
@@ -222,6 +223,7 @@ public static partial class GraphQLOperations
                     outputPath
                     minimalWorkingExample
                     buildWithoutDocker
+                    dotnetVersion
                   }
                 }
                 """,
@@ -344,6 +346,11 @@ public static partial class GraphQLOperations
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request Log.");
     }
+}
+
+public enum DotNetVersion
+{
+    NET8,
 }
 
 public enum FileKind
@@ -521,6 +528,10 @@ public class GetConfiguration
 
     [JsonPropertyName("buildWithoutDocker")]
     public bool? BuildWithoutDocker { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter<DotNetVersion>))]
+    [JsonPropertyName("dotnetVersion")]
+    public required DotNetVersion DotnetVersion { get; set; }
 }
 
 public class GetFileContentsData
