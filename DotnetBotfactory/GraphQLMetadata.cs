@@ -46,8 +46,8 @@ public class GraphQLInputObjectType : IDirectives
 
 public class GraphQLOperation : IDirectives, ISelections
 {
-    public string? Name { get; set; }
-    public string Text { get; set; }
+    public required string? Name { get; set; }
+    public required string Text { get; set; }
     public GraphQLOperationType OperationType { get; set; }
     public List<IGraphQLSelection> Selections { get; set; } = new();
     public List<GraphQLDirective> Directives { get; set; } = new();
@@ -56,8 +56,8 @@ public class GraphQLOperation : IDirectives, ISelections
 
 public class GraphQLVariable : IDirectives, ITyped
 {
-    public string Name { get; set; }
-    public TypeRef Type { get; set; }
+    public required string Name { get; set; }
+    public required TypeRef Type { get; set; }
     public List<GraphQLDirective> Directives { get; set; } = new();
     public string? Value { get; set; }
 }
@@ -86,7 +86,7 @@ public interface IGraphQLSelection
 
 public class GraphQLFieldSelection : IGraphQLSelection, IDirectives, ISelections
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
     public string? Alias { get; set; }
     public List<IGraphQLSelection> Selections { get; set; } = new();
     public List<GraphQLFieldSelection> FieldSelections { get; set; } = new();
@@ -96,19 +96,19 @@ public class GraphQLFieldSelection : IGraphQLSelection, IDirectives, ISelections
 
 public class GraphQLFragmentSpreadSelection : IGraphQLSelection
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }
 
 public class GraphQLDirective
 {
-    public string Name { get; set; }
-    public List<GraphQLDirectiveArgument> Arguments { get; set; }
+    public required string Name { get; set; }
+    public List<GraphQLDirectiveArgument> Arguments { get; set; } = new();
 }
 
 public class GraphQLDirectiveArgument
 {
-    public string Name { get; set; }
-    public string Value { get; set; }
+    public required string Name { get; set; }
+    public required string Value { get; set; }
 }
 
 public class GraphQLEnumeration : IDirectives
@@ -132,6 +132,7 @@ public class GraphQLField : IDirectives, ITyped
     public required TypeRef Type { get; set; }
     public List<GraphQLArgument> Arguments { get; set; } = new();
     public List<GraphQLDirective> Directives { get; set; } = new();
+    public string? Description { get; set; }
 }
 
 public class GraphQLInputField : IDirectives, ITyped
@@ -145,15 +146,15 @@ public class GraphQLInputField : IDirectives, ITyped
 
 public class GraphQLArgument : IDirectives, ITyped
 {
-    public string Name { get; set; }
-    public TypeRef Type { get; set; }
+    public required string Name { get; set; }
+    public required TypeRef Type { get; set; }
     public List<GraphQLDirective> Directives { get; set; } = new();
     public string? Value { get; set; }
 }
 
 public class GraphQLScalarType : IDirectives
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
     public List<GraphQLDirective> Directives { get; set; } = new();
 }
 

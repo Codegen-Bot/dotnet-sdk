@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 using HotChocolate.Language;
 
 namespace DotnetBotfactory;
@@ -31,6 +32,7 @@ public class GraphQLMetadataExtractionService
                     {
                         Name = field.Name.Value,
                         Type = field.Type.ToTypeRef(),
+                        Description = field.Description?.Value,
                     };
 
                     foreach (var argument in field.Arguments)
@@ -155,7 +157,7 @@ public class GraphQLMetadataExtractionService
             {
                 var newFragment = new GraphQLFragment()
                 {
-                    Name = fragment.Name?.Value,
+                    Name = fragment.Name.Value,
                     TypeCondition = fragment.TypeCondition.Name(),
                 };
 
@@ -244,6 +246,15 @@ public class GraphQLMetadataExtractionService
                 throw new NotImplementedException();
             }
         }
+    }
+}
+
+public class GraphQLMetadataExtractor(GraphQLMetadataExtractionService metadataExtractionService)
+{
+    public Task Extract(string filePath, string text, GraphQLMetadata metadata)
+    {
+        metadataExtractionService.Extract(text, metadata);
+        return Task.CompletedTask;
     }
 }
 

@@ -20,11 +20,21 @@ public class GraphQLOperationsBot : IMiniBot
 
         var metadata = new GraphQLMetadata();
         
-        Imports.Log(new LogEvent() { Level = LogEventLevel.Information, Message = "Found {FileCount} GraphQL files", Args = [files.Count.ToString()] });
+        Imports.Log(new LogEvent() { Level = LogEventLevel.Information, Message = "Found {FileCount} GraphQL files", Args = [files?.Count.ToString() ?? "0"] });
         
-        foreach (var file in files)
+        foreach (var file in files ?? [])
         {
             var fileContents = GraphQLOperations.GetFileContents(file.Path, FileVersion.HEAD).ReadTextFile;
+            if (fileContents is null)
+            {
+                Imports.Log(new LogEvent()
+                {
+                    Level = LogEventLevel.Error,
+                    Message = "File {File} was detected as a GraphQL file but it could not be read",
+                    Args = [file.Path],
+                });
+                continue;
+            }
             service.Extract(fileContents, metadata);
             
             Imports.Log(new LogEvent()
@@ -65,10 +75,18 @@ public class GraphQLOperationsBot : IMiniBot
                   public string Message { get; set; }
               }
               
+              [JsonSerializable(typeof(GraphQLError))]
+              {{CaretRef.New(out var jsonSerializerContextAttributes)}}
+              public partial class GraphQLOperationsJsonSerializerContext : JsonSerializerContext
+              {
+              }
+              
               {{CaretRef.New(out var typeDefinitions)}}
 
               """");
 
+        // TODO - do we do this?
+        //[JsonSerializable(typeof(GraphQLResponse<>))]
         foreach (var objectType in metadata.ObjectTypes)
         {
             Imports.Log(new LogEvent()
@@ -80,6 +98,12 @@ public class GraphQLOperationsBot : IMiniBot
         
         foreach (var enumType in metadata.Enumerations)
         {
+            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+                $"""
+                [JsonSerializable(typeof({enumType.Name.Pascalize()}))]
+                
+                """);
+            
             GraphQLOperations.AddText(typeDefinitions.Id,
                 $$"""
 
@@ -89,7 +113,7 @@ public class GraphQLOperationsBot : IMiniBot
                   }
 
                   """);
-
+            
             foreach (var value in enumType.Values)
             {
                 GraphQLOperations.AddText(enumValues.Id, value.Name);
@@ -98,6 +122,12 @@ public class GraphQLOperationsBot : IMiniBot
         
         foreach (var inputObjectType in metadata.InputObjectTypes)
         {
+            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+                $"""
+                 [JsonSerializable(typeof({inputObjectType.Name.Pascalize()}))]
+
+                 """);
+            
             GraphQLOperations.AddText(typeDefinitions.Id,
                 $$"""
 
@@ -122,6 +152,25 @@ public class GraphQLOperationsBot : IMiniBot
 
         foreach (var operation in metadata.Operations)
         {
+            if (string.IsNullOrWhiteSpace(operation.Name))
+            {
+                Imports.Log(new LogEvent()
+                {
+                    Level = LogEventLevel.Warning,
+                    Message = "This operation has no name, so code won't be generated for it: {Operation}",
+                    Args = [operation.Text],
+                });
+                continue;
+            }
+            
+            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+                $"""
+                 [JsonSerializable(typeof({operation.Name.Pascalize()}Variables))]
+                 [JsonSerializable(typeof({operation.Name.Pascalize()}Data))]
+                 [JsonSerializable(typeof(GraphQLResponse<{operation.Name.Pascalize()}Data>))]
+
+                 """);
+
             GraphQLOperations.AddText(operations.Id,
                 $$""""
                    public static {{operation.Name.Pascalize()}}Data {{operation.Name}}({{CaretRef.New(out var parameters, separator: ", ")}})
@@ -139,7 +188,7 @@ public class GraphQLOperationsBot : IMiniBot
                        };
                    
                        var response = Imports.GraphQL(request);
-                       var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                       var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLOperationsJsonSerializationContext.GraphQLResponseOf{{operation.Name.Pascalize()}}Data);
                        return result?.Data;
                    }
                    """");
@@ -210,19 +259,21 @@ public class GraphQLOperationsBot : IMiniBot
             }
             else
             {
-                AddText(operation, properties, operation.Name, rootType);
+                AddText(operation, properties, jsonSerializerContextAttributes, operation.Name, rootType);
             }
         }
         
-        void AddText(GraphQLOperation operation, CaretRef properties, string path, GraphQLObjectType objectType)
+        void AddText(GraphQLOperation operation, CaretRef properties, CaretRef jsonSerializerContextAttributes, string path,
+            GraphQLObjectType objectType)
         {
             foreach (var selection in operation.Selections)
             {
-                AddSelectionText(properties, path, objectType, selection);
+                AddSelectionText(properties, jsonSerializerContextAttributes, path, objectType, selection);
             }
         }
 
-        void AddSelectionText(CaretRef properties, string path, GraphQLObjectType objectType, IGraphQLSelection selection)
+        void AddSelectionText(CaretRef properties, CaretRef jsonSerializerContextAttributes, string path, GraphQLObjectType objectType,
+            IGraphQLSelection selection)
         {
             if (selection is GraphQLFieldSelection fieldSelection)
             {
@@ -275,7 +326,7 @@ public class GraphQLOperationsBot : IMiniBot
                 {
                     foreach (var fragmentSelection in fragment.Selections)
                     {
-                        AddSelectionText(properties, path, objectType, fragmentSelection);
+                        AddSelectionText(properties, jsonSerializerContextAttributes, path, objectType, fragmentSelection);
                     }
                 }
             }
@@ -325,6 +376,12 @@ public class GraphQLOperationsBot : IMiniBot
             var objectType = metadata.ObjectTypes.FirstOrDefault(objType => objType.Name == type.Name);
             if (objectType is not null)
             {
+                GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+                    $"""
+                     [JsonSerializable(typeof({path.Pascalize()}))]
+
+                     """);
+
                 GraphQLOperations.AddText(typeDefinitions.Id,
                     $$"""
                       public class {{path.Pascalize()}}
@@ -336,7 +393,7 @@ public class GraphQLOperationsBot : IMiniBot
 
                 foreach (var subselection in selection.Selections)
                 {
-                    AddSelectionText(properties, path + " " + (selection.Alias ?? selection.Name), objectType, subselection);
+                    AddSelectionText(properties, jsonSerializerContextAttributes, path + " " + (selection.Alias ?? selection.Name), objectType, subselection);
                 }
                 
                 return path.Pascalize() + "?";

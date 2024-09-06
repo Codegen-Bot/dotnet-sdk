@@ -47,6 +47,10 @@ public class CSharpBot : IMiniBot
                   <!--<RuntimeIdentifier>wasi-wasm</RuntimeIdentifier>-->
                   <OutputType>Exe</OutputType>
                   <PublishTrimmed>true</PublishTrimmed>
+                  <!-- WASM bots can be difficult to debug, so it's better ot just have nullable enabled -->
+                  <!-- and treat warnings as errors from the beginning. It makes your life easier in the future. -->
+                  <Nullable>enable</Nullable>
+                  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
                   {{CaretRef.New(out var rootNamespaceCaret)}}
                 </PropertyGroup>
                 <ItemGroup>
