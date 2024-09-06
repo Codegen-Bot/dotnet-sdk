@@ -285,187 +285,187 @@ public enum LogSeverity
 public class CaretTagInput
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonPropertyName("value")]
-    public string Value { get; set; }
+    public required string Value { get; set; }
 }
 
 public class GetFilesData
 {
     [JsonPropertyName("files")]
-    public required List<GetFiles>? Files { get; set; }
+    public List<GetFiles>? Files { get; set; }
 }
 
 public class GetFilesVariables
 {
     [JsonPropertyName("whitelist")]
-    public required List<string>? Whitelist { get; set; }
+    public List<string>? Whitelist { get; set; }
 
     [JsonPropertyName("blacklist")]
-    public required List<string>? Blacklist { get; set; }
+    public List<string>? Blacklist { get; set; }
 }
 
 public class GetFiles
 {
     [JsonPropertyName("path")]
-    public string Path { get; set; }
+    public required string Path { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     [JsonPropertyName("kind")]
-    public FileKind Kind { get; set; }
+    public required FileKind Kind { get; set; }
 }
 
 public class GetFileContentsData
 {
     [JsonPropertyName("readTextFile")]
-    public required string? ReadTextFile { get; set; }
+    public string? ReadTextFile { get; set; }
 }
 
 public class GetFileContentsVariables
 {
     [JsonPropertyName("textFilePath")]
-    public string TextFilePath { get; set; }
+    public required string TextFilePath { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     [JsonPropertyName("fileVersion")]
-    public FileVersion FileVersion { get; set; }
+    public required FileVersion FileVersion { get; set; }
 }
 
 public class AddFileData
 {
     [JsonPropertyName("addFile")]
-    public AddFile AddFile { get; set; }
+    public required AddFile AddFile { get; set; }
 }
 
 public class AddFileVariables
 {
     [JsonPropertyName("filePath")]
-    public string FilePath { get; set; }
+    public required string FilePath { get; set; }
 
     [JsonPropertyName("textAndCarets")]
-    public string TextAndCarets { get; set; }
+    public required string TextAndCarets { get; set; }
 }
 
 public class AddFile
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 }
 
 public class AddTextData
 {
     [JsonPropertyName("addText")]
-    public AddText AddText { get; set; }
+    public required AddText AddText { get; set; }
 }
 
 public class AddTextVariables
 {
     [JsonPropertyName("caretId")]
-    public string CaretId { get; set; }
+    public required string CaretId { get; set; }
 
     [JsonPropertyName("textAndCarets")]
-    public string TextAndCarets { get; set; }
+    public required string TextAndCarets { get; set; }
 }
 
 public class AddText
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 }
 
 public class AddKeyedTextData
 {
     [JsonPropertyName("addKeyedText")]
-    public AddKeyedText AddKeyedText { get; set; }
+    public required AddKeyedText AddKeyedText { get; set; }
 }
 
 public class AddKeyedTextVariables
 {
     [JsonPropertyName("key")]
-    public string Key { get; set; }
+    public required string Key { get; set; }
 
     [JsonPropertyName("caretId")]
-    public string CaretId { get; set; }
+    public required string CaretId { get; set; }
 
     [JsonPropertyName("textAndCarets")]
-    public string TextAndCarets { get; set; }
+    public required string TextAndCarets { get; set; }
 }
 
 public class AddKeyedText
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 }
 
 public class AddTextByTagsData
 {
     [JsonPropertyName("addTextByTags")]
-    public required List<AddTextByTags>? AddTextByTags { get; set; }
+    public List<AddTextByTags>? AddTextByTags { get; set; }
 }
 
 public class AddTextByTagsVariables
 {
     [JsonPropertyName("tags")]
-    public required List<CaretTagInput>? Tags { get; set; }
+    public List<CaretTagInput>? Tags { get; set; }
 
     [JsonPropertyName("textAndCarets")]
-    public string TextAndCarets { get; set; }
+    public required string TextAndCarets { get; set; }
 }
 
 public class AddTextByTags
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 }
 
 public class AddKeyedTextByTagsData
 {
     [JsonPropertyName("addKeyedTextByTags")]
-    public required List<AddKeyedTextByTags>? AddKeyedTextByTags { get; set; }
+    public List<AddKeyedTextByTags>? AddKeyedTextByTags { get; set; }
 }
 
 public class AddKeyedTextByTagsVariables
 {
     [JsonPropertyName("key")]
-    public string Key { get; set; }
+    public required string Key { get; set; }
 
     [JsonPropertyName("tags")]
-    public required List<CaretTagInput>? Tags { get; set; }
+    public List<CaretTagInput>? Tags { get; set; }
 
     [JsonPropertyName("textAndCarets")]
-    public string TextAndCarets { get; set; }
+    public required string TextAndCarets { get; set; }
 }
 
 public class AddKeyedTextByTags
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 }
 
 public class LogData
 {
     [JsonPropertyName("log")]
-    public string Log { get; set; }
+    public required string Log { get; set; }
 }
 
 public class LogVariables
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     [JsonPropertyName("severity")]
-    public LogSeverity Severity { get; set; }
+    public required LogSeverity Severity { get; set; }
 
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public required string Message { get; set; }
 
     [JsonPropertyName("arguments")]
-    public required List<string>? Arguments { get; set; }
+    public List<string>? Arguments { get; set; }
 }
 
 public class GetConfigurationData
 {
     [JsonPropertyName("configuration")]
-    public GetConfiguration Configuration { get; set; }
+    public required GetConfiguration Configuration { get; set; }
 }
 
 public class GetConfigurationVariables { }
@@ -473,17 +473,17 @@ public class GetConfigurationVariables { }
 public class GetConfiguration
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
     [JsonPropertyName("projectName")]
-    public string ProjectName { get; set; }
+    public required string ProjectName { get; set; }
 
     [JsonPropertyName("outputPath")]
-    public string OutputPath { get; set; }
+    public required string OutputPath { get; set; }
 
     [JsonPropertyName("minimalWorkingExample")]
-    public bool MinimalWorkingExample { get; set; }
+    public required bool MinimalWorkingExample { get; set; }
 
     [JsonPropertyName("buildWithoutDocker")]
-    public required bool? BuildWithoutDocker { get; set; }
+    public bool? BuildWithoutDocker { get; set; }
 }
