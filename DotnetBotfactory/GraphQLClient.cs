@@ -62,6 +62,7 @@ public class GraphQLError
 [JsonSerializable(typeof(GetSchemaVariables))]
 [JsonSerializable(typeof(GetSchemaData))]
 [JsonSerializable(typeof(GraphQLResponse<GetSchemaData>))]
+[JsonSerializable(typeof(GetSchema))]
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
@@ -299,6 +300,9 @@ public static partial class GraphQLOperations
             Query = """
                 query GetSchema($botFilePath: String!) {
                   botSchema(botFilePath: $botFilePath)
+                  botSpec(botFilePath: $botFilePath) {
+                    dependenciesSchemaPath
+                  }
                 }
                 """,
             OperationName = "GetSchema",
@@ -564,12 +568,21 @@ public class GetSchemaData
 {
     [JsonPropertyName("botSchema")]
     public string? BotSchema { get; set; }
+
+    [JsonPropertyName("botSpec")]
+    public GetSchema? BotSpec { get; set; }
 }
 
 public class GetSchemaVariables
 {
     [JsonPropertyName("botFilePath")]
     public required string BotFilePath { get; set; }
+}
+
+public class GetSchema
+{
+    [JsonPropertyName("dependenciesSchemaPath")]
+    public string? DependenciesSchemaPath { get; set; }
 }
 
 public class LogData
