@@ -7,8 +7,91 @@ using CodegenBot;
 
 namespace DotnetBotfactory;
 
+public class GraphQLResponse<T>
+{
+    [JsonPropertyName("data")]
+    public T? Data { get; set; }
+
+    [JsonPropertyName("errors")]
+    public List<GraphQLError>? Errors { get; set; }
+}
+
+public class GraphQLError
+{
+    [JsonPropertyName("message")]
+    public string Message { get; set; }
+}
+
+[JsonSerializable(typeof(GraphQLError))]
+[JsonSerializable(typeof(FileKind))]
+[JsonSerializable(typeof(FileVersion))]
+[JsonSerializable(typeof(LogSeverity))]
+[JsonSerializable(typeof(CaretTagInput))]
+[JsonSerializable(typeof(GetConfigurationVariables))]
+[JsonSerializable(typeof(GetConfigurationData))]
+[JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
+[JsonSerializable(typeof(GetConfiguration))]
+[JsonSerializable(typeof(GetFilesVariables))]
+[JsonSerializable(typeof(GetFilesData))]
+[JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
+[JsonSerializable(typeof(GetFiles))]
+[JsonSerializable(typeof(GetFileContentsVariables))]
+[JsonSerializable(typeof(GetFileContentsData))]
+[JsonSerializable(typeof(GraphQLResponse<GetFileContentsData>))]
+[JsonSerializable(typeof(AddFileVariables))]
+[JsonSerializable(typeof(AddFileData))]
+[JsonSerializable(typeof(GraphQLResponse<AddFileData>))]
+[JsonSerializable(typeof(AddFile))]
+[JsonSerializable(typeof(AddTextVariables))]
+[JsonSerializable(typeof(AddTextData))]
+[JsonSerializable(typeof(GraphQLResponse<AddTextData>))]
+[JsonSerializable(typeof(AddText))]
+[JsonSerializable(typeof(AddKeyedTextVariables))]
+[JsonSerializable(typeof(AddKeyedTextData))]
+[JsonSerializable(typeof(GraphQLResponse<AddKeyedTextData>))]
+[JsonSerializable(typeof(AddKeyedText))]
+[JsonSerializable(typeof(AddTextByTagsVariables))]
+[JsonSerializable(typeof(AddTextByTagsData))]
+[JsonSerializable(typeof(GraphQLResponse<AddTextByTagsData>))]
+[JsonSerializable(typeof(AddTextByTags))]
+[JsonSerializable(typeof(AddKeyedTextByTagsVariables))]
+[JsonSerializable(typeof(AddKeyedTextByTagsData))]
+[JsonSerializable(typeof(GraphQLResponse<AddKeyedTextByTagsData>))]
+[JsonSerializable(typeof(AddKeyedTextByTags))]
+[JsonSerializable(typeof(LogVariables))]
+[JsonSerializable(typeof(LogData))]
+[JsonSerializable(typeof(GraphQLResponse<LogData>))]
+public partial class GraphQLOperationsJsonSerializerContext : JsonSerializerContext { }
+
 public static partial class GraphQLOperations
 {
+    public static GetConfigurationData GetConfiguration()
+    {
+        var request = new GraphQLRequest<GetConfigurationVariables>
+        {
+            Query = """
+                query GetConfiguration {
+                  configuration {
+                    id
+                    projectName
+                    outputPath
+                    minimalWorkingExample
+                    buildWithoutDocker
+                  }
+                }
+                """,
+            OperationName = "GetConfiguration",
+            Variables = new GetConfigurationVariables() { },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
+            response,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetConfigurationData
+        );
+        return result?.Data;
+    }
+
     public static GetFilesData GetFiles(List<string>? whitelist, List<string>? blacklist)
     {
         var request = new GraphQLRequest<GetFilesVariables>
@@ -28,7 +111,7 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetFilesData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFilesData
         );
         return result?.Data;
     }
@@ -53,7 +136,7 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetFileContentsData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFileContentsData
         );
         return result?.Data;
     }
@@ -80,7 +163,7 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddFileData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddFileData
         );
         return result?.Data;
     }
@@ -103,7 +186,7 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextData
         );
         return result?.Data;
     }
@@ -131,7 +214,7 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextData
         );
         return result?.Data;
     }
@@ -154,7 +237,7 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextByTagsData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextByTagsData
         );
         return result?.Data;
     }
@@ -186,7 +269,7 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextByTagsData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextByTagsData
         );
         return result?.Data;
     }
@@ -212,52 +295,10 @@ public static partial class GraphQLOperations
         var response = Imports.GraphQL(request);
         var result = JsonSerializer.Deserialize<GraphQLResponse<LogData>>(
             response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseLogData
         );
         return result?.Data;
     }
-
-    public static GetConfigurationData GetConfiguration()
-    {
-        var request = new GraphQLRequest<GetConfigurationVariables>
-        {
-            Query = """
-                query GetConfiguration {
-                  configuration {
-                    id
-                    projectName
-                    outputPath
-                    minimalWorkingExample
-                    buildWithoutDocker
-                  }
-                }
-                """,
-            OperationName = "GetConfiguration",
-            Variables = new GetConfigurationVariables() { },
-        };
-
-        var response = Imports.GraphQL(request);
-        var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
-            response,
-            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
-        );
-        return result?.Data;
-    }
-}
-
-public class GraphQLResponse<T>
-{
-    [JsonPropertyName("data")]
-    public T? Data { get; set; }
-
-    [JsonPropertyName("errors")]
-    public List<GraphQLError>? Errors { get; set; }
-}
-
-public class GraphQLError
-{
-    [JsonPropertyName("message")]
-    public string Message { get; set; }
 }
 
 public enum FileKind
@@ -289,6 +330,32 @@ public class CaretTagInput
 
     [JsonPropertyName("value")]
     public required string Value { get; set; }
+}
+
+public class GetConfigurationData
+{
+    [JsonPropertyName("configuration")]
+    public required GetConfiguration Configuration { get; set; }
+}
+
+public class GetConfigurationVariables { }
+
+public class GetConfiguration
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    [JsonPropertyName("projectName")]
+    public required string ProjectName { get; set; }
+
+    [JsonPropertyName("outputPath")]
+    public required string OutputPath { get; set; }
+
+    [JsonPropertyName("minimalWorkingExample")]
+    public required bool MinimalWorkingExample { get; set; }
+
+    [JsonPropertyName("buildWithoutDocker")]
+    public bool? BuildWithoutDocker { get; set; }
 }
 
 public class GetFilesData
@@ -460,30 +527,4 @@ public class LogVariables
 
     [JsonPropertyName("arguments")]
     public List<string>? Arguments { get; set; }
-}
-
-public class GetConfigurationData
-{
-    [JsonPropertyName("configuration")]
-    public required GetConfiguration Configuration { get; set; }
-}
-
-public class GetConfigurationVariables { }
-
-public class GetConfiguration
-{
-    [JsonPropertyName("id")]
-    public required string Id { get; set; }
-
-    [JsonPropertyName("projectName")]
-    public required string ProjectName { get; set; }
-
-    [JsonPropertyName("outputPath")]
-    public required string OutputPath { get; set; }
-
-    [JsonPropertyName("minimalWorkingExample")]
-    public required bool MinimalWorkingExample { get; set; }
-
-    [JsonPropertyName("buildWithoutDocker")]
-    public bool? BuildWithoutDocker { get; set; }
 }
