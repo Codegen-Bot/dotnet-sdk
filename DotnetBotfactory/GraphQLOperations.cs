@@ -335,16 +335,16 @@ public class CaretTagInput
 public class GetFilesData
 {
     [JsonPropertyName("files")]
-    public List<GetFiles>? Files { get; set; }
+    public required List<GetFiles>? Files { get; set; }
 }
 
 public class GetFilesVariables
 {
     [JsonPropertyName("whitelist")]
-    public List<string>? Whitelist { get; set; }
+    public required List<string>? Whitelist { get; set; }
 
     [JsonPropertyName("blacklist")]
-    public List<string>? Blacklist { get; set; }
+    public required List<string>? Blacklist { get; set; }
 }
 
 public class GetFiles
@@ -360,7 +360,7 @@ public class GetFiles
 public class GetFileContentsData
 {
     [JsonPropertyName("readTextFile")]
-    public string? ReadTextFile { get; set; }
+    public required string? ReadTextFile { get; set; }
 }
 
 public class GetFileContentsVariables
@@ -442,13 +442,13 @@ public class AddKeyedText
 public class AddTextByTagsData
 {
     [JsonPropertyName("addTextByTags")]
-    public List<AddTextByTags>? AddTextByTags { get; set; }
+    public required List<AddTextByTags>? AddTextByTags { get; set; }
 }
 
 public class AddTextByTagsVariables
 {
     [JsonPropertyName("tags")]
-    public List<CaretTagInput>? Tags { get; set; }
+    public required List<CaretTagInput>? Tags { get; set; }
 
     [JsonPropertyName("textAndCarets")]
     public string TextAndCarets { get; set; }
@@ -463,7 +463,7 @@ public class AddTextByTags
 public class AddKeyedTextByTagsData
 {
     [JsonPropertyName("addKeyedTextByTags")]
-    public List<AddKeyedTextByTags>? AddKeyedTextByTags { get; set; }
+    public required List<AddKeyedTextByTags>? AddKeyedTextByTags { get; set; }
 }
 
 public class AddKeyedTextByTagsVariables
@@ -472,7 +472,7 @@ public class AddKeyedTextByTagsVariables
     public string Key { get; set; }
 
     [JsonPropertyName("tags")]
-    public List<CaretTagInput>? Tags { get; set; }
+    public required List<CaretTagInput>? Tags { get; set; }
 
     [JsonPropertyName("textAndCarets")]
     public string TextAndCarets { get; set; }
@@ -500,7 +500,7 @@ public class LogVariables
     public string Message { get; set; }
 
     [JsonPropertyName("arguments")]
-    public List<string>? Arguments { get; set; }
+    public required List<string>? Arguments { get; set; }
 }
 
 public class GetConfigurationData
@@ -526,5 +526,5 @@ public class GetConfiguration
     public bool MinimalWorkingExample { get; set; }
 
     [JsonPropertyName("buildWithoutDocker")]
-    public bool? BuildWithoutDocker { get; set; }
+    public required bool? BuildWithoutDocker { get; set; }
 }
