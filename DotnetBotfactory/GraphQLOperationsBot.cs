@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.IO;
 using System.Linq;
 using CodegenBot;
@@ -21,10 +22,38 @@ public class GraphQLOperationsBot : IMiniBot
         var metadata = new GraphQLMetadata();
         
         Imports.Log(new LogEvent() { Level = LogEventLevel.Information, Message = "Found {FileCount} GraphQL files", Args = [files?.Count.ToString() ?? "0"] });
-        
-        foreach (var file in files ?? [])
+
+        var schema = GraphQLOperations.GetSchema($"{configuration.OutputPath}/bot.json");
+
+        string? schemaPath = null;
+        if (schema.BotSpec?.DependenciesSchemaPath is not null && schema.BotSchema is not null)
         {
-            var fileContents = GraphQLOperations.GetFileContents(file.Path, FileVersion.HEAD).ReadTextFile;
+            schemaPath = Path.Combine(configuration.OutputPath, schema.BotSpec?.DependenciesSchemaPath!)
+                .Replace("\\", "/");
+            GraphQLOperations.AddFile(schemaPath,
+                schema.BotSchema!);
+        }
+
+        files ??= new();
+        if (schemaPath is not null && !files.Any(file => file.Path == schemaPath))
+        {
+            files.Add(new GetFiles() { Path = schemaPath, Kind = FileKind.TEXT });
+        }
+        
+        foreach (var file in files)
+        {
+            string? fileContents = null;
+            if (file.Path == schemaPath)
+            {
+                fileContents = schema.BotSchema;
+            }
+            
+            if (fileContents is null)
+            {
+                fileContents = GraphQLOperations.GetFileContents(file.Path, FileVersion.HEAD).ReadTextFile
+                               ?? GraphQLOperations.GetFileContents(file.Path, null).ReadTextFile;
+            }
+            
             if (fileContents is null)
             {
                 Imports.Log(new LogEvent()
@@ -44,7 +73,7 @@ public class GraphQLOperationsBot : IMiniBot
             });
         }
         
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/GraphQLOperations.cs",
+        GraphQLOperations.AddFile($"{configuration.OutputPath}/GraphQLClient.cs",
             $$""""
               using System;
               using System.Collections.Generic;
@@ -54,11 +83,6 @@ public class GraphQLOperationsBot : IMiniBot
               using CodegenBot;
               
               namespace {{rootNamespace}};
-              
-              public static partial class GraphQLOperations
-              {
-              {{CaretRef.New(out var operations)}}
-              }
               
               public class GraphQLResponse<T>
               {
@@ -72,7 +96,7 @@ public class GraphQLOperationsBot : IMiniBot
               public class GraphQLError
               {
                   [JsonPropertyName("message")]
-                  public string Message { get; set; }
+                  public required string Message { get; set; }
               }
               
               [JsonSerializable(typeof(GraphQLError))]
@@ -81,22 +105,16 @@ public class GraphQLOperationsBot : IMiniBot
               {
               }
               
+              public static partial class GraphQLOperations
+              {
+              {{CaretRef.New(out var operations)}}
+              }
+              
               {{CaretRef.New(out var typeDefinitions)}}
 
               """");
 
-        // TODO - do we do this?
-        //[JsonSerializable(typeof(GraphQLResponse<>))]
-        foreach (var objectType in metadata.ObjectTypes)
-        {
-            Imports.Log(new LogEvent()
-            {
-                Level = LogEventLevel.Debug, Message = "Found object type {Type}",
-                Args = [objectType.Name]
-            });
-        }
-        
-        foreach (var enumType in metadata.Enumerations)
+        foreach (var enumType in metadata.Enumerations.OrderBy(x => x.Name))
         {
             GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
                 $"""
@@ -120,7 +138,7 @@ public class GraphQLOperationsBot : IMiniBot
             }
         }
         
-        foreach (var inputObjectType in metadata.InputObjectTypes)
+        foreach (var inputObjectType in metadata.InputObjectTypes.OrderBy(x => x.Name))
         {
             GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
                 $"""
@@ -151,7 +169,7 @@ public class GraphQLOperationsBot : IMiniBot
             }
         }
 
-        foreach (var operation in metadata.Operations)
+        foreach (var operation in metadata.Operations.OrderBy(x => x.Name))
         {
             if (string.IsNullOrWhiteSpace(operation.Name))
             {
@@ -190,7 +208,7 @@ public class GraphQLOperationsBot : IMiniBot
                    
                        var response = Imports.GraphQL(request);
                        var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLOperationsJsonSerializerContext.Default.GraphQLResponse{{operation.Name.Pascalize()}}Data);
-                       return result?.Data;
+                       return result?.Data ?? throw new InvalidOperationException("Received null data for request {{operation.Name.Pascalize()}}.");
                    }
                    """");
 
@@ -227,7 +245,7 @@ public class GraphQLOperationsBot : IMiniBot
 
                                                               """);
                     GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
-                                                              [JsonConverter(typeof(JsonStringEnumConverter))]
+                                                              [JsonConverter(typeof(JsonStringEnumConverter<{{type.TrimEnd('?')}}>))]
                                                               [JsonPropertyName("{{variable.Name}}")]
                                                               public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
@@ -297,7 +315,7 @@ public class GraphQLOperationsBot : IMiniBot
                         GraphQLOperations.AddText(properties.Id,
                             $$"""
 
-                              [JsonConverter(typeof(JsonStringEnumConverter))]
+                              [JsonConverter(typeof(JsonStringEnumConverter<{{type.TrimEnd('?')}}>))]
                               [JsonPropertyName("{{selection.Name}}")]
                               public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
 
@@ -426,33 +444,33 @@ public class GraphQLOperationsBot : IMiniBot
             if (type.Name == "String")
             {
                 isEnum = false;
-                return "string";
+                return "string?";
             }
 
             if (type.Name == "Boolean")
             {
                 isEnum = false;
-                return "bool";
+                return "bool?";
             }
 
             if (type.Name == "Integer")
             {
                 isEnum = false;
-                return "int";
+                return "int?";
             }
 
             var enumType = metadata.Enumerations.FirstOrDefault(enumType => enumType.Name == type.Name);
             if (enumType is not null)
             {
                 isEnum = true;
-                return enumType.Name.Pascalize();
+                return enumType.Name.Pascalize() + "?";
             }
             
             var objectType = metadata.InputObjectTypes.FirstOrDefault(objType => objType.Name == type.Name);
             if (objectType is not null)
             {
                 isEnum = false;
-                return objectType.Name;
+                return objectType.Name + "?";
             }
 
             GraphQLOperations.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
@@ -463,7 +481,7 @@ public class GraphQLOperationsBot : IMiniBot
 
         string GetIsRequired(string typeRef)
         {
-            if (typeRef.EndsWith("?"))
+            if (!typeRef.EndsWith("?"))
             {
                 return "required ";
             }

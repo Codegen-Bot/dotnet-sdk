@@ -7,3 +7,13 @@ query GetConfiguration {
         buildWithoutDocker
     }
 }
+
+query GetSchema($botFilePath: String!) {
+    botSchema(botFilePath: $botFilePath)
+}
+
+query GetBotSpec($botFilePath: String!) {
+    botSpec(botFilePath: $botFilePath) {
+        dependenciesSchemaPath
+    }
+}
