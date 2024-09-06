@@ -41,9 +41,5 @@ type Configuration {
     """
     The version of .NET to use in this bot
     """
-    dotnetVersion: DotNetVersion!
-}
-
-enum DotNetVersion {
-    NET8
+    dotnetVersion: String!
 }
