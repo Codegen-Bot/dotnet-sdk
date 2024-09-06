@@ -140,11 +140,12 @@ public class GraphQLOperationsBot : IMiniBot
 
             foreach (var field in inputObjectType.Fields)
             {
+                var type = GetVariableCSharpType(field.Type, out var _);
                 GraphQLOperations.AddText(properties.Id,
                     $$"""
 
                       [JsonPropertyName("{{field.Name}}")]
-                      public {{GetVariableCSharpType(field.Type, out var _)}} {{field.Name.Pascalize()}} { get; set; }
+                      public {{GetIsRequired(type)}} {{type}} {{field.Name.Pascalize()}} { get; set; }
 
                       """);
             }
@@ -188,7 +189,7 @@ public class GraphQLOperationsBot : IMiniBot
                        };
                    
                        var response = Imports.GraphQL(request);
-                       var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLOperationsJsonSerializationContext.GraphQLResponseOf{{operation.Name.Pascalize()}}Data);
+                       var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLOperationsJsonSerializerContext.Default.GraphQLResponse{{operation.Name.Pascalize()}}Data);
                        return result?.Data;
                    }
                    """");
@@ -228,7 +229,7 @@ public class GraphQLOperationsBot : IMiniBot
                     GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
                                                               [JsonConverter(typeof(JsonStringEnumConverter))]
                                                               [JsonPropertyName("{{variable.Name}}")]
-                                                              public {{type}} {{variable.Name.Pascalize()}} { get; set; }
+                                                              public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
                                                               """);
                 }
@@ -240,7 +241,7 @@ public class GraphQLOperationsBot : IMiniBot
                                                               """);
                     GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
                                                                                 [JsonPropertyName("{{variable.Name}}")]
-                                                                                public {{type}} {{variable.Name.Pascalize()}} { get; set; }
+                                                                                public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
                                                                                 """);
                 }
@@ -298,7 +299,7 @@ public class GraphQLOperationsBot : IMiniBot
 
                               [JsonConverter(typeof(JsonStringEnumConverter))]
                               [JsonPropertyName("{{selection.Name}}")]
-                              public {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
+                              public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
 
                               """);
                     }
@@ -308,7 +309,7 @@ public class GraphQLOperationsBot : IMiniBot
                             $$"""
 
                               [JsonPropertyName("{{selection.Name}}")]
-                              public {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
+                              public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
 
                               """);
                     }
@@ -458,6 +459,16 @@ public class GraphQLOperationsBot : IMiniBot
             
             isEnum = false;
             return "???";
+        }
+
+        string GetIsRequired(string typeRef)
+        {
+            if (typeRef.EndsWith("?"))
+            {
+                return "required ";
+            }
+
+            return "";
         }
     }
 }
