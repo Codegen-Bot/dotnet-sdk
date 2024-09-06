@@ -235,7 +235,7 @@ public static partial class GraphQLOperations
             );
     }
 
-    public static GetFileContentsData GetFileContents(string textFilePath, FileVersion fileVersion)
+    public static GetFileContentsData GetFileContents(string textFilePath, FileVersion? fileVersion)
     {
         var request = new GraphQLRequest<GetFileContentsVariables>
         {
@@ -497,7 +497,7 @@ public class GetFileContentsVariables
 
     [JsonConverter(typeof(JsonStringEnumConverter<FileVersion>))]
     [JsonPropertyName("fileVersion")]
-    public required FileVersion FileVersion { get; set; }
+    public FileVersion? FileVersion { get; set; }
 }
 
 public class GetFilesData
