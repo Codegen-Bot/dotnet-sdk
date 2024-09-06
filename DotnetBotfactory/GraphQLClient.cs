@@ -47,9 +47,6 @@ public class GraphQLError
 [JsonSerializable(typeof(AddTextByTagsData))]
 [JsonSerializable(typeof(GraphQLResponse<AddTextByTagsData>))]
 [JsonSerializable(typeof(AddTextByTags))]
-[JsonSerializable(typeof(GetBotSpecVariables))]
-[JsonSerializable(typeof(GetBotSpecData))]
-[JsonSerializable(typeof(GraphQLResponse<GetBotSpecData>))]
 [JsonSerializable(typeof(GetConfigurationVariables))]
 [JsonSerializable(typeof(GetConfigurationData))]
 [JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
@@ -211,30 +208,6 @@ public static partial class GraphQLOperations
             ?? throw new InvalidOperationException("Received null data for request AddTextByTags.");
     }
 
-    public static GetBotSpecData GetBotSpec(string botFilePath)
-    {
-        var request = new GraphQLRequest<GetBotSpecVariables>
-        {
-            Query = """
-                query GetBotSpec($botFilePath: String!) {
-                  botSpec(botFilePath: $botFilePath) {
-                    dependenciesSchemaPath
-                  }
-                }
-                """,
-            OperationName = "GetBotSpec",
-            Variables = new GetBotSpecVariables() { BotFilePath = botFilePath },
-        };
-
-        var response = Imports.GraphQL(request);
-        var result = JsonSerializer.Deserialize<GraphQLResponse<GetBotSpecData>>(
-            response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetBotSpecData
-        );
-        return result?.Data
-            ?? throw new InvalidOperationException("Received null data for request GetBotSpec.");
-    }
-
     public static GetConfigurationData GetConfiguration()
     {
         var request = new GraphQLRequest<GetConfigurationVariables>
@@ -325,6 +298,9 @@ public static partial class GraphQLOperations
             Query = """
                 query GetSchema($botFilePath: String!) {
                   botSchema(botFilePath: $botFilePath)
+                  botSpec(botFilePath: $botFilePath) {
+                    dependenciesSchemaPath
+                  }
                 }
                 """,
             OperationName = "GetSchema",
@@ -508,14 +484,6 @@ public class AddTextByTags
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
-}
-
-public class GetBotSpecData { }
-
-public class GetBotSpecVariables
-{
-    [JsonPropertyName("botFilePath")]
-    public required string BotFilePath { get; set; }
 }
 
 public class GetConfigurationData
