@@ -228,6 +228,7 @@ public static partial class GraphQLOperations
                     dotnetVersion
                     copybots {
                       name
+                      inputDirectory
                       whitelist
                       searchAndReplace {
                         needle
@@ -555,6 +556,9 @@ public class GetConfigurationConfiguration
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
+
+    [JsonPropertyName("inputDirectory")]
+    public required string InputDirectory { get; set; }
 
     [JsonPropertyName("whitelist")]
     public List<string>? Whitelist { get; set; }
