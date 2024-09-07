@@ -23,6 +23,7 @@ public class GraphQLError
 }
 
 [JsonSerializable(typeof(GraphQLError))]
+[JsonSerializable(typeof(DotnetCopybotSearchReplaceVariant))]
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
@@ -52,6 +53,8 @@ public class GraphQLError
 [JsonSerializable(typeof(GetConfigurationData))]
 [JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
 [JsonSerializable(typeof(GetConfiguration))]
+[JsonSerializable(typeof(GetConfigurationConfiguration))]
+[JsonSerializable(typeof(GetConfigurationConfigurationCopybots))]
 [JsonSerializable(typeof(GetFileContentsVariables))]
 [JsonSerializable(typeof(GetFileContentsData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFileContentsData>))]
@@ -223,6 +226,15 @@ public static partial class GraphQLOperations
                     minimalWorkingExample
                     buildWithoutDocker
                     dotnetVersion
+                    copybots {
+                      name
+                      whitelist
+                      searchAndReplace {
+                        needle
+                        replacement
+                        variants
+                      }
+                    }
                   }
                 }
                 """,
@@ -345,6 +357,15 @@ public static partial class GraphQLOperations
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request Log.");
     }
+}
+
+public enum DotnetCopybotSearchReplaceVariant
+{
+    CamelCase,
+    SnakeCase,
+    KebabCase,
+    LowerCase,
+    UpperCase,
 }
 
 public enum FileKind
@@ -525,6 +546,34 @@ public class GetConfiguration
 
     [JsonPropertyName("dotnetVersion")]
     public required string DotnetVersion { get; set; }
+
+    [JsonPropertyName("copybots")]
+    public List<GetConfigurationConfiguration>? Copybots { get; set; }
+}
+
+public class GetConfigurationConfiguration
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("whitelist")]
+    public List<string>? Whitelist { get; set; }
+
+    [JsonPropertyName("searchAndReplace")]
+    public List<GetConfigurationConfigurationCopybots>? SearchAndReplace { get; set; }
+}
+
+public class GetConfigurationConfigurationCopybots
+{
+    [JsonPropertyName("needle")]
+    public required string Needle { get; set; }
+
+    [JsonPropertyName("replacement")]
+    public required string Replacement { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter<List<DotnetCopybotSearchReplaceVariant>>))]
+    [JsonPropertyName("variants")]
+    public List<DotnetCopybotSearchReplaceVariant>? Variants { get; set; }
 }
 
 public class GetFileContentsData
