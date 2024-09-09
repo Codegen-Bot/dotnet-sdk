@@ -19,3 +19,5 @@ docker run -v .:/src codegenbot/dotnet-bot-builder:net8.0
 ```
 
 If the above docker container doesn't work, take a look at [the Dockerfile that builds that container](https://github.com/Codegen-Bot/dotnet-sdk/blob/master/CodegenBot.Builder/Dockerfile) for ideas.
+
+The above command specifically won't work if there are ProjectReferences in the bot's csproj file.

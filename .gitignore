@@ -2,6 +2,7 @@
 **/obj/**/*
 **/.idea/**/*
 *.wasm
+*.sln.DotSettings.user
 
 *.log
 *.DotSettings
