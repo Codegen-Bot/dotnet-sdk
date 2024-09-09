@@ -57,6 +57,7 @@ public class CSharpBot : IMiniBot
                 <ItemGroup>
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
                   <PackageReference Include="CodegenBot" Version="1.1.0-alpha.89" />
+                  <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
                   {{CaretRef.New(out var packageRefs)}}
                 </ItemGroup>
               </Project>

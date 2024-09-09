@@ -125,16 +125,20 @@ public class GraphQLOperationsBot : IMiniBot
             GraphQLOperations.AddText(typeDefinitions.Id,
                 $$"""
 
+                  [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
                   public enum {{enumType.Name.Pascalize()}}
                   {
-                      {{CaretRef.New(out var enumValues, separator: ", ")}}
+                      {{CaretRef.New(out var enumValues)}}
                   }
 
                   """);
             
             foreach (var value in enumType.Values)
             {
-                GraphQLOperations.AddText(enumValues.Id, value.Name);
+                GraphQLOperations.AddText(enumValues.Id, $$"""
+                                                           [EnumMember(Value = "{{value.Name}}")]
+                                                           {{value.Name}},
+                                                           """);
             }
         }
         
@@ -235,23 +239,23 @@ public class GraphQLOperationsBot : IMiniBot
             
             foreach (var variable in operation.Variables)
             {
-                var type = GetVariableCSharpType(variable.Type, out var isEnum);
+                var type = GetVariableCSharpType(variable.Type, out var enumName);
                 GraphQLOperations.AddText(parameters.Id, $$"""{{type}} {{variable.Name}}""");
 
-                if (isEnum)
-                {
-                    GraphQLOperations.AddText(variables.Id, $$"""
-                                                              {{variable.Name.Pascalize()}} = {{variable.Name}}
-
-                                                              """);
-                    GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
-                                                              [JsonConverter(typeof(JsonStringEnumConverter<{{type.TrimEnd('?')}}>))]
-                                                              [JsonPropertyName("{{variable.Name}}")]
-                                                              public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
-
-                                                              """);
-                }
-                else
+//                 if (enumName is not null)
+//                 {
+//                     GraphQLOperations.AddText(variables.Id, $$"""
+//                                                               {{variable.Name.Pascalize()}} = {{variable.Name}}
+//
+//                                                               """);
+//                     GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
+//                                                               [JsonConverter(typeof(JsonStringEnumConverter<{{enumName}}>))]
+//                                                               [JsonPropertyName("{{variable.Name}}")]
+//                                                               public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
+//
+//                                                               """);
+//                 }
+//                 else
                 {
                     GraphQLOperations.AddText(variables.Id, $$"""
                                                               {{variable.Name.Pascalize()}} = {{variable.Name}}
@@ -310,18 +314,18 @@ public class GraphQLOperationsBot : IMiniBot
                 {
                     var type = GetSelectionType(path, fieldSelection, field.Type, out var isEnum);
 
-                    if (isEnum)
-                    {
-                        GraphQLOperations.AddText(properties.Id,
-                            $$"""
-
-                              [JsonConverter(typeof(JsonStringEnumConverter<{{type.TrimEnd('?')}}>))]
-                              [JsonPropertyName("{{selection.Name}}")]
-                              public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
-
-                              """);
-                    }
-                    else
+                    // if (isEnum)
+                    // {
+                    //     GraphQLOperations.AddText(properties.Id,
+                    //         $$"""
+                    //
+                    //           [JsonConverter(typeof(JsonStringEnumConverter<{{type.TrimEnd('?')}}>))]
+                    //           [JsonPropertyName("{{selection.Name}}")]
+                    //           public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
+                    //
+                    //           """);
+                    // }
+                    // else
                     {
                         GraphQLOperations.AddText(properties.Id,
                             $$"""
@@ -423,11 +427,11 @@ public class GraphQLOperationsBot : IMiniBot
             return "???";
         }
 
-        string GetVariableCSharpType(TypeRef type, out bool isEnum)
+        string GetVariableCSharpType(TypeRef type, out string? enumName)
         {
             if (type.Name == "NotNull")
             {
-                var result = GetVariableCSharpType(type.GenericArguments[0], out isEnum);
+                var result = GetVariableCSharpType(type.GenericArguments[0], out enumName);
                 if (result.EndsWith("?"))
                 {
                     result = result.Substring(0, result.Length - 1);
@@ -438,44 +442,44 @@ public class GraphQLOperationsBot : IMiniBot
 
             if (type.Name == "List")
             {
-                return $"List<{GetVariableCSharpType(type.GenericArguments[0], out isEnum)}>?";
+                return $"List<{GetVariableCSharpType(type.GenericArguments[0], out enumName)}>?";
             }
 
             if (type.Name == "String")
             {
-                isEnum = false;
+                enumName = null;
                 return "string?";
             }
 
             if (type.Name == "Boolean")
             {
-                isEnum = false;
+                enumName = null;
                 return "bool?";
             }
 
             if (type.Name == "Integer")
             {
-                isEnum = false;
+                enumName = null;
                 return "int?";
             }
 
             var enumType = metadata.Enumerations.FirstOrDefault(enumType => enumType.Name == type.Name);
             if (enumType is not null)
             {
-                isEnum = true;
+                enumName = enumType.Name.Pascalize();
                 return enumType.Name.Pascalize() + "?";
             }
             
             var objectType = metadata.InputObjectTypes.FirstOrDefault(objType => objType.Name == type.Name);
             if (objectType is not null)
             {
-                isEnum = false;
+                enumName = null;
                 return objectType.Name + "?";
             }
 
             GraphQLOperations.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
             
-            isEnum = false;
+            enumName = null;
             return "???";
         }
 
