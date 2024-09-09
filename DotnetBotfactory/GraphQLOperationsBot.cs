@@ -80,6 +80,7 @@ public class GraphQLOperationsBot : IMiniBot
               using System.Linq;
               using System.Text.Json;
               using System.Text.Json.Serialization;
+              using System.Runtime.Serialization;
               using CodegenBot;
               
               namespace {{rootNamespace}};
