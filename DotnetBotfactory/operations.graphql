@@ -6,6 +6,16 @@ query GetConfiguration {
         minimalWorkingExample
         buildWithoutDocker
         dotnetVersion
+        copybots {
+            name
+            inputDirectory
+            whitelist
+            searchAndReplace {
+                needle
+                replacement
+                variants
+            }
+        }
     }
 }
 

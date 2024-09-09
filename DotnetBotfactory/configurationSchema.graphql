@@ -18,6 +18,8 @@ type Configuration {
       in their ID.
     - Choose a bot ID that starts with bot://hub/. Other bot ID prefixes, like bot://core/,
       are reserved for future Codegen Bot releases.
+    - Bot IDs are usually lower case
+    - If the bot is for generated a specific file name or file extension, that can be included in the bot ID.
     """
     id: String!
     """
@@ -39,7 +41,33 @@ type Configuration {
     """
     buildWithoutDocker: Boolean
     """
-    The version of .NET to use in this bot
+    The version of .NET to use in this bot. Currently the only supported value is just '8'.
+    As future versions of .NET are released and we add support for them, this value will become
+    important.
     """
     dotnetVersion: String!
+    copybots: [DotnetCopybot!]
+}
+
+type DotnetCopybot
+{
+    name: String!
+    inputDirectory: String!
+    whitelist: [String!]!
+    searchAndReplace: [DotnetCopybotSearchReplace!]
+}
+
+type DotnetCopybotSearchReplace {
+    needle: String!
+    replacement: String!
+    variants: [DotnetCopybotSearchReplaceVariant!]
+}
+
+enum DotnetCopybotSearchReplaceVariant
+{
+    CamelCase,
+    SnakeCase,
+    KebabCase,
+    LowerCase,
+    UpperCase,
 }
