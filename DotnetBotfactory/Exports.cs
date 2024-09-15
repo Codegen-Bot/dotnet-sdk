@@ -28,6 +28,7 @@ public class Exports
             [
                 new CSharpBot(),
                 new GraphQLOperationsBot(),
+                new CopyBot(),
             ];
 
             // Run each minibot in order

@@ -36,11 +36,6 @@ type Configuration {
     """
     minimalWorkingExample: Boolean!
     """
-    If true, excludes the bits for building without docker.
-    If this is false or null then those bits are included.
-    """
-    buildWithoutDocker: Boolean
-    """
     The version of .NET to use in this bot. Currently the only supported value is just '8'.
     As future versions of .NET are released and we add support for them, this value will become
     important.

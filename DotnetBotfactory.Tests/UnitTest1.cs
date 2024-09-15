@@ -1,13 +1,5 @@
 namespace DotnetBotfactory.Tests;
 
-public class TemplateReverseEngineer
-{
-    public string GetTemplateSourceCode(IReadOnlyList<TemplateVariant> templates)
-    {
-        
-    }
-}
-
 public class TemplateVariant
 {
     public string Value { get; set; }

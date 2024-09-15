@@ -4,7 +4,7 @@ using CodegenBot;
 
 namespace DotnetBotfactory;
 
-public class CopyMiniBot : IMiniBot
+public class CopyBot : IMiniBot
 {
     public void Execute()
     {
