@@ -225,7 +225,6 @@ public static partial class GraphQLOperations
                     projectName
                     outputPath
                     minimalWorkingExample
-                    buildWithoutDocker
                     dotnetVersion
                     copybots {
                       name
@@ -572,9 +571,6 @@ public class GetConfiguration
 
     [JsonPropertyName("minimalWorkingExample")]
     public required bool MinimalWorkingExample { get; set; }
-
-    [JsonPropertyName("buildWithoutDocker")]
-    public bool? BuildWithoutDocker { get; set; }
 
     [JsonPropertyName("dotnetVersion")]
     public required string DotnetVersion { get; set; }
