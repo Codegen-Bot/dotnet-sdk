@@ -62,7 +62,7 @@
     },
     {
       "botId": "bot://hub/dotnet/botfactory",
-      "botVersion": "0.0.1-alpha43",
+      "botVersion": "0.0.1-alpha46",
       "configuration": {
         "id": "bot://hub/dotnet/botfactory",
         "outputPath": "DotnetBotfactory",

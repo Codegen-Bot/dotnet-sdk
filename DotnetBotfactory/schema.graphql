@@ -13,6 +13,7 @@ type BotSpec @source(name: "BotSpec", schema: "schema") {
   dependentSchemaPath: String
   dependencies: [KeyValuePairOfStringAndString!]!
   private: Boolean
+  exec: [KeyValuePairOfStringAndString!]
 }
 
 type Caret @source(name: "Caret", schema: "output") {
