@@ -24,7 +24,7 @@ public class GraphQLError
 }
 
 [JsonSerializable(typeof(GraphQLError))]
-[JsonSerializable(typeof(DotnetCopybotSearchReplaceVariant))]
+[JsonSerializable(typeof(DotnetCopybotStringVariant))]
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
@@ -230,9 +230,9 @@ public static partial class GraphQLOperations
                       name
                       inputDirectory
                       whitelist
-                      searchAndReplace {
+                      fieldDefinitions {
                         needle
-                        replacement
+                        fieldName
                         variants
                       }
                     }
@@ -361,7 +361,7 @@ public static partial class GraphQLOperations
 }
 
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public enum DotnetCopybotSearchReplaceVariant
+public enum DotnetCopybotStringVariant
 {
     [EnumMember(Value = "CamelCase")]
     CamelCase,
@@ -590,8 +590,8 @@ public class GetConfigurationConfiguration
     [JsonPropertyName("whitelist")]
     public List<string>? Whitelist { get; set; }
 
-    [JsonPropertyName("searchAndReplace")]
-    public List<GetConfigurationConfigurationCopybots>? SearchAndReplace { get; set; }
+    [JsonPropertyName("fieldDefinitions")]
+    public List<GetConfigurationConfigurationCopybots>? FieldDefinitions { get; set; }
 }
 
 public class GetConfigurationConfigurationCopybots
@@ -599,11 +599,11 @@ public class GetConfigurationConfigurationCopybots
     [JsonPropertyName("needle")]
     public required string Needle { get; set; }
 
-    [JsonPropertyName("replacement")]
-    public required string Replacement { get; set; }
+    [JsonPropertyName("fieldName")]
+    public required string FieldName { get; set; }
 
     [JsonPropertyName("variants")]
-    public List<DotnetCopybotSearchReplaceVariant>? Variants { get; set; }
+    public List<DotnetCopybotStringVariant>? Variants { get; set; }
 }
 
 public class GetFileContentsData
