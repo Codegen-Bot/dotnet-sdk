@@ -9,9 +9,9 @@ query GetConfiguration {
             name
             inputDirectory
             whitelist
-            searchAndReplace {
+            fieldDefinitions {
                 needle
-                replacement
+                fieldName
                 variants
             }
         }

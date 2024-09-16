@@ -21,8 +21,6 @@ public class GraphQLOperationsBot : IMiniBot
 
         var metadata = new GraphQLMetadata();
         
-        Imports.Log(new LogEvent() { Level = LogEventLevel.Information, Message = "Found {FileCount} GraphQL files", Args = [files?.Count.ToString() ?? "0"] });
-
         var schema = GraphQLOperations.GetSchema($"{configuration.OutputPath}/bot.json");
 
         string? schemaPath = null;
@@ -65,12 +63,6 @@ public class GraphQLOperationsBot : IMiniBot
                 continue;
             }
             service.Extract(fileContents, metadata);
-            
-            Imports.Log(new LogEvent()
-            {
-                Level = LogEventLevel.Debug, Message = "Found GraphQL file {FilePath}: {Length} characters",
-                Args = [file.Path, fileContents.Length.ToString()]
-            });
         }
         
         GraphQLOperations.AddFile($"{configuration.OutputPath}/GraphQLClient.cs",

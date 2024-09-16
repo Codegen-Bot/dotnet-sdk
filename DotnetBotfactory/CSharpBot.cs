@@ -19,9 +19,9 @@ public class CSharpBot : IMiniBot
 
         GraphQLOperations.AddKeyedTextByTags("", [new CaretTagInput() { Name = "location", Value = ".gitignore" }],
             """
-            **/bin/**/*
-            **/obj/**/*
-            **/.idea/**/*
+            **/bin
+            **/obj
+            **/.idea
             *.wasm
             *.sln.DotSettings.user
             
@@ -58,6 +58,7 @@ public class CSharpBot : IMiniBot
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
                   <PackageReference Include="CodegenBot" Version="1.1.0-alpha.89" />
                   <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
+                  <PackageReference Include="Humanizer" Version="2.14.1" />
                   {{CaretRef.New(out var packageRefs)}}
                 </ItemGroup>
               </Project>
@@ -102,6 +103,7 @@ public class CSharpBot : IMiniBot
                  when codegen.bot prompts the bot user for each value.
                  """
                  outputPath: String!
+                 {{CaretRef.New(new CaretTag("outputPath", configuration.OutputPath), new CaretTag("location", "configurationSchema.graphql/Configuration"))}}
              }
 
              """");
@@ -183,6 +185,7 @@ public class CSharpBot : IMiniBot
               query GetConfiguration() {
                   configuration {
                       outputPath
+                      {{CaretRef.New(new CaretTag("outputPath", configuration.OutputPath), new CaretTag("location", "operations.graphql/GetConfiguration/configuration"))}}
                   }
               }
 
@@ -375,10 +378,12 @@ public class CSharpBot : IMiniBot
                         // Create all our minibots here
                         IMiniBot[] miniBots = [
                             // TODO - remove the ExampleMiniBot entry from this list because it creates a hello world file
-                            // that won't be useful in real life.
+                            // that won't be useful in real life, and could even be harmful if you're writing to configuration.OutputPath elsewhere,
+                            // or if you're assuming configuration.OutputPath is a directory and you're writing to files under it.
                             new ExampleMiniBot(),
+                            {{CaretRef.New(new CaretTag("outputPath", configuration.OutputPath), new CaretTag("location", "Exports.cs/miniBots"))}}
                         ];
-            
+
                         // Run each minibot in order
                         foreach (var miniBot in miniBots)
                         {
