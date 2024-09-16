@@ -369,8 +369,20 @@ public enum DotnetCopybotStringVariant
     [EnumMember(Value = "SnakeCase")]
     SnakeCase,
 
+    [EnumMember(Value = "UpperSnakeCase")]
+    UpperSnakeCase,
+
+    [EnumMember(Value = "LowerSnakeCase")]
+    LowerSnakeCase,
+
     [EnumMember(Value = "KebabCase")]
     KebabCase,
+
+    [EnumMember(Value = "UpperKebabCase")]
+    UpperKebabCase,
+
+    [EnumMember(Value = "LowerKebabCase")]
+    LowerKebabCase,
 
     [EnumMember(Value = "LowerCase")]
     LowerCase,
