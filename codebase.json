@@ -62,7 +62,7 @@
     },
     {
       "botId": "bot://hub/dotnet/botfactory",
-      "botVersion": "0.0.1-alpha46",
+      "botVersion": "0.0.1-alpha57",
       "configuration": {
         "id": "bot://hub/dotnet/botfactory",
         "outputPath": "DotnetBotfactory",
@@ -70,7 +70,8 @@
         "language": "CSHARP",
         "minimalWorkingExample": false,
         "buildWithoutDocker": true,
-        "dotnetVersion": "8"
+        "dotnetVersion": "DotNet8",
+        "copybots": []
       },
       "dependencies": [
         {
