@@ -11,4 +11,5 @@ type Configuration {
     when codegen.bot prompts the bot user for each value.
     """
     outputPath: String!
+    
 }
