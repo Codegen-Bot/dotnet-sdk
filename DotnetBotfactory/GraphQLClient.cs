@@ -25,6 +25,7 @@ public class GraphQLError
 
 [JsonSerializable(typeof(GraphQLError))]
 [JsonSerializable(typeof(DotnetCopybotStringVariant))]
+[JsonSerializable(typeof(DotnetVersion))]
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
@@ -392,6 +393,13 @@ public enum DotnetCopybotStringVariant
 }
 
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public enum DotnetVersion
+{
+    [EnumMember(Value = "DotNet8")]
+    DotNet8,
+}
+
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public enum FileKind
 {
     [EnumMember(Value = "BINARY")]
@@ -585,7 +593,7 @@ public class GetConfiguration
     public required bool MinimalWorkingExample { get; set; }
 
     [JsonPropertyName("dotnetVersion")]
-    public required string DotnetVersion { get; set; }
+    public required DotnetVersion DotnetVersion { get; set; }
 
     [JsonPropertyName("copybots")]
     public List<GetConfigurationConfiguration>? Copybots { get; set; }
