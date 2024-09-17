@@ -90,20 +90,22 @@ public class CSharpBot : IMiniBot
 
          GraphQLOperations.AddFile($"{configuration.OutputPath}/configurationSchema.graphql",
            $$""""
-             # This is where we put all configuration settings that are needed by this bot.
-             # This file can contain any number of types, but it is best to keep configuration simple
-             # and prefer convention over configuration. That helps keep bots easy to use, focused,
-             # and easy to refactor.
-             
-             # This is a special type. A non-nullable field of this type called "configuration" will be
-             # inserted in the query root type, so that this bot can access its configuration values.
+             """
+             This is a special type. A non-nullable field of this type called "configuration" will be
+             inserted in the query root type, so that this bot can access its configuration values.
+
+             This is where we put all configuration settings that are needed by this bot.
+             This file can contain any number of types, but it is best to keep configuration simple
+             and prefer convention over configuration. That helps keep bots easy to use, focused,
+             and easy to refactor.
+             """
              type Configuration {
                  """
                  It's best to add documentation strings for your fields, because they are displayed
                  when codegen.bot prompts the bot user for each value.
                  """
                  outputPath: String!
-                 {{CaretRef.New(new CaretTag("outputPath", configuration.OutputPath), new CaretTag("location", "configurationSchema.graphql/Configuration"))}}
+             {{CaretRef.New(new CaretTag("outputPath", configuration.OutputPath), new CaretTag("location", "configurationSchema.graphql/Configuration"))}}
              }
 
              """");
@@ -185,7 +187,7 @@ public class CSharpBot : IMiniBot
               query GetConfiguration() {
                   configuration {
                       outputPath
-                      {{CaretRef.New(new CaretTag("outputPath", configuration.OutputPath), new CaretTag("location", "operations.graphql/GetConfiguration/configuration"))}}
+              {{CaretRef.New(new CaretTag("outputPath", configuration.OutputPath), new CaretTag("location", "operations.graphql/GetConfiguration/configuration"))}}
                   }
               }
 

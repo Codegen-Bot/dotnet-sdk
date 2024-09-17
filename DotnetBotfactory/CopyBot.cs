@@ -132,7 +132,7 @@ public class CopyBot : IMiniBot
                 ],
                 $"""
                      {field}: String!
-                     
+                 
                  """);
 
             GraphQLOperations.AddTextByTags([
@@ -140,8 +140,8 @@ public class CopyBot : IMiniBot
                     new CaretTagInput() { Name = "location", Value = "operations.graphql/GetConfiguration/configuration" },
                 ],
                 $"""
-                     {field}
-                     
+                         {field}
+                 
                  """);
         }
     }
