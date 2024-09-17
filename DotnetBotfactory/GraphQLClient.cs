@@ -60,6 +60,9 @@ public class GraphQLError
 [JsonSerializable(typeof(GetFileContentsVariables))]
 [JsonSerializable(typeof(GetFileContentsData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFileContentsData>))]
+[JsonSerializable(typeof(GetFileContentsVersionVariables))]
+[JsonSerializable(typeof(GetFileContentsVersionData))]
+[JsonSerializable(typeof(GraphQLResponse<GetFileContentsVersionData>))]
 [JsonSerializable(typeof(GetFilesVariables))]
 [JsonSerializable(typeof(GetFilesData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
@@ -227,6 +230,7 @@ public static partial class GraphQLOperations
                     outputPath
                     minimalWorkingExample
                     dotnetVersion
+                    provideApi
                     copybots {
                       name
                       inputDirectory
@@ -255,21 +259,17 @@ public static partial class GraphQLOperations
             );
     }
 
-    public static GetFileContentsData GetFileContents(string textFilePath, FileVersion? fileVersion)
+    public static GetFileContentsData GetFileContents(string textFilePath)
     {
         var request = new GraphQLRequest<GetFileContentsVariables>
         {
             Query = """
-                query GetFileContents($textFilePath: String!, $fileVersion: FileVersion) {
-                  readTextFile(textFilePath: $textFilePath, fileVersion: $fileVersion)
+                query GetFileContents($textFilePath: String!) {
+                  readTextFile(textFilePath: $textFilePath)
                 }
                 """,
             OperationName = "GetFileContents",
-            Variables = new GetFileContentsVariables()
-            {
-                TextFilePath = textFilePath,
-                FileVersion = fileVersion,
-            },
+            Variables = new GetFileContentsVariables() { TextFilePath = textFilePath },
         };
 
         var response = Imports.GraphQL(request);
@@ -280,6 +280,37 @@ public static partial class GraphQLOperations
         return result?.Data
             ?? throw new InvalidOperationException(
                 "Received null data for request GetFileContents."
+            );
+    }
+
+    public static GetFileContentsVersionData GetFileContentsVersion(
+        string textFilePath,
+        FileVersion? fileVersion
+    )
+    {
+        var request = new GraphQLRequest<GetFileContentsVersionVariables>
+        {
+            Query = """
+                query GetFileContentsVersion($textFilePath: String!, $fileVersion: FileVersion) {
+                  readTextFile(textFilePath: $textFilePath, fileVersion: $fileVersion)
+                }
+                """,
+            OperationName = "GetFileContentsVersion",
+            Variables = new GetFileContentsVersionVariables()
+            {
+                TextFilePath = textFilePath,
+                FileVersion = fileVersion,
+            },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetFileContentsVersionData>>(
+            response,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFileContentsVersionData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException(
+                "Received null data for request GetFileContentsVersion."
             );
     }
 
@@ -595,6 +626,9 @@ public class GetConfiguration
     [JsonPropertyName("dotnetVersion")]
     public required DotnetVersion DotnetVersion { get; set; }
 
+    [JsonPropertyName("provideApi")]
+    public required bool ProvideApi { get; set; }
+
     [JsonPropertyName("copybots")]
     public List<GetConfigurationConfiguration>? Copybots { get; set; }
 }
@@ -633,6 +667,18 @@ public class GetFileContentsData
 }
 
 public class GetFileContentsVariables
+{
+    [JsonPropertyName("textFilePath")]
+    public required string TextFilePath { get; set; }
+}
+
+public class GetFileContentsVersionData
+{
+    [JsonPropertyName("readTextFile")]
+    public string? ReadTextFile { get; set; }
+}
+
+public class GetFileContentsVersionVariables
 {
     [JsonPropertyName("textFilePath")]
     public required string TextFilePath { get; set; }
