@@ -1,26 +1,30 @@
 query GetConfiguration {
-    configuration {
-        id
-        projectName
-        outputPath
-        minimalWorkingExample
-        dotnetVersion
-        copybots {
-            name
-            inputDirectory
-            whitelist
-            fieldDefinitions {
-                needle
-                fieldName
-                variants
-            }
-        }
+  configuration {
+    id
+    projectName
+    outputPath
+    minimalWorkingExample
+    dotnetVersion
+    copybots {
+      name
+      inputDirectory
+      whitelist
+      fieldDefinitions {
+        needle
+        fieldName
+        variants
+      }
     }
+  }
+}
+
+query GetFileContentsVersion($textFilePath: String! $fileVersion: FileVersion) {
+  readTextFile(textFilePath: $textFilePath fileVersion: $fileVersion)
 }
 
 query GetSchema($botFilePath: String!) {
-    botSchema(botFilePath: $botFilePath)
-    botSpec(botFilePath: $botFilePath) {
-        dependenciesSchemaPath
-    }
+  botSchema(botFilePath: $botFilePath)
+  botSpec(botFilePath: $botFilePath) {
+    dependenciesSchemaPath
+  }
 }
