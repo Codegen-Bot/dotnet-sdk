@@ -94,7 +94,7 @@ public class CopyBot : IMiniBot
                 
                 var relativePath = file.Path.Replace(copybot.InputDirectory, "");
                 
-                var fileContents = GraphQLOperations.GetFileContents(file.Path, null);
+                var fileContents = GraphQLOperations.GetFileContents(file.Path);
 
                 var dollarSigns = string.Join("", Enumerable.Repeat('$', Math.Max(MaxConsecutiveOccurrences(fileContents.ReadTextFile ?? "", '{', 1), MaxConsecutiveOccurrences(fileContents.ReadTextFile ?? "", '}', 1)) + 1));
                 
