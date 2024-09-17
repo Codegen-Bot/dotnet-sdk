@@ -36,6 +36,11 @@ type Configuration {
     """
     minimalWorkingExample: Boolean!
     """
+    If true, the new bot will provide a new GraphQL API, which can be consumed by bots that depend
+    on the new bot.
+    """
+    provideApi: Boolean!
+    """
     The version of .NET to use in this bot. Currently the only supported value is just '8'.
     As future versions of .NET are released and we add support for them, this value will become
     important.

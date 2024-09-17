@@ -1,20 +1,21 @@
 query GetConfiguration {
   configuration {
-      id
-      projectName
-      outputPath
-      minimalWorkingExample
-      dotnetVersion
-      copybots {
-          name
-          inputDirectory
-          whitelist
-          fieldDefinitions {
-              needle
-              fieldName
-              variants
-          }
+    id
+    projectName
+    outputPath
+    minimalWorkingExample
+    dotnetVersion
+    provideApi
+    copybots {
+      name
+      inputDirectory
+      whitelist
+      fieldDefinitions {
+        needle
+        fieldName
+        variants
       }
+    }
   }
 }
 
