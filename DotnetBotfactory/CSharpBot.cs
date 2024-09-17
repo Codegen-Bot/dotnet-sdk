@@ -295,6 +295,8 @@ public class CSharpBot : IMiniBot
             
             """");
 
+        CaretRef graphql, staticConstructor;
+        
         if (configuration.MinimalWorkingExample)
         {
                     GraphQLOperations.AddFile($"{configuration.OutputPath}/Exports.cs",
@@ -318,6 +320,8 @@ public class CSharpBot : IMiniBot
                 {
                     // Note: a `Main` method is required for the app to compile
                 }
+                
+                {{CaretRef.New(out staticConstructor)}}
                 
                 [UnmanagedCallersOnly(EntryPoint = "entry_point")]
                 public static int Run()
@@ -344,6 +348,8 @@ public class CSharpBot : IMiniBot
                         return 0;
                     }
                 }
+                
+                {{CaretRef.New(out graphql)}}
             }
             
             """");
@@ -371,7 +377,9 @@ public class CSharpBot : IMiniBot
                 {
                     // Note: a `Main` method is required for the app to compile
                 }
-                
+                                
+                {{CaretRef.New(out staticConstructor)}}
+
                 [UnmanagedCallersOnly(EntryPoint = "entry_point")]
                 public static int Run()
                 {
@@ -420,9 +428,122 @@ public class CSharpBot : IMiniBot
                         return 0;
                     }
                 }
+                
+                {{CaretRef.New(out graphql)}}
             }
             
             """");
+        }
+
+        if (configuration.ProvideApi)
+        {
+            GraphQLOperations.AddText(graphql.Id,
+                $$"""
+                
+                [UnmanagedCallersOnly(EntryPoint = "handle_request")]
+                public static int HandleRequest()
+                {
+                    var request = Pdk.GetInputJson(SourceGenerationContext.Default.Add);
+                    var sum = new Sum(parameters.a + parameters.b);
+                    
+                    return 0;
+                }
+                
+                """);
+            GraphQLOperations.AddText(staticConstructor.Id,
+                $$"""
+
+                  private static GraphQLServer _graphqlServer;
+                  
+                  static Exports()
+                  {
+                      var services = new ServiceCollection();
+                  
+                      services.AddLogging(x => x.AddProvider(new CustomLoggerProvider()));
+                      
+                      // Register services here that will be injected into
+                      // GraphQL servers, if needed
+                      
+                      services.AddGraphQL()
+                          .AddQueryType<Query>(x => x.Name("Query"));
+                      
+                      var serviceProvider = services.BuildServiceProvider();
+                      var requestExecutorResolver = serviceProvider.GetRequiredService<IRequestExecutorResolver>();
+                      
+                      _graphqlServer = new GraphQLServer(serviceProvider, requestExecutorResolver);
+                  }
+
+                  """);
+
+            GraphQLOperations.AddFile($"{configuration.OutputPath}/CustomLogger.cs",
+                $$"""
+                using System;
+                using CodegenBot;
+                using Microsoft.Extensions.Logging;
+                
+                namespace {{rootNamespace}};
+                
+                internal class CustomLoggerProvider : ILoggerProvider
+                {
+                    public ILogger CreateLogger(string categoryName)
+                    {
+                        return new CustomLogger();
+                    }
+                    
+                    public void Dispose()
+                    {
+                    }
+                }
+                
+                internal class CustomLogger() : ILogger
+                {
+                    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+                    {
+                        return null;
+                    }
+                
+                    public bool IsEnabled(LogLevel logLevel)
+                    {
+                        return true;
+                    }
+                
+                    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+                    {
+                        if (logLevel > LogLevel.Warning)
+                        {
+                            Imports.Log(new LogEvent()
+                            {
+                                Level = logLevel switch
+                                {
+                                    LogLevel.Trace => LogEventLevel.Trace,
+                                    LogLevel.Debug => LogEventLevel.Debug,
+                                    LogLevel.Information => LogEventLevel.Information,
+                                    LogLevel.Warning => LogEventLevel.Warning,
+                                    LogLevel.Error => LogEventLevel.Error,
+                                    LogLevel.Critical => LogEventLevel.Critical,
+                                    LogLevel.None => LogEventLevel.Information,
+                                    _ => LogEventLevel.Information
+                                },
+                                Message = formatter(state, exception),
+                                Args = Array.Empty<string>(),
+                            });
+                        }
+                    }
+                }
+                
+                """);
+            
+            GraphQLOperations.AddFile($"{configuration.OutputPath}/Query.cs",
+                $$"""
+
+                  namespace {{rootNamespace}};
+
+                  public class Query
+                  {
+                      public string Hello(string name) => $"Hello, {name}!";
+                  }
+
+                  """);
         }
 
         GraphQLOperations.AddTextByTags(
