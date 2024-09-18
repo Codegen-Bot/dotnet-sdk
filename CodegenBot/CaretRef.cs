@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace CodegenBot;
 
+/// <summary>
+/// Represents a reference to a caret. A caret is a position in a text file; text can be inserted at that position.
+/// </summary>
 public class CaretRef
 {
     public string Id { get; init; }
