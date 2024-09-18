@@ -1,4 +1,4 @@
 {
   "$schema": "./build.schema.json",
-  "Solution": "CodegenBot.sln"
+  "Solution": "CodegenBotSdk.sln"
 }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodegenBot.Tests", "Codegen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetBotfactory.Tests", "DotnetBotfactory.Tests\DotnetBotfactory.Tests.csproj", "{F4CEA60F-A9B5-454E-8D9B-C36CD4F5A126}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_build", "build\_build.csproj", "{3495F9B7-606B-460F-B63D-BA0B53B9D73E}"
+EndProject
 
 Global
 		GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +92,14 @@ Global
 			{F4CEA60F-A9B5-454E-8D9B-C36CD4F5A126}.Release|x64.Build.0 = Release|Any CPU
 			{F4CEA60F-A9B5-454E-8D9B-C36CD4F5A126}.Release|x86.ActiveCfg = Release|Any CPU
 			{F4CEA60F-A9B5-454E-8D9B-C36CD4F5A126}.Release|x86.Build.0 = Release|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Debug|x64.ActiveCfg = Debug|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Debug|x86.ActiveCfg = Debug|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Release|ARM64.ActiveCfg = Release|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Release|x64.ActiveCfg = Release|Any CPU
+			{3495F9B7-606B-460F-B63D-BA0B53B9D73E}.Release|x86.ActiveCfg = Release|Any CPU
 		EndGlobalSection
 		GlobalSection(SolutionProperties) = preSolution
 					HideSolutionNode = FALSE
