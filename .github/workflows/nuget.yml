@@ -3,6 +3,7 @@ name: .NET Core CI
 on:
   push:
     paths:
+      - build/**
       - CodegenBot/**
       - .github/workflows/nuget.yml
 
