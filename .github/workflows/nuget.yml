@@ -23,6 +23,6 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Build
-      run: ./build.cmd Test Push
+      run: ./build.cmd Version Test Push
       env: 
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

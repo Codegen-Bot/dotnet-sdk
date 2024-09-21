@@ -7,6 +7,8 @@ using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Utilities;
+using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.Docker.DockerTasks;
 
@@ -82,6 +84,14 @@ class Build : NukeBuild
                 .SetFileVersion(GitVersion.AssemblySemFileVer)
                 .SetInformationalVersion(GitVersion.InformationalVersion)
             );
+        });
+
+    Target Version => _ => _
+        .Before(Pack)
+        .Before(Push)
+        .Executes(() =>
+        {
+            Log.Information("Git version: {GitVersion}", GitVersion.ToJson());
         });
 
     Target Pack => _ => _
