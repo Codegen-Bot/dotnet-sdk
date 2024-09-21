@@ -9,6 +9,11 @@ public class CSharpBot : IMiniBot
     {
         var configuration = GraphQLOperations.GetConfiguration().Configuration;
 
+        if (configuration.Language != DotnetLanguage.CSHARP)
+        {
+            return;
+        }
+
         if (!configuration.Id.StartsWith("bot://hub/"))
         {
             GraphQLOperations.Log(LogSeverity.WARNING, "Bot IDs must begin with {BotIdBeginning}",
@@ -123,7 +128,8 @@ public class CSharpBot : IMiniBot
                 "dependencies": {
                   "bot://core/output": "1.0.0",
                   "bot://core/filesystem": "1.0.0",
-                  "bot://core/log": "1.0.0"
+                  "bot://core/log": "1.0.0",
+                  "bot://core/ready": "1.0.0"
                 },
                 "exec": {
                   "devenv": "dotnet workload install wasi-experimental",
