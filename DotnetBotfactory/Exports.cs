@@ -28,6 +28,9 @@ public class Exports
                 new CopyBot(),
                 new GraphQLOperationsBot(),
                 new RustBot(),
+                new TypescriptBot(),
+                new GoBot(),
+                new KotlinBot(),
             ];
 
             // Run each minibot in order

@@ -3,13 +3,13 @@ using Humanizer;
 
 namespace DotnetBotfactory;
 
-public class RustBot : IMiniBot
+public class GoBot : IMiniBot
 {
     public void Execute()
     {
         var configuration = GraphQLOperations.GetConfiguration().Configuration;
 
-        if (configuration.Language != DotnetLanguage.RUST)
+        if (configuration.Language != DotnetLanguage.GO)
         {
             return;
         }
@@ -24,97 +24,66 @@ public class RustBot : IMiniBot
 
         GraphQLOperations.AddKeyedTextByTags("", [new CaretTagInput() { Name = "location", Value = ".gitignore" }],
             """
+            **/bin
+            **/obj
+            **/.idea
             *.wasm
+            *.sln.DotSettings.user
             
             """);
         
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/Cargo.toml",
+        GraphQLOperations.AddFile($"{configuration.OutputPath}/global.json",
             """
-            [package]
-            name = "botfactory"
-            version = "0.1.0"
-            edition = "2021"
-            
-            # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-            [lib]
-            crate-type = ["cdylib"]
-            
-            [dependencies]
-            extism-pdk = "1.1.0"
-            serde = { version = "1.0.197", features = ["derive"] }
-            serde_json = "1.0.128"
-            
+            {
+              "sdk": {
+                "version": "8.0.300",
+                "rollForward": "latestFeature"
+              }
+            }
             """);
 
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/src/imports.rs",
-            """
-            
-            #[derive(Serialize, Deserialize, ToBytes, FromBytes)]
-            #[encoding(Json)]
-            struct GraphQLRequest {
-                pub count: i32,
-            }
-            
-            #[derive(Serialize, Deserialize, ToBytes, FromBytes)]
-            #[encoding(Json)]
-            struct GraphQLResponse {
-                pub count: i32,
-            }
-            
-            #[host_fn("extism:env/user")]
-            extern "ExtismHost" {
-              fn make_graphql_request(graphql_request: GraphQLRequest) -> GraphQLResponse;
-              fn make_graphql_request(graphql_request: GraphQLRequest) -> GraphQLResponse;
-            }
-            
-            """);
+        GraphQLOperations.AddFile($"{configuration.OutputPath}/{configuration.ProjectName}.csproj",
+            $$"""
+              <Project Sdk="Microsoft.NET.Sdk">
+                <PropertyGroup>
+                  <TargetFramework>net8.0</TargetFramework>
+                  <!-- This is commented out because otherwise your IDE will be full of red squiggly lines. -->
+                  <!-- The build process using the codegenbot docker container should still work -->
+                  <!-- because it explicitly specifies the runtime when it builds the bot. -->
+                  <!--<RuntimeIdentifier>wasi-wasm</RuntimeIdentifier>-->
+                  <OutputType>Exe</OutputType>
+                  <PublishTrimmed>true</PublishTrimmed>
+                  <!-- WASM bots can be difficult to debug, so it's better ot just have nullable enabled -->
+                  <!-- and treat warnings as errors from the beginning. It makes your life easier in the future. -->
+                  <Nullable>enable</Nullable>
+                  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+                  {{CaretRef.New(out var rootNamespaceCaret)}}
+                </PropertyGroup>
+                <ItemGroup>
+                  <PackageReference Include="Extism.Pdk" Version="1.0.3" />
+                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.89" />
+                  <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
+                  <PackageReference Include="Humanizer" Version="2.14.1" />
+                  {{CaretRef.New(out var packageRefs)}}
+                </ItemGroup>
+              </Project>
+              """);
+
+        // The root namespace defaults to the project name, so if they're the same then don't specify it explicity.
+        if (rootNamespace != configuration.ProjectName)
+        {
+            GraphQLOperations.AddText(rootNamespaceCaret.Id,
+                $$"""
+                <RootNamespace>{{rootNamespace}}</RootNamespace>
+                """);
+        }
+
+        GraphQLOperations.AddFile($"{configuration.OutputPath}/Properties/AssemblyInfo.cs",
+            $$"""
+              [assembly:System.Runtime.Versioning.SupportedOSPlatform("wasi")]
+
+              """);
         
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/src/lib.rs",
-            $$"""
-              use extism_pdk::*;
-              use serde::{Deserialize, Serialize};
-              
-              #[plugin_fn]
-              pub fn handle_request(request: GraphQLRequest) -> FnResult<String> {
-                  let name = "whatevs";
-                  Ok(format!("Hello, {}!", name))
-              }
-              
-              #[plugin_fn]
-              pub fn entry_point() -> FnResult<i32> {
-                  Ok(0)
-              }
-              
-              """);
-
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/src/lib.rs",
-            $$"""
-              use extism_pdk::*;
-              use serde::{Deserialize, Serialize};
-
-              #[derive(FromBytes, Serialize, Deserialize, Debug, PartialEq)]
-              #[encoding(Json)]
-              struct GraphQLRequest {
-                  #[serde(rename = "query")]
-                  query: String,
-                  #[serde(rename = "operationName")]
-                  operation_name: Option<String>,
-                  #[serde(rename = "variables")]
-                  variables: Option<std::collections::HashMap<String, Option<serde_json::Value>>>,
-              }
-
-              impl GraphQLRequest {
-                  pub fn from_json_string(request_body: &str) -> serde_json::Result<Self> {
-                      serde_json::from_str(request_body)
-                  }
-              
-                  pub fn to_json_string(&self) -> serde_json::Result<String> {
-                      serde_json::to_string_pretty(self)
-                  }
-              }
-
-              """);
-
         GraphQLOperations.AddFile($"{configuration.OutputPath}/.graphqlrc.json",
             $$"""
               {
@@ -170,21 +139,54 @@ public class RustBot : IMiniBot
               }
               """);
 
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/eventually_put_in_crate.rs",
-            $$""""
-              
-              impl MiniBot for ExampleMiniBot {
-                  fn execute(&self) {
-                      let configuration = GraphQLOperations::get_configuration();
-              
-                      GraphQLOperations::add_file(
-                          &format!("{}", configuration.output_path),
-                          "This file was generated by a Rust bot.",
-                      );
+        if (!configuration.MinimalWorkingExample)
+        {
+            GraphQLOperations.AddFile($"{configuration.OutputPath}/ExampleMiniBot.cs",
+                $$""""
+                  using System.Threading;
+                  using System.Threading.Tasks;
+
+                  namespace {{rootNamespace}};
+
+                  /// <summary>
+                  /// This is an example of a mini bot. When building a real bot, the first thing you should do is copy
+                  /// this example mini bot to create one or more non-example mini bots and put your bot code in those.
+                  /// </summary>
+                  public class ExampleMiniBot() : IMiniBot
+                  {
+                      public void Execute()
+                      {
+                          // Here is where we make API requests to codegen.bot asking for details on the codebase
+                          // or our configuration.
+                          var configuration = GraphQLOperations.GetConfiguration();
+                  
+                          GraphQLOperations.AddFile($"{configuration.Configuration.OutputPath}",
+                              $$"""
+                                This file was generated by a C# bot.
+                          
+                                """);
+                      }
                   }
-              }
-              
-              """");
+
+                  """");
+            GraphQLOperations.AddFile($"{configuration.OutputPath}/IMiniBot.cs",
+                $$""""
+                  using System.Threading;
+                  using System.Threading.Tasks;
+
+                  namespace {{rootNamespace}};
+
+                  /// <summary>
+                  /// New bots include the concept of a mini bot. You can put all your bot code in one or more mini bots.
+                  /// Mini bots can be moved from one bot's code to another, making it easy to refactor bots.
+                  /// </summary>
+                  public interface IMiniBot
+                  {
+                      void Execute();
+                  }
+
+                  """");
+        }
         
         GraphQLOperations.AddFile($"{configuration.OutputPath}/operations.graphql",
             $$""""
