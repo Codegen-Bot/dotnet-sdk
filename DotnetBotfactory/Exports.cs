@@ -27,6 +27,7 @@ public class Exports
                 new CSharpBot(),
                 new CopyBot(),
                 new GraphQLOperationsBot(),
+                new RustBot(),
             ];
 
             // Run each minibot in order

@@ -6,6 +6,7 @@ query GetConfiguration {
     minimalWorkingExample
     dotnetVersion
     provideApi
+    language
     copybots {
       name
       inputDirectory

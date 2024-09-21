@@ -23,6 +23,10 @@ type Configuration {
     """
     id: String!
     """
+    The programming language the bot will be written in
+    """
+    language: DotnetLanguage!
+    """
     The directory that will contain the C# project
     """
     outputPath: String!
@@ -52,6 +56,11 @@ type Configuration {
     Each copybot can produce multiple files.
     """
     copybots: [DotnetCopybot!]!
+}
+
+enum DotnetLanguage {
+    CSHARP,
+    RUST,
 }
 
 enum DotnetVersion {
