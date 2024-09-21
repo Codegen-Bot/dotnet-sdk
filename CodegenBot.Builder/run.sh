@@ -11,6 +11,11 @@ cp /src /tmp-src -r
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 echo "[$TIMESTAMP] [INFORMATION] [codegen.bot] Building the bot"
 dotnet build /tmp-src -c Release -r wasi-wasm
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ]; then
+  echo "[ERROR] [codegen.bot] Build failed with exit code $EXIT_CODE"
+  exit $EXIT_CODE
+fi
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 echo "[$TIMESTAMP] [INFORMATION] [codegen.bot] Copying built wasm file to bin/Release/net8.0/wasi-wasm/AppBundle/, which should be outside the container"
 if [ ! -d /src/bin/Release/net8.0/wasi-wasm/AppBundle/ ]; then
