@@ -436,6 +436,12 @@ public enum DotnetLanguage
 
     [EnumMember(Value = "TYPESCRIPT")]
     TYPESCRIPT,
+
+    [EnumMember(Value = "GO")]
+    GO,
+
+    [EnumMember(Value = "KOTLIN")]
+    KOTLIN,
 }
 
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
