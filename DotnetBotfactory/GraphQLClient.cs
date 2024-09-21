@@ -25,6 +25,7 @@ public class GraphQLError
 
 [JsonSerializable(typeof(GraphQLError))]
 [JsonSerializable(typeof(DotnetCopybotStringVariant))]
+[JsonSerializable(typeof(DotnetLanguage))]
 [JsonSerializable(typeof(DotnetVersion))]
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
@@ -231,6 +232,7 @@ public static partial class GraphQLOperations
                     minimalWorkingExample
                     dotnetVersion
                     provideApi
+                    language
                     copybots {
                       name
                       inputDirectory
@@ -421,6 +423,16 @@ public enum DotnetCopybotStringVariant
 
     [EnumMember(Value = "UpperCase")]
     UpperCase,
+}
+
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public enum DotnetLanguage
+{
+    [EnumMember(Value = "CSHARP")]
+    CSHARP,
+
+    [EnumMember(Value = "RUST")]
+    RUST,
 }
 
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
@@ -628,6 +640,9 @@ public class GetConfiguration
 
     [JsonPropertyName("provideApi")]
     public required bool ProvideApi { get; set; }
+
+    [JsonPropertyName("language")]
+    public required DotnetLanguage Language { get; set; }
 
     [JsonPropertyName("copybots")]
     public List<GetConfigurationConfiguration>? Copybots { get; set; }

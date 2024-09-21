@@ -12,6 +12,7 @@ type BotSpec @source(name: "BotSpec", schema: "schema") {
   excludeConfigurationFromDependenciesSchema: Boolean
   dependentSchemaPath: String
   dependencies: [KeyValuePairOfStringAndString!]!
+  tags: [KeyValuePairOfStringAndString!]
   private: Boolean
   exec: [KeyValuePairOfStringAndString!]
 }
