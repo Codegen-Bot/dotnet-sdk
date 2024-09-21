@@ -433,6 +433,9 @@ public enum DotnetLanguage
 
     [EnumMember(Value = "RUST")]
     RUST,
+
+    [EnumMember(Value = "TYPESCRIPT")]
+    TYPESCRIPT,
 }
 
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
