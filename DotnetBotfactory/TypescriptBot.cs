@@ -271,7 +271,7 @@ public class TypescriptBot : IMiniBot
             
             """");
 
-        CaretRef graphql, staticConstructor;
+        CaretRef graphql;
         
         if (configuration.MinimalWorkingExample)
         {
