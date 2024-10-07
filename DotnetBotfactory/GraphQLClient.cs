@@ -58,9 +58,6 @@ public class GraphQLError
 [JsonSerializable(typeof(GetConfiguration))]
 [JsonSerializable(typeof(GetConfigurationConfiguration))]
 [JsonSerializable(typeof(GetConfigurationConfigurationCopybots))]
-[JsonSerializable(typeof(GetFileContentsVariables))]
-[JsonSerializable(typeof(GetFileContentsData))]
-[JsonSerializable(typeof(GraphQLResponse<GetFileContentsData>))]
 [JsonSerializable(typeof(GetFileContentsVersionVariables))]
 [JsonSerializable(typeof(GetFileContentsVersionData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFileContentsVersionData>))]
@@ -75,6 +72,9 @@ public class GraphQLError
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
+[JsonSerializable(typeof(ReadTextFileVariables))]
+[JsonSerializable(typeof(ReadTextFileData))]
+[JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
 public partial class GraphQLOperationsJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLOperations
@@ -261,30 +261,6 @@ public static partial class GraphQLOperations
             );
     }
 
-    public static GetFileContentsData GetFileContents(string textFilePath)
-    {
-        var request = new GraphQLRequest<GetFileContentsVariables>
-        {
-            Query = """
-                query GetFileContents($textFilePath: String!) {
-                  readTextFile(textFilePath: $textFilePath)
-                }
-                """,
-            OperationName = "GetFileContents",
-            Variables = new GetFileContentsVariables() { TextFilePath = textFilePath },
-        };
-
-        var response = Imports.GraphQL(request);
-        var result = JsonSerializer.Deserialize<GraphQLResponse<GetFileContentsData>>(
-            response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFileContentsData
-        );
-        return result?.Data
-            ?? throw new InvalidOperationException(
-                "Received null data for request GetFileContents."
-            );
-    }
-
     public static GetFileContentsVersionData GetFileContentsVersion(
         string textFilePath,
         FileVersion? fileVersion
@@ -351,7 +327,6 @@ public static partial class GraphQLOperations
                   botSpec(botFilePath: $botFilePath) {
                     dependenciesSchemaPath
                     excludeConfigurationFromDependenciesSchema
-                    dependenciesSchemaPath
                   }
                 }
                 """,
@@ -393,6 +368,28 @@ public static partial class GraphQLOperations
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request Log.");
+    }
+
+    public static ReadTextFileData ReadTextFile(string textFilePath)
+    {
+        var request = new GraphQLRequest<ReadTextFileVariables>
+        {
+            Query = """
+                query ReadTextFile($textFilePath: String!) {
+                  readTextFile(textFilePath: $textFilePath)
+                }
+                """,
+            OperationName = "ReadTextFile",
+            Variables = new ReadTextFileVariables() { TextFilePath = textFilePath },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<ReadTextFileData>>(
+            response,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseReadTextFileData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request ReadTextFile.");
     }
 }
 
@@ -686,18 +683,6 @@ public class GetConfigurationConfigurationCopybots
     public List<DotnetCopybotStringVariant>? Variants { get; set; }
 }
 
-public class GetFileContentsData
-{
-    [JsonPropertyName("readTextFile")]
-    public string? ReadTextFile { get; set; }
-}
-
-public class GetFileContentsVariables
-{
-    [JsonPropertyName("textFilePath")]
-    public required string TextFilePath { get; set; }
-}
-
 public class GetFileContentsVersionData
 {
     [JsonPropertyName("readTextFile")]
@@ -759,9 +744,6 @@ public class GetSchema
 
     [JsonPropertyName("excludeConfigurationFromDependenciesSchema")]
     public bool? ExcludeConfigurationFromDependenciesSchema { get; set; }
-
-    [JsonPropertyName("dependenciesSchemaPath")]
-    public string? DependenciesSchemaPath { get; set; }
 }
 
 public class LogData
@@ -780,4 +762,16 @@ public class LogVariables
 
     [JsonPropertyName("arguments")]
     public List<string>? Arguments { get; set; }
+}
+
+public class ReadTextFileData
+{
+    [JsonPropertyName("readTextFile")]
+    public string? ReadTextFile { get; set; }
+}
+
+public class ReadTextFileVariables
+{
+    [JsonPropertyName("textFilePath")]
+    public required string TextFilePath { get; set; }
 }
