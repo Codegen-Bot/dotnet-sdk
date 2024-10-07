@@ -350,6 +350,8 @@ public static partial class GraphQLOperations
                   botSchema(botFilePath: $botFilePath)
                   botSpec(botFilePath: $botFilePath) {
                     dependenciesSchemaPath
+                    excludeConfigurationFromDependenciesSchema
+                    dependenciesSchemaPath
                   }
                 }
                 """,
@@ -752,6 +754,12 @@ public class GetSchemaVariables
 
 public class GetSchema
 {
+    [JsonPropertyName("dependenciesSchemaPath")]
+    public string? DependenciesSchemaPath { get; set; }
+
+    [JsonPropertyName("excludeConfigurationFromDependenciesSchema")]
+    public bool? ExcludeConfigurationFromDependenciesSchema { get; set; }
+
     [JsonPropertyName("dependenciesSchemaPath")]
     public string? DependenciesSchemaPath { get; set; }
 }

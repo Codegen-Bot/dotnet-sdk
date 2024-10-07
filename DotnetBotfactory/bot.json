@@ -2,15 +2,17 @@
   "type": "wasm",
   "id": "bot://hub/dotnet/botfactory",
   "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/DotnetBotfactory.wasm",
+  "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/DotnetBotfactory.wasm",
   "readme": "Bot.md",
   "configurationSchema": "configurationSchema.graphql",
   "dependenciesSchema": "schema.graphql",
   "dependencies": {
+    "bot://core/schema": "1.0.0",
+    "bot://core/random": "1.0.0",
     "bot://core/output": "1.0.0",
     "bot://core/filesystem": "1.0.0",
     "bot://core/log": "1.0.0",
-    "bot://core/schema": "1.0.0",
-    "bot://core/random": "1.0.0"
+    "bot://core/ready": "1.0.0"
   },
   "exec": {
     "devenv": "dotnet workload install wasi-experimental",
