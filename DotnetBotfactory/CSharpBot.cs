@@ -208,7 +208,7 @@ public class CSharpBot : IMiniBot
                   }
               }
               
-              query GetFileContents($textFilePath: String!) {
+              query ReadTextFile($textFilePath: String!) {
                   readTextFile(textFilePath: $textFilePath)
               }
               
@@ -552,6 +552,8 @@ public class CSharpBot : IMiniBot
                   """);
         }
 
+        //var projectGuid = 
+        
         GraphQLOperations.AddTextByTags(
             [
                 new CaretTagInput() { Name = "location", Value = ".sln/Project" }
