@@ -29,6 +29,5 @@ query GetSchema($botFilePath: String!) {
   botSpec(botFilePath: $botFilePath) {
     dependenciesSchemaPath
     excludeConfigurationFromDependenciesSchema
-    dependenciesSchemaPath
   }
 }

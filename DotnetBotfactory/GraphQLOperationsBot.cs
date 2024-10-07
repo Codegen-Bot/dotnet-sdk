@@ -49,7 +49,7 @@ public class GraphQLOperationsBot : IMiniBot
             if (fileContents is null)
             {
                 fileContents = GraphQLOperations.GetFileContentsVersion(file.Path, FileVersion.HEAD).ReadTextFile
-                               ?? GraphQLOperations.GetFileContents(file.Path).ReadTextFile;
+                               ?? GraphQLOperations.ReadTextFile(file.Path).ReadTextFile;
             }
             
             if (fileContents is null)

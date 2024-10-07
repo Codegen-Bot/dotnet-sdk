@@ -208,7 +208,7 @@ public class GoBot : IMiniBot
                   }
               }
               
-              query GetFileContents($textFilePath: String!) {
+              query ReadTextFile($textFilePath: String!) {
                   readTextFile(textFilePath: $textFilePath)
               }
               

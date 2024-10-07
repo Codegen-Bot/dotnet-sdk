@@ -206,7 +206,7 @@ public class RustBot : IMiniBot
                   }
               }
               
-              query GetFileContents($textFilePath: String!) {
+              query ReadTextFile($textFilePath: String!) {
                   readTextFile(textFilePath: $textFilePath)
               }
               
