@@ -377,7 +377,7 @@ public class GraphQLOperationsBot : IMiniBot
                 return "bool?";
             }
 
-            if (type.Name == "Integer")
+            if (type.Name == "Int")
             {
                 return "int?";
             }
@@ -450,7 +450,7 @@ public class GraphQLOperationsBot : IMiniBot
                 return "bool?";
             }
 
-            if (type.Name == "Integer")
+            if (type.Name == "Int")
             {
                 enumName = null;
                 return "int?";
