@@ -386,7 +386,7 @@ public class GraphQLOperationsBot : IMiniBot
             if (enumType is not null)
             {
                 isEnum = true;
-                return enumType.Name.Pascalize();
+                return enumType.Name.Pascalize() + "?";
             }
             
             var objectType = metadata.ObjectTypes.FirstOrDefault(objType => objType.Name == type.Name);
