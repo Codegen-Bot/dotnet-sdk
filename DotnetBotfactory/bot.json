@@ -1,11 +1,11 @@
 {
   "type": "wasm",
   "id": "bot://hub/dotnet/botfactory",
-  "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/DotnetBotfactory.wasm",
-  "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/DotnetBotfactory.wasm",
   "readme": "Bot.md",
   "configurationSchema": "configurationSchema.graphql",
-  "dependenciesSchema": "schema.graphql",
+  "consumedSchema": "consumedSchema.graphql",
+  "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/DotnetBotfactory.wasm",
+  "deduplicateConfigurationSchema": true,
   "dependencies": {
     "bot://core/schema": "1.0.0",
     "bot://core/random": "1.0.0",

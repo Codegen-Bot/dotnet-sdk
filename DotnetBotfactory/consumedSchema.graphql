@@ -8,10 +8,10 @@ type BotSpec @source(name: "BotSpec", schema: "schema") {
   readMePath: String
   configurationSchemaPath: String
   stitchSchemaPath: String
-  dependenciesSchemaPath: String
-  excludeConfigurationFromDependenciesSchema: Boolean
-  dependentSchemaPath: String
+  consumedSchemaPath: String
+  excludeConfigurationFromConsumedSchema: Boolean
   dependencies: [KeyValuePairOfStringAndString!]!
+  providedSchemaPath: String
   tags: [KeyValuePairOfStringAndString!]
   private: Boolean
   exec: [KeyValuePairOfStringAndString!]

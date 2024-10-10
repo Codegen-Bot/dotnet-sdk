@@ -28,9 +28,14 @@ public class GraphQLError
 [JsonSerializable(typeof(DotnetLanguage))]
 [JsonSerializable(typeof(DotnetVersion))]
 [JsonSerializable(typeof(FileKind))]
+[JsonSerializable(typeof(FileKind))]
+[JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(FileVersion))]
 [JsonSerializable(typeof(LogSeverity))]
+[JsonSerializable(typeof(LogSeverity))]
 [JsonSerializable(typeof(BotDependencyInput))]
+[JsonSerializable(typeof(BotDependencyInput))]
+[JsonSerializable(typeof(CaretTagInput))]
 [JsonSerializable(typeof(CaretTagInput))]
 [JsonSerializable(typeof(AddFileVariables))]
 [JsonSerializable(typeof(AddFileData))]
@@ -294,8 +299,8 @@ public static partial class GraphQLOperations
                 query GetSchema($botFilePath: String!) {
                   botSchema(botFilePath: $botFilePath)
                   botSpec(botFilePath: $botFilePath) {
-                    dependenciesSchemaPath
-                    excludeConfigurationFromDependenciesSchema
+                    consumedSchemaPath
+                    excludeConfigurationFromConsumedSchema
                   }
                 }
                 """,
@@ -463,6 +468,26 @@ public enum FileKind
 }
 
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public enum FileKind
+{
+    [EnumMember(Value = "BINARY")]
+    BINARY,
+
+    [EnumMember(Value = "TEXT")]
+    TEXT,
+}
+
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public enum FileVersion
+{
+    [EnumMember(Value = "GENERATED")]
+    GENERATED,
+
+    [EnumMember(Value = "HEAD")]
+    HEAD,
+}
+
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public enum FileVersion
 {
     [EnumMember(Value = "GENERATED")]
@@ -494,6 +519,28 @@ public enum LogSeverity
     CRITICAL,
 }
 
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public enum LogSeverity
+{
+    [EnumMember(Value = "TRACE")]
+    TRACE,
+
+    [EnumMember(Value = "DEBUG")]
+    DEBUG,
+
+    [EnumMember(Value = "INFORMATION")]
+    INFORMATION,
+
+    [EnumMember(Value = "WARNING")]
+    WARNING,
+
+    [EnumMember(Value = "ERROR")]
+    ERROR,
+
+    [EnumMember(Value = "CRITICAL")]
+    CRITICAL,
+}
+
 public class BotDependencyInput
 {
     [JsonPropertyName("botId")]
@@ -501,6 +548,24 @@ public class BotDependencyInput
 
     [JsonPropertyName("botVersion")]
     public required string BotVersion { get; set; }
+}
+
+public class BotDependencyInput
+{
+    [JsonPropertyName("botId")]
+    public required string BotId { get; set; }
+
+    [JsonPropertyName("botVersion")]
+    public required string BotVersion { get; set; }
+}
+
+public class CaretTagInput
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("value")]
+    public required string Value { get; set; }
 }
 
 public class CaretTagInput
@@ -726,11 +791,11 @@ public class GetSchemaVariables
 
 public class GetSchema
 {
-    [JsonPropertyName("dependenciesSchemaPath")]
-    public string? DependenciesSchemaPath { get; set; }
+    [JsonPropertyName("consumedSchemaPath")]
+    public string? ConsumedSchemaPath { get; set; }
 
-    [JsonPropertyName("excludeConfigurationFromDependenciesSchema")]
-    public bool? ExcludeConfigurationFromDependenciesSchema { get; set; }
+    [JsonPropertyName("excludeConfigurationFromConsumedSchema")]
+    public bool? ExcludeConfigurationFromConsumedSchema { get; set; }
 }
 
 public class LogData
