@@ -19,6 +19,10 @@
       "botVersion": "1.0.0"
     },
     {
+      "botId": "bot://core/random",
+      "botVersion": "1.0.0"
+    },
+    {
       "botId": "bot://hub/.gitignore",
       "botVersion": "0.0.1-alpha1",
       "configuration": {
@@ -62,7 +66,7 @@
     },
     {
       "botId": "bot://hub/dotnet/botfactory",
-      "botVersion": "0.0.1-alpha57",
+      "botVersion": "0.0.1-alpha2",
       "configuration": {
         "id": "bot://hub/dotnet/botfactory",
         "outputPath": "DotnetBotfactory",
@@ -71,7 +75,8 @@
         "minimalWorkingExample": false,
         "buildWithoutDocker": true,
         "dotnetVersion": "DotNet8",
-        "copybots": []
+        "copybots": [],
+        "provideApi": false
       },
       "dependencies": [
         {
@@ -91,6 +96,9 @@
         },
         {
           "botId": "bot://hub/dotnet/solution"
+        },
+        {
+          "botId": "bot://core/random"
         }
       ]
     }

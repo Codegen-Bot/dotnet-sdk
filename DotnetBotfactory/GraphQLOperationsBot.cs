@@ -48,8 +48,8 @@ public class GraphQLOperationsBot : IMiniBot
             
             if (fileContents is null)
             {
-                fileContents = GraphQLOperations.GetFileContentsVersion(file.Path, FileVersion.HEAD).ReadTextFile
-                               ?? GraphQLOperations.GetFileContents(file.Path).ReadTextFile;
+                fileContents = GraphQLOperations.ReadTextFileWithVersion(file.Path, FileVersion.HEAD).ReadTextFile
+                               ?? GraphQLOperations.ReadTextFile(file.Path).ReadTextFile;
             }
             
             if (fileContents is null)
@@ -377,7 +377,7 @@ public class GraphQLOperationsBot : IMiniBot
                 return "bool?";
             }
 
-            if (type.Name == "Integer")
+            if (type.Name == "Int")
             {
                 return "int?";
             }
@@ -386,7 +386,7 @@ public class GraphQLOperationsBot : IMiniBot
             if (enumType is not null)
             {
                 isEnum = true;
-                return enumType.Name.Pascalize();
+                return enumType.Name.Pascalize() + "?";
             }
             
             var objectType = metadata.ObjectTypes.FirstOrDefault(objType => objType.Name == type.Name);
@@ -450,7 +450,7 @@ public class GraphQLOperationsBot : IMiniBot
                 return "bool?";
             }
 
-            if (type.Name == "Integer")
+            if (type.Name == "Int")
             {
                 enumName = null;
                 return "int?";
