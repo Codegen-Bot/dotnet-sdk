@@ -12,11 +12,18 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
 {
     private readonly ILogger logger = services.GetRequiredService<ILogger<GraphQLServer>>();
 
-    public async Task<string> GetSchema()
+    private async Task<string> GetSchemaAsync()
     {
         var requestExecutor =
             await requestExecutorResolver.GetRequestExecutorAsync(cancellationToken: CancellationToken.None);
         return requestExecutor.Schema.Print();
+    }
+    
+    public string GetGraphQLSchema()
+    {
+        var task = GetSchemaAsync();
+        task.Wait();
+        return task.Result;
     }
     
     public async Task<string> ExecuteAsync(string requestBody, IServiceProvider services,
