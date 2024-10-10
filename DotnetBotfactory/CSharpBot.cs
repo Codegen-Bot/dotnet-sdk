@@ -124,6 +124,7 @@ public class CSharpBot : IMiniBot
                 "configurationSchema": "configurationSchema.graphql",
                 "consumedSchema": "consumedSchema.graphql",
                 "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/{{configuration.ProjectName}}.wasm",
+                {{CaretRef.New(out var botJsonFields)}}
                 "deduplicateConfigurationSchema": true,
                 "dependencies": {
                   "bot://core/output": "1.0.0",
@@ -135,6 +136,7 @@ public class CSharpBot : IMiniBot
                   "devenv": "dotnet workload install wasi-experimental",
                   "build": "dotnet build -c Release -r wasi-wasm",
                   "build-docker": "docker run -v .:/src codegenbot/dotnet-bot-builder:net8.0"
+                  {{CaretRef.New(out var botJsonExecs)}}
                 }
               }
               """);
@@ -447,6 +449,16 @@ public class CSharpBot : IMiniBot
 
         if (configuration.ProvideApi)
         {
+            GraphQLOperations.AddText(botJsonFields.Id,
+                """
+                "providedApi": "providedApi.graphql",
+                """);
+
+            GraphQLOperations.AddText(botJsonExecs.Id,
+                """
+                , "schema": "dotnet run -- providedSchema.graphql"
+                """);
+            
             GraphQLOperations.AddText(packageRefs.Id,
                 """
                 <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
@@ -457,9 +469,17 @@ public class CSharpBot : IMiniBot
                 """
                 // However this is also used to export the GraphQL schema
                 
-                var task = _graphqlServer.GetSchema();
-                task.Wait();
-
+                var schema = _graphqlServer.GetSchema();
+                
+                var providedSchemaFilePath = ProvidedSchemaUtility.CalculateProvidedSchemaPath();
+                
+                if (providedSchemaFilePath is null)
+                {
+                    return;
+                }
+                
+                Console.WriteLine($"Writing provided schema to {providedSchemaFilePath}");
+                File.WriteAllText(providedSchemaFilePath, schema);
                 """);
             
             GraphQLOperations.AddText(exportsUsings.Id,
@@ -467,6 +487,7 @@ public class CSharpBot : IMiniBot
                 using Microsoft.Extensions.DependencyInjection;
                 using Microsoft.Extensions.Logging;
                 using HotChocolate.Execution;
+                using System.IO;
                 
                 """);
 
@@ -497,6 +518,7 @@ public class CSharpBot : IMiniBot
                 }
                 
                 """);
+            
             GraphQLOperations.AddText(staticConstructor.Id,
                 $$"""
 
