@@ -24,9 +24,9 @@ public class GraphQLOperationsBot : IMiniBot
         var schema = GraphQLOperations.GetSchema($"{configuration.OutputPath}/bot.json");
 
         string? schemaPath = null;
-        if (schema.BotSpec?.DependenciesSchemaPath is not null && schema.BotSchema is not null)
+        if (schema.BotSpec?.ConsumedSchemaPath is not null && schema.BotSchema is not null)
         {
-            schemaPath = Path.Combine(configuration.OutputPath, schema.BotSpec?.DependenciesSchemaPath!)
+            schemaPath = Path.Combine(configuration.OutputPath, schema.BotSpec?.ConsumedSchemaPath!)
                 .Replace("\\", "/");
             GraphQLOperations.AddFile(schemaPath,
                 schema.BotSchema!);
