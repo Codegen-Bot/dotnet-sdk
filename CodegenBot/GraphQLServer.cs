@@ -25,6 +25,7 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
         // stuff. This is the place where things registered in inMemoryGraphQLServerServices can be initialized to point
         // at services in the outer scope.
 
+        
         var result =
             (IQueryResult) await requestExecutor.ExecuteAsync(
                 ConvertJsonToQueryRequest(req, services), cancellationToken);
