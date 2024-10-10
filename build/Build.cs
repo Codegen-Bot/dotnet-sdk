@@ -105,6 +105,9 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(ArtifactsDirectory)
                 .SetVersion(GitVersion.NuGetVersion)
+                .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                .SetFileVersion(GitVersion.AssemblySemFileVer)
+                .SetInformationalVersion(GitVersion.InformationalVersion)
                 .SetIncludeSymbols(true)
                 .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
             );
