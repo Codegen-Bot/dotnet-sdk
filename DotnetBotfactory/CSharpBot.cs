@@ -61,7 +61,7 @@ public class CSharpBot : IMiniBot
                 </PropertyGroup>
                 <ItemGroup>
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
-                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.89" />
+                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.146" />
                   <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
                   <PackageReference Include="Humanizer" Version="2.14.1" />
                   {{CaretRef.New(out var packageRefs)}}
@@ -87,7 +87,7 @@ public class CSharpBot : IMiniBot
         GraphQLOperations.AddFile($"{configuration.OutputPath}/.graphqlrc.json",
             $$"""
               {
-                "schema": ["schema.graphql", "configurationSchema.graphql"],
+                "schema": ["consumedSchema.graphql", "configurationSchema.graphql"],
                 "documents": "**/*.graphql"
               }
               
@@ -122,7 +122,7 @@ public class CSharpBot : IMiniBot
                 "id": "{{configuration.Id}}",
                 "readme": "Bot.md",
                 "configurationSchema": "configurationSchema.graphql",
-                "dependenciesSchema": "schema.graphql",
+                "consumedSchema": "consumedSchema.graphql",
                 "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/{{configuration.ProjectName}}.wasm",
                 "deduplicateConfigurationSchema": true,
                 "dependencies": {
@@ -301,7 +301,7 @@ public class CSharpBot : IMiniBot
             
             """");
 
-        CaretRef graphql, staticConstructor, exportsUsings;
+        CaretRef graphql, staticConstructor, exportsUsings, mainBody;
         
         if (configuration.MinimalWorkingExample)
         {
@@ -326,6 +326,7 @@ public class CSharpBot : IMiniBot
                 public static void Main()
                 {
                     // Note: a `Main` method is required for the app to compile
+                    {{CaretRef.New(out mainBody)}}
                 }
                 
                 {{CaretRef.New(out staticConstructor)}}
@@ -384,6 +385,7 @@ public class CSharpBot : IMiniBot
                 public static void Main()
                 {
                     // Note: a `Main` method is required for the app to compile
+                    {{CaretRef.New(out mainBody)}}
                 }
                                 
                 {{CaretRef.New(out staticConstructor)}}
@@ -451,10 +453,21 @@ public class CSharpBot : IMiniBot
                 
                 """);
             
+            GraphQLOperations.AddText(mainBody.Id,
+                """
+                // However this is also used to export the GraphQL schema
+                
+                var task = _graphqlServer.GetSchema();
+                task.Wait();
+
+                """);
+            
             GraphQLOperations.AddText(exportsUsings.Id,
                 """
                 using Microsoft.Extensions.DependencyInjection;
-
+                using Microsoft.Extensions.Logging;
+                using HotChocolate.Execution;
+                
                 """);
 
             GraphQLOperations.AddText(graphql.Id,
@@ -463,9 +476,23 @@ public class CSharpBot : IMiniBot
                 [UnmanagedCallersOnly(EntryPoint = "handle_request")]
                 public static int HandleRequest()
                 {
-                    var request = Pdk.GetInputJson(SourceGenerationContext.Default.Add);
-                    var sum = new Sum(parameters.a + parameters.b);
+                    var request = Pdk.GetInputString();
+                
+                    var task = _graphqlServer.ExecuteAsync(request, _serviceProvider, CancellationToken.None);
+                    task.Wait();
+                
+                    if (task.IsFaulted)
+                    {
+                        Imports.Log(new LogEvent()
+                        {
+                            Level = LogEventLevel.Critical,
+                            Message = "Failed to process GraphQL request: {ExceptionType} {Message}, {StackTrace}",
+                            Args = [task.Exception.GetType().Name, task.Exception.Message, task.Exception.StackTrace ?? "",]
+                        });
+                    }
                     
+                    Pdk.SetOutput(task.Result);
+                
                     return 0;
                 }
                 
@@ -474,6 +501,7 @@ public class CSharpBot : IMiniBot
                 $$"""
 
                   private static GraphQLServer _graphqlServer;
+                  private static IServiceProvider _serviceProvider;
                   
                   static Exports()
                   {
@@ -487,10 +515,11 @@ public class CSharpBot : IMiniBot
                       services.AddGraphQL()
                           .AddQueryType<Query>(x => x.Name("Query"));
                       
-                      var serviceProvider = services.BuildServiceProvider();
-                      var requestExecutorResolver = serviceProvider.GetRequiredService<IRequestExecutorResolver>();
+                      _serviceProvider = services.BuildServiceProvider();
+                      var requestExecutorResolver =
+                          _serviceProvider.GetRequiredService<IRequestExecutorResolver>();
                       
-                      _graphqlServer = new GraphQLServer(serviceProvider, requestExecutorResolver);
+                      _graphqlServer = new GraphQLServer(_serviceProvider, requestExecutorResolver);
                   }
 
                   """);

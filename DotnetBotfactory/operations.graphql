@@ -27,7 +27,7 @@ query ReadTextFileWithVersion($textFilePath: String! $fileVersion: FileVersion) 
 query GetSchema($botFilePath: String!) {
   botSchema(botFilePath: $botFilePath)
   botSpec(botFilePath: $botFilePath) {
-    dependenciesSchemaPath
-    excludeConfigurationFromDependenciesSchema
+    consumedSchemaPath
+    excludeConfigurationFromConsumedSchema
   }
 }

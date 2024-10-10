@@ -122,7 +122,7 @@ public class KotlinBot : IMiniBot
                 "id": "{{configuration.Id}}",
                 "readme": "Bot.md",
                 "configurationSchema": "configurationSchema.graphql",
-                "dependenciesSchema": "schema.graphql",
+                "consumedSchema": "consumedSchema.graphql",
                 "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/{{configuration.ProjectName}}.wasm",
                 "deduplicateConfigurationSchema": true,
                 "dependencies": {
