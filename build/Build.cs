@@ -104,11 +104,7 @@ class Build : NukeBuild
                 .SetProject("CodegenBot")
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(ArtifactsDirectory)
-                //.SetVersion(GitVersion.NuGetVersion)
-                .SetProperty("Version", GitVersion.FullSemVer)
-                //.SetAssemblyVersion(GitVersion.AssemblySemVer)
-                //.SetFileVersion(GitVersion.AssemblySemFileVer)
-                //.SetInformationalVersion(GitVersion.InformationalVersion)
+\                .SetProperty("Version", GitVersion.FullSemVer)
                 .SetIncludeSymbols(true)
                 .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
             );
