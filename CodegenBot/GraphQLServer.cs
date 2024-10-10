@@ -11,6 +11,13 @@ namespace CodegenBot;
 public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver requestExecutorResolver)
 {
     private readonly ILogger logger = services.GetRequiredService<ILogger<GraphQLServer>>();
+
+    public async Task<string> GetSchema()
+    {
+        var requestExecutor =
+            await requestExecutorResolver.GetRequestExecutorAsync(cancellationToken: CancellationToken.None);
+        return requestExecutor.Schema.Print();
+    }
     
     public async Task<string> ExecuteAsync(string requestBody, IServiceProvider services,
         CancellationToken cancellationToken)
@@ -24,7 +31,6 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
         // whereas inMemoryGraphQLServerServices is the service provider that HotChocolate uses to resolve all its
         // stuff. This is the place where things registered in inMemoryGraphQLServerServices can be initialized to point
         // at services in the outer scope.
-
         
         var result =
             (IQueryResult) await requestExecutor.ExecuteAsync(
