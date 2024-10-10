@@ -301,7 +301,7 @@ public class CSharpBot : IMiniBot
             
             """");
 
-        CaretRef graphql, staticConstructor;
+        CaretRef graphql, staticConstructor, exportsUsings;
         
         if (configuration.MinimalWorkingExample)
         {
@@ -313,6 +313,7 @@ public class CSharpBot : IMiniBot
             using System.Threading;
             using CodegenBot;
             using Extism;
+            {{CaretRef.New(out exportsUsings)}}
             
             namespace {{rootNamespace}};
             
@@ -370,6 +371,7 @@ public class CSharpBot : IMiniBot
             using System.Threading;
             using CodegenBot;
             using Extism;
+            {{CaretRef.New(out exportsUsings)}}
             
             namespace {{rootNamespace}};
             
@@ -443,6 +445,18 @@ public class CSharpBot : IMiniBot
 
         if (configuration.ProvideApi)
         {
+            GraphQLOperations.AddText(packageRefs.Id,
+                """
+                <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+                
+                """);
+            
+            GraphQLOperations.AddText(exportsUsings.Id,
+                """
+                using Microsoft.Extensions.DependencyInjection;
+
+                """);
+
             GraphQLOperations.AddText(graphql.Id,
                 $$"""
                 
