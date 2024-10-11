@@ -670,6 +670,7 @@ public static partial class GraphQLOperations
                       name
                       fields {
                         name
+                        text
                         type {
                           name
                           genericArguments {
