@@ -89,7 +89,6 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaObjectTypeField))]
 [JsonSerializable(typeof(ParseGraphQLSchemaObjectTypeFieldArgument))]
 [JsonSerializable(typeof(ParseGraphQLSchemaObjectTypeFieldArgumentType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaObjectTypeFieldType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsVariables))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsData))]
 [JsonSerializable(typeof(GraphQLResponse<ParseGraphQLSchemaAndOperationsData>))]
@@ -99,7 +98,6 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeField))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldArgument))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldArgumentType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldType))]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
@@ -1024,15 +1022,6 @@ public class ParseGraphQLSchemaObjectTypeField
 
     [JsonPropertyName("arguments")]
     public required List<ParseGraphQLSchemaObjectTypeFieldArgument> Arguments { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaObjectTypeFieldType Type { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaObjectTypeFieldArgument
@@ -1042,24 +1031,12 @@ public class ParseGraphQLSchemaObjectTypeFieldArgument
 
     [JsonPropertyName("type")]
     public required ParseGraphQLSchemaObjectTypeFieldArgumentType Type { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaObjectTypeFieldArgumentType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypeFieldType
-{
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsData
@@ -1087,9 +1064,6 @@ public class ParseGraphQLSchemaAndOperationsObjectType
 
     [JsonPropertyName("fields")]
     public required List<ParseGraphQLSchemaAndOperationsObjectTypeField> Fields { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsObjectTypeField
@@ -1099,15 +1073,6 @@ public class ParseGraphQLSchemaAndOperationsObjectTypeField
 
     [JsonPropertyName("arguments")]
     public required List<ParseGraphQLSchemaAndOperationsObjectTypeFieldArgument> Arguments { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsObjectTypeFieldType Type { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsObjectTypeFieldArgument
@@ -1117,24 +1082,12 @@ public class ParseGraphQLSchemaAndOperationsObjectTypeFieldArgument
 
     [JsonPropertyName("type")]
     public required ParseGraphQLSchemaAndOperationsObjectTypeFieldArgumentType Type { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsObjectTypeFieldArgumentType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypeFieldType
-{
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ReadTextFileData
