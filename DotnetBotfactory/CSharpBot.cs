@@ -61,7 +61,7 @@ public class CSharpBot : IMiniBot
                 </PropertyGroup>
                 <ItemGroup>
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
-                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.146" />
+                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.154" />
                   <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
                   <PackageReference Include="Humanizer" Version="2.14.1" />
                   {{CaretRef.New(out var packageRefs)}}
@@ -147,6 +147,7 @@ public class CSharpBot : IMiniBot
                 $$""""
                   using System.Threading;
                   using System.Threading.Tasks;
+                  using CodegenBot;
 
                   namespace {{rootNamespace}};
 
@@ -171,23 +172,24 @@ public class CSharpBot : IMiniBot
                   }
 
                   """");
-            GraphQLOperations.AddFile($"{configuration.OutputPath}/IMiniBot.cs",
-                $$""""
-                  using System.Threading;
-                  using System.Threading.Tasks;
-
-                  namespace {{rootNamespace}};
-
-                  /// <summary>
-                  /// New bots include the concept of a mini bot. You can put all your bot code in one or more mini bots.
-                  /// Mini bots can be moved from one bot's code to another, making it easy to refactor bots.
-                  /// </summary>
-                  public interface IMiniBot
-                  {
-                      void Execute();
-                  }
-
-                  """");
+            
+//             GraphQLOperations.AddFile($"{configuration.OutputPath}/IMiniBot.cs",
+//                 $$""""
+//                   using System.Threading;
+//                   using System.Threading.Tasks;
+//
+//                   namespace {{rootNamespace}};
+//
+//                   /// <summary>
+//                   /// New bots include the concept of a mini bot. You can put all your bot code in one or more mini bots.
+//                   /// Mini bots can be moved from one bot's code to another, making it easy to refactor bots.
+//                   /// </summary>
+//                   public interface IMiniBot
+//                   {
+//                       void Execute();
+//                   }
+//
+//                   """");
         }
         
         GraphQLOperations.AddFile($"{configuration.OutputPath}/operations.graphql",
@@ -451,12 +453,12 @@ public class CSharpBot : IMiniBot
         {
             GraphQLOperations.AddText(botJsonFields.Id,
                 """
-                "providedApi": "providedApi.graphql",
+                "providedSchema": "providedSchema.graphql",
                 """);
 
             GraphQLOperations.AddText(botJsonExecs.Id,
                 """
-                , "schema": "dotnet run -- providedSchema.graphql"
+                , "schema": "dotnet run"
                 """);
             
             GraphQLOperations.AddText(packageRefs.Id,
@@ -469,7 +471,7 @@ public class CSharpBot : IMiniBot
                 """
                 // However this is also used to export the GraphQL schema
                 
-                var schema = _graphqlServer.GetSchema();
+                var schema = _graphqlServer.GetGraphQLSchema();
                 
                 var providedSchemaFilePath = ProvidedSchemaUtility.CalculateProvidedSchemaPath();
                 
@@ -497,24 +499,41 @@ public class CSharpBot : IMiniBot
                 [UnmanagedCallersOnly(EntryPoint = "handle_request")]
                 public static int HandleRequest()
                 {
-                    var request = Pdk.GetInputString();
-                
-                    var task = _graphqlServer.ExecuteAsync(request, _serviceProvider, CancellationToken.None);
-                    task.Wait();
-                
-                    if (task.IsFaulted)
+                    try
                     {
-                        Imports.Log(new LogEvent()
-                        {
-                            Level = LogEventLevel.Critical,
-                            Message = "Failed to process GraphQL request: {ExceptionType} {Message}, {StackTrace}",
-                            Args = [task.Exception.GetType().Name, task.Exception.Message, task.Exception.StackTrace ?? "",]
-                        });
-                    }
+                        var request = Pdk.GetInputString();
                     
-                    Pdk.SetOutput(task.Result);
-                
-                    return 0;
+                        var task = _graphqlServer.ExecuteAsync(request, _serviceProvider, CancellationToken.None);
+                        task.Wait();
+                    
+                        if (task.IsFaulted)
+                        {
+                            Imports.Log(new LogEvent()
+                            {
+                                Level = LogEventLevel.Critical,
+                                Message = "Failed to process GraphQL request: {ExceptionType} {Message}, {StackTrace}",
+                                Args = [task.Exception.GetType().Name, task.Exception.Message, task.Exception.StackTrace ?? "",]
+                            });
+                        }
+                        
+                        Pdk.SetOutput(task.Result);
+                    
+                        return 0;
+                    }
+                    catch (Exception e)
+                    {
+                        Imports.Log(
+                            new LogEvent()
+                            {
+                                // Only a critical error will cause codegen.bot to realize that the generated code should not be used
+                                Level = LogEventLevel.Critical,
+                                Message = "Failed to handle GraphQL request: {ExceptionType} {Message}, {StackTrace}",
+                                Args = [e.GetType().Name, e.Message, e.StackTrace ?? ""],
+                            }
+                        );
+                        Pdk.SetError($"{e.GetType()}: {e.Message}");
+                        return 0;
+                    }
                 }
                 
                 """);
