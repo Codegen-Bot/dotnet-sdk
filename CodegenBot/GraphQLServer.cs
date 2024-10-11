@@ -26,6 +26,13 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
         return task.Result;
     }
     
+    public string Execute(string requestBody, IServiceProvider services)
+    {
+        var task = ExecuteAsync(requestBody, services, CancellationToken.None);
+        task.Wait();
+        return task.Result;
+    }
+    
     public async Task<string> ExecuteAsync(string requestBody, IServiceProvider services,
         CancellationToken cancellationToken)
     {
