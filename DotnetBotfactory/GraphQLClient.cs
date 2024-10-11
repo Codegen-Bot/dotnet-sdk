@@ -296,6 +296,7 @@ public static partial class GraphQLOperations
                   botSpec(botFilePath: $botFilePath) {
                     consumedSchemaPath
                     excludeConfigurationFromConsumedSchema
+                    providedSchemaPath
                   }
                 }
                 """,
@@ -731,6 +732,9 @@ public class GetSchema
 
     [JsonPropertyName("excludeConfigurationFromConsumedSchema")]
     public bool? ExcludeConfigurationFromConsumedSchema { get; set; }
+
+    [JsonPropertyName("providedSchemaPath")]
+    public string? ProvidedSchemaPath { get; set; }
 }
 
 public class LogData
