@@ -35,46 +35,57 @@ public class GraphQLError
 [JsonSerializable(typeof(AddFileVariables))]
 [JsonSerializable(typeof(AddFileData))]
 [JsonSerializable(typeof(GraphQLResponse<AddFileData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddFileVariables>))]
 [JsonSerializable(typeof(AddFile))]
 [JsonSerializable(typeof(AddKeyedTextVariables))]
 [JsonSerializable(typeof(AddKeyedTextData))]
 [JsonSerializable(typeof(GraphQLResponse<AddKeyedTextData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddKeyedTextVariables>))]
 [JsonSerializable(typeof(AddKeyedText))]
 [JsonSerializable(typeof(AddKeyedTextByTagsVariables))]
 [JsonSerializable(typeof(AddKeyedTextByTagsData))]
 [JsonSerializable(typeof(GraphQLResponse<AddKeyedTextByTagsData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddKeyedTextByTagsVariables>))]
 [JsonSerializable(typeof(AddKeyedTextByTags))]
 [JsonSerializable(typeof(AddTextVariables))]
 [JsonSerializable(typeof(AddTextData))]
 [JsonSerializable(typeof(GraphQLResponse<AddTextData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddTextVariables>))]
 [JsonSerializable(typeof(AddText))]
 [JsonSerializable(typeof(AddTextByTagsVariables))]
 [JsonSerializable(typeof(AddTextByTagsData))]
 [JsonSerializable(typeof(GraphQLResponse<AddTextByTagsData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddTextByTagsVariables>))]
 [JsonSerializable(typeof(AddTextByTags))]
 [JsonSerializable(typeof(GetConfigurationVariables))]
 [JsonSerializable(typeof(GetConfigurationData))]
 [JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
+[JsonSerializable(typeof(GraphQLRequest<GetConfigurationVariables>))]
 [JsonSerializable(typeof(GetConfiguration))]
-[JsonSerializable(typeof(GetConfigurationConfiguration))]
-[JsonSerializable(typeof(GetConfigurationConfigurationCopybots))]
+[JsonSerializable(typeof(GetConfigurationCopybots))]
+[JsonSerializable(typeof(GetConfigurationCopybotsFieldDefinitions))]
 [JsonSerializable(typeof(GetFilesVariables))]
 [JsonSerializable(typeof(GetFilesData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
+[JsonSerializable(typeof(GraphQLRequest<GetFilesVariables>))]
 [JsonSerializable(typeof(GetFiles))]
 [JsonSerializable(typeof(GetSchemaVariables))]
 [JsonSerializable(typeof(GetSchemaData))]
 [JsonSerializable(typeof(GraphQLResponse<GetSchemaData>))]
+[JsonSerializable(typeof(GraphQLRequest<GetSchemaVariables>))]
 [JsonSerializable(typeof(GetSchema))]
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
+[JsonSerializable(typeof(GraphQLRequest<LogVariables>))]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
+[JsonSerializable(typeof(GraphQLRequest<ReadTextFileVariables>))]
 [JsonSerializable(typeof(ReadTextFileWithVersionVariables))]
 [JsonSerializable(typeof(ReadTextFileWithVersionData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileWithVersionData>))]
+[JsonSerializable(typeof(GraphQLRequest<ReadTextFileWithVersionVariables>))]
 public partial class GraphQLOperationsJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLOperations
@@ -98,7 +109,10 @@ public static partial class GraphQLOperations
             },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddFileVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddFileData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddFileData
@@ -127,7 +141,10 @@ public static partial class GraphQLOperations
             },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddKeyedTextVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextData
@@ -160,7 +177,10 @@ public static partial class GraphQLOperations
             },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddKeyedTextByTagsVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextByTagsData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextByTagsData
@@ -186,7 +206,10 @@ public static partial class GraphQLOperations
             Variables = new AddTextVariables() { CaretId = caretId, TextAndCarets = textAndCarets },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddTextVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextData
@@ -210,7 +233,10 @@ public static partial class GraphQLOperations
             Variables = new AddTextByTagsVariables() { Tags = tags, TextAndCarets = textAndCarets },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddTextByTagsVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextByTagsData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextByTagsData
@@ -250,7 +276,10 @@ public static partial class GraphQLOperations
             Variables = new GetConfigurationVariables() { },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestGetConfigurationVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetConfigurationData
@@ -277,7 +306,10 @@ public static partial class GraphQLOperations
             Variables = new GetFilesVariables() { Whitelist = whitelist, Blacklist = blacklist },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestGetFilesVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetFilesData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFilesData
@@ -304,7 +336,10 @@ public static partial class GraphQLOperations
             Variables = new GetSchemaVariables() { BotFilePath = botFilePath },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestGetSchemaVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetSchemaData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetSchemaData
@@ -331,7 +366,10 @@ public static partial class GraphQLOperations
             },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestLogVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<LogData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseLogData
@@ -353,7 +391,10 @@ public static partial class GraphQLOperations
             Variables = new ReadTextFileVariables() { TextFilePath = textFilePath },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestReadTextFileVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<ReadTextFileData>>(
             response,
             GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseReadTextFileData
@@ -382,7 +423,12 @@ public static partial class GraphQLOperations
             },
         };
 
-        var response = Imports.GraphQL(request);
+        var response = Imports.GraphQL(
+            request,
+            GraphQLOperationsJsonSerializerContext
+                .Default
+                .GraphQLRequestReadTextFileWithVersionVariables
+        );
         var result = JsonSerializer.Deserialize<GraphQLResponse<ReadTextFileWithVersionData>>(
             response,
             GraphQLOperationsJsonSerializerContext
@@ -656,10 +702,10 @@ public class GetConfiguration
     public required DotnetLanguage Language { get; set; }
 
     [JsonPropertyName("copybots")]
-    public List<GetConfigurationConfiguration>? Copybots { get; set; }
+    public List<GetConfigurationCopybots>? Copybots { get; set; }
 }
 
-public class GetConfigurationConfiguration
+public class GetConfigurationCopybots
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -671,10 +717,10 @@ public class GetConfigurationConfiguration
     public List<string>? Whitelist { get; set; }
 
     [JsonPropertyName("fieldDefinitions")]
-    public List<GetConfigurationConfigurationCopybots>? FieldDefinitions { get; set; }
+    public List<GetConfigurationCopybotsFieldDefinitions>? FieldDefinitions { get; set; }
 }
 
-public class GetConfigurationConfigurationCopybots
+public class GetConfigurationCopybotsFieldDefinitions
 {
     [JsonPropertyName("needle")]
     public required string Needle { get; set; }
