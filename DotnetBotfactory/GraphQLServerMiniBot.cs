@@ -4,7 +4,7 @@ using Humanizer;
 
 namespace DotnetBotfactory;
 
-public class GraphQLServerBot : IMiniBot
+public class GraphQLServerMiniBot : IMiniBot
 {
     public void Execute()
     {
@@ -61,19 +61,22 @@ public class GraphQLServerBot : IMiniBot
 
               """");
          
-         foreach (var objectType in parsedSchema.ObjectTypes ?? [])
+         foreach (var objectType in parsedSchema.ObjectTypes)
          {
-             if (objectType is null)
-             {
-                 continue;
-             }
-             
              GraphQLOperations.AddText(typeDefinitions.Id,
                  $$"""
                  
                  public partial class {{objectType.Name}}
+                 {
+                     {{CaretRef.New(out var body)}}
+                 }
                  
                  """);
+
+             foreach (var field in objectType.Fields)
+             {
+                 
+             }
          }
     }
 }

@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using CodegenBot;
-using HotChocolate.Language;
 using Humanizer;
 
 namespace DotnetBotfactory;
 
-public class GraphQLOperationsBot : IMiniBot
+public class GraphQLClientMiniBot : IMiniBot
 {
     public void Execute()
     {
@@ -101,11 +99,11 @@ public class GraphQLOperationsBot : IMiniBot
               
               [JsonSerializable(typeof(GraphQLError))]
               {{CaretRef.New(out var jsonSerializerContextAttributes)}}
-              public partial class GraphQLOperationsJsonSerializerContext : JsonSerializerContext
+              public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext
               {
               }
               
-              public static partial class GraphQLOperations
+              public static partial class GraphQLClient
               {
               {{CaretRef.New(out var operations)}}
               }
@@ -210,8 +208,8 @@ public class GraphQLOperationsBot : IMiniBot
                            },
                        };
                    
-                       var response = Imports.GraphQL(request, GraphQLOperationsJsonSerializerContext.Default.GraphQLRequest{{operation.Name.Pascalize()}}Variables);
-                       var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLOperationsJsonSerializerContext.Default.GraphQLResponse{{operation.Name.Pascalize()}}Data);
+                       var response = Imports.GraphQL(request, GraphQLClientJsonSerializerContext.Default.GraphQLRequest{{operation.Name.Pascalize()}}Variables);
+                       var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLClientJsonSerializerContext.Default.GraphQLResponse{{operation.Name.Pascalize()}}Data);
                        return result?.Data ?? throw new InvalidOperationException("Received null data for request {{operation.Name.Pascalize()}}.");
                    }
                    """");
