@@ -126,9 +126,9 @@ public class GraphQLError
 [JsonSerializable(typeof(ReadTextFileWithVersionData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileWithVersionData>))]
 [JsonSerializable(typeof(GraphQLRequest<ReadTextFileWithVersionVariables>))]
-public partial class GraphQLOperationsJsonSerializerContext : JsonSerializerContext { }
+public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext { }
 
-public static partial class GraphQLOperations
+public static partial class GraphQLClient
 {
     public static AddFileData AddFile(string filePath, string textAndCarets)
     {
@@ -151,11 +151,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddFileVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddFileVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddFileData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddFileData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddFileData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request AddFile.");
@@ -183,11 +183,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddKeyedTextVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddKeyedTextVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddKeyedTextData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request AddKeyedText.");
@@ -219,11 +219,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddKeyedTextByTagsVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddKeyedTextByTagsVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextByTagsData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddKeyedTextByTagsData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddKeyedTextByTagsData
         );
         return result?.Data
             ?? throw new InvalidOperationException(
@@ -248,11 +248,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddTextVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddTextVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddTextData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request AddText.");
@@ -275,11 +275,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestAddTextByTagsVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddTextByTagsVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextByTagsData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseAddTextByTagsData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddTextByTagsData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request AddTextByTags.");
@@ -318,11 +318,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestGetConfigurationVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestGetConfigurationVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetConfigurationData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetConfigurationData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseGetConfigurationData
         );
         return result?.Data
             ?? throw new InvalidOperationException(
@@ -348,11 +348,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestGetFilesVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestGetFilesVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetFilesData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetFilesData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseGetFilesData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request GetFiles.");
@@ -378,11 +378,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestGetSchemaVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestGetSchemaVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<GetSchemaData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseGetSchemaData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseGetSchemaData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request GetSchema.");
@@ -408,11 +408,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestLogVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestLogVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<LogData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseLogData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseLogData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request Log.");
@@ -464,11 +464,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestParseGraphQLSchemaVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestParseGraphQLSchemaVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<ParseGraphQLSchemaData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseParseGraphQLSchemaData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseParseGraphQLSchemaData
         );
         return result?.Data
             ?? throw new InvalidOperationException(
@@ -545,7 +545,7 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext
+            GraphQLClientJsonSerializerContext
                 .Default
                 .GraphQLRequestParseGraphQLSchemaAndOperationsVariables
         );
@@ -553,7 +553,7 @@ public static partial class GraphQLOperations
             GraphQLResponse<ParseGraphQLSchemaAndOperationsData>
         >(
             response,
-            GraphQLOperationsJsonSerializerContext
+            GraphQLClientJsonSerializerContext
                 .Default
                 .GraphQLResponseParseGraphQLSchemaAndOperationsData
         );
@@ -578,11 +578,11 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLRequestReadTextFileVariables
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestReadTextFileVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<ReadTextFileData>>(
             response,
-            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseReadTextFileData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseReadTextFileData
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request ReadTextFile.");
@@ -610,15 +610,13 @@ public static partial class GraphQLOperations
 
         var response = Imports.GraphQL(
             request,
-            GraphQLOperationsJsonSerializerContext
+            GraphQLClientJsonSerializerContext
                 .Default
                 .GraphQLRequestReadTextFileWithVersionVariables
         );
         var result = JsonSerializer.Deserialize<GraphQLResponse<ReadTextFileWithVersionData>>(
             response,
-            GraphQLOperationsJsonSerializerContext
-                .Default
-                .GraphQLResponseReadTextFileWithVersionData
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseReadTextFileWithVersionData
         );
         return result?.Data
             ?? throw new InvalidOperationException(
