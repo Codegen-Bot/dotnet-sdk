@@ -102,6 +102,8 @@ type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
   typeCondition: String!
   variables: [GraphQLVariable!]!
   selections: [GraphQLSelection!]!
+  fieldSelections: [GraphQLFieldSelection!]!
+  fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
   directives: [GraphQLDirective!]!
 }
 
@@ -151,6 +153,8 @@ type GraphQLOperation @source(name: "GraphQLOperation", schema: "graphql") {
   text: String!
   operationType: GraphQLOperationType!
   selections: [GraphQLSelection!]!
+  fieldSelections: [GraphQLFieldSelection!]!
+  fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
   directives: [GraphQLDirective!]!
   variables: [GraphQLVariable!]!
 }
