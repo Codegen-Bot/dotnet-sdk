@@ -111,6 +111,44 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerations))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerationsValues))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperations))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelections))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelections))]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections)
+)]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
@@ -510,6 +548,48 @@ public static partial class GraphQLOperations
                     }
                     operations {
                       name
+                      fieldSelections {
+                        name
+                        fieldSelections {
+                          name
+                          fieldSelections {
+                            name
+                            fieldSelections {
+                              name
+                              fieldSelections {
+                                name
+                                fieldSelections {
+                                  name
+                                  fieldSelections {
+                                    name
+                                    fieldSelections {
+                                      name
+                                      fieldSelections {
+                                        name
+                                        fieldSelections {
+                                          name
+                                          fieldSelections {
+                                            name
+                                            fieldSelections {
+                                              name
+                                              fieldSelections {
+                                                name
+                                                fieldSelections {
+                                                  name
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -1200,6 +1280,132 @@ public class ParseGraphQLSchemaAndOperationsOperations
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fieldSelections")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelectionsFieldSelections
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
 }
 
 public class ReadTextFileData
