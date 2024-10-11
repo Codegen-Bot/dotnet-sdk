@@ -89,38 +89,10 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaObjectTypesFields))]
 [JsonSerializable(typeof(ParseGraphQLSchemaObjectTypesFieldsArguments))]
 [JsonSerializable(typeof(ParseGraphQLSchemaObjectTypesFieldsArgumentsType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArguments))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
-)]
 [JsonSerializable(typeof(ParseGraphQLSchemaObjectTypesFieldsType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaObjectTypesFieldsTypeGenericArguments))]
-[JsonSerializable(typeof(ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArguments))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
-)]
 [JsonSerializable(typeof(ParseGraphQLSchemaInputObjectTypes))]
 [JsonSerializable(typeof(ParseGraphQLSchemaInputObjectTypesFields))]
 [JsonSerializable(typeof(ParseGraphQLSchemaInputObjectTypesFieldsType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArguments))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
-)]
 [JsonSerializable(typeof(ParseGraphQLSchemaEnumerations))]
 [JsonSerializable(typeof(ParseGraphQLSchemaEnumerationsValues))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsVariables))]
@@ -132,59 +104,15 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypesFields))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsArguments))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsType))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
-)]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArguments))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
-)]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypes))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypesFields))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsType))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
-)]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerations))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerationsValues))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperations))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariables))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArguments))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArguments)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
-)]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelections))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelections))]
 [JsonSerializable(
@@ -537,35 +465,11 @@ public static partial class GraphQLOperations
                         arguments {
                           name
                           type {
-                            name
-                            genericArguments {
-                              name
-                              genericArguments {
-                                name
-                                genericArguments {
-                                  name
-                                  genericArguments {
-                                    name
-                                  }
-                                }
-                              }
-                            }
+                            text
                           }
                         }
                         type {
-                          name
-                          genericArguments {
-                            name
-                            genericArguments {
-                              name
-                              genericArguments {
-                                name
-                                genericArguments {
-                                  name
-                                }
-                              }
-                            }
-                          }
+                          text
                         }
                       }
                     }
@@ -574,19 +478,7 @@ public static partial class GraphQLOperations
                       fields {
                         name
                         type {
-                          name
-                          genericArguments {
-                            name
-                            genericArguments {
-                              name
-                              genericArguments {
-                                name
-                                genericArguments {
-                                  name
-                                }
-                              }
-                            }
-                          }
+                          text
                         }
                       }
                     }
@@ -633,36 +525,11 @@ public static partial class GraphQLOperations
                         arguments {
                           name
                           type {
-                            name
-                            genericArguments {
-                              name
-                              genericArguments {
-                                name
-                                genericArguments {
-                                  name
-                                  genericArguments {
-                                    name
-                                  }
-                                }
-                              }
-                            }
+                            text
                           }
                         }
                         type {
-                          name
                           text
-                          genericArguments {
-                            name
-                            genericArguments {
-                              name
-                              genericArguments {
-                                name
-                                genericArguments {
-                                  name
-                                }
-                              }
-                            }
-                          }
                         }
                       }
                     }
@@ -671,20 +538,7 @@ public static partial class GraphQLOperations
                       fields {
                         name
                         type {
-                          name
                           text
-                          genericArguments {
-                            name
-                            genericArguments {
-                              name
-                              genericArguments {
-                                name
-                                genericArguments {
-                                  name
-                                }
-                              }
-                            }
-                          }
                         }
                       }
                     }
@@ -701,19 +555,7 @@ public static partial class GraphQLOperations
                       variables {
                         name
                         type {
-                          name
-                          genericArguments {
-                            name
-                            genericArguments {
-                              name
-                              genericArguments {
-                                name
-                                genericArguments {
-                                  name
-                                }
-                              }
-                            }
-                          }
+                          text
                         }
                       }
                       fieldSelections {
@@ -1287,86 +1129,14 @@ public class ParseGraphQLSchemaObjectTypesFieldsArguments
 
 public class ParseGraphQLSchemaObjectTypesFieldsArgumentsType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 }
 
 public class ParseGraphQLSchemaObjectTypesFieldsType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsTypeGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsTypeGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 }
 
 public class ParseGraphQLSchemaInputObjectTypes
@@ -1389,44 +1159,8 @@ public class ParseGraphQLSchemaInputObjectTypesFields
 
 public class ParseGraphQLSchemaInputObjectTypesFieldsType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 }
 
 public class ParseGraphQLSchemaEnumerations
@@ -1503,89 +1237,14 @@ public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsArguments
 
 public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsArgumentsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
     [JsonPropertyName("text")]
     public required string Text { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsInputObjectTypes
@@ -1608,47 +1267,8 @@ public class ParseGraphQLSchemaAndOperationsInputObjectTypesFields
 
 public class ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
     [JsonPropertyName("text")]
     public required string Text { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsInputObjectTypesFieldsTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsEnumerations
@@ -1695,44 +1315,8 @@ public class ParseGraphQLSchemaAndOperationsOperationsVariables
 
 public class ParseGraphQLSchemaAndOperationsOperationsVariablesType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("genericArguments")]
-    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
-}
-
-public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsOperationsFieldSelections
