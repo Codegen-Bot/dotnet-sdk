@@ -61,7 +61,7 @@ public class CSharpBot : IMiniBot
                 </PropertyGroup>
                 <ItemGroup>
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
-                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.154" />
+                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.158" />
                   <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
                   <PackageReference Include="Humanizer" Version="2.14.1" />
                   {{CaretRef.New(out var packageRefs)}}
@@ -251,59 +251,6 @@ public class CSharpBot : IMiniBot
               }
               
               """");
-
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/Imports.cs",
-          $$""""
-            using System;
-            using System.Runtime.InteropServices;
-            using System.Text.Json;
-            using Extism;
-            using CodegenBot;
-            
-            namespace {{rootNamespace}};
-            
-            /// <summary>
-            /// This class contains all the static methods that we can call that codegen.bot implements. See also the Exports class,
-            /// which contains static methods that we can implement that are called by codegen.bot.
-            /// </summary>
-            public class Imports
-            {
-                [DllImport("extism", EntryPoint = "cgb_graphql")]
-                public static extern ulong ExternGraphQL(ulong offset);
-            
-                public static string GraphQL<T>(GraphQLRequest<T> request)
-                {
-                    var json = request.ToJsonString();
-                    using var block = Pdk.Allocate(json);
-                    var ptr = ExternGraphQL(block.Offset);
-                    var response = MemoryBlock.Find(ptr).ReadString();
-                    return response;
-                }
-            
-                [DllImport("extism", EntryPoint = "cgb_log")]
-                public static extern void ExternLog(ulong offset);
-            
-                public static void Log(LogEvent logEvent)
-                {
-                    var json = JsonSerializer.Serialize(logEvent, LogEventJsonContext.Default.LogEvent);
-                    using var block = Pdk.Allocate(json);
-                    ExternLog(block.Offset);
-                }
-            
-                [DllImport("extism", EntryPoint = "cgb_random")]
-                public static extern ulong ExternRandom(ulong offset);
-                
-                public static byte[] GetRandomBytes(int numBytes)
-                {
-                    var text = numBytes.ToString();
-                    using var block = Pdk.Allocate(text);
-                    var ptr = ExternRandom(block.Offset);
-                    var response = MemoryBlock.Find(ptr).ReadBytes();
-                    return response;
-                }
-            }
-            
-            """");
 
         CaretRef graphql, staticConstructor, exportsUsings, mainBody;
         
@@ -565,64 +512,6 @@ public class CSharpBot : IMiniBot
 
                   """);
 
-            GraphQLOperations.AddFile($"{configuration.OutputPath}/CustomLogger.cs",
-                $$"""
-                using System;
-                using CodegenBot;
-                using Microsoft.Extensions.Logging;
-                
-                namespace {{rootNamespace}};
-                
-                internal class CustomLoggerProvider : ILoggerProvider
-                {
-                    public ILogger CreateLogger(string categoryName)
-                    {
-                        return new CustomLogger();
-                    }
-                    
-                    public void Dispose()
-                    {
-                    }
-                }
-                
-                internal class CustomLogger() : ILogger
-                {
-                    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
-                    {
-                        return null;
-                    }
-                
-                    public bool IsEnabled(LogLevel logLevel)
-                    {
-                        return true;
-                    }
-                
-                    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-                    {
-                        if (logLevel > LogLevel.Warning)
-                        {
-                            Imports.Log(new LogEvent()
-                            {
-                                Level = logLevel switch
-                                {
-                                    LogLevel.Trace => LogEventLevel.Trace,
-                                    LogLevel.Debug => LogEventLevel.Debug,
-                                    LogLevel.Information => LogEventLevel.Information,
-                                    LogLevel.Warning => LogEventLevel.Warning,
-                                    LogLevel.Error => LogEventLevel.Error,
-                                    LogLevel.Critical => LogEventLevel.Critical,
-                                    LogLevel.None => LogEventLevel.Information,
-                                    _ => LogEventLevel.Information
-                                },
-                                Message = formatter(state, exception),
-                                Args = Array.Empty<string>(),
-                            });
-                        }
-                    }
-                }
-                
-                """);
-            
             GraphQLOperations.AddFile($"{configuration.OutputPath}/Query.cs",
                 $$"""
 
