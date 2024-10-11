@@ -650,6 +650,7 @@ public static partial class GraphQLOperations
                         }
                         type {
                           name
+                          text
                           genericArguments {
                             name
                             genericArguments {
@@ -1545,6 +1546,9 @@ public class ParseGraphQLSchemaAndOperationsObjectTypesFieldsType
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
+
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 
     [JsonPropertyName("genericArguments")]
     public List<ParseGraphQLSchemaAndOperationsObjectTypesFieldsTypeGenericArguments>? GenericArguments { get; set; }
