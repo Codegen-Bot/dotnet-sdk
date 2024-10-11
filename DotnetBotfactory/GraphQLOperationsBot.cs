@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using CodegenBot;
+using HotChocolate.Language;
 using Humanizer;
 
 namespace DotnetBotfactory;
@@ -14,11 +17,7 @@ public class GraphQLOperationsBot : IMiniBot
         
         var rootNamespace = configuration.ProjectName.Replace("-", " ").Pascalize();
 
-        var service = new GraphQLMetadataExtractionService();
-
         var files = GraphQLOperations.GetFiles(["**/*.graphql"], []).Files;
-
-        var metadata = new GraphQLMetadata();
         
         var schema = GraphQLOperations.GetSchema($"{configuration.OutputPath}/bot.json");
 
@@ -36,6 +35,8 @@ public class GraphQLOperationsBot : IMiniBot
         {
             files.Add(new GetFiles() { Path = schemaPath, Kind = FileKind.TEXT });
         }
+
+        var fileContentses = new List<AdditionalFileInput>();
         
         foreach (var file in files)
         {
@@ -61,8 +62,15 @@ public class GraphQLOperationsBot : IMiniBot
                 });
                 continue;
             }
-            service.Extract(fileContents, metadata);
+
+            fileContentses.Add(new AdditionalFileInput()
+            {
+                FilePath = file.Path,
+                Content = fileContents,
+            });
         }
+
+        var metadata = GraphQLOperations.ParseGraphQLSchemaAndOperations(fileContentses).GraphQL;
         
         GraphQLOperations.AddFile($"{configuration.OutputPath}/GraphQLClient.cs",
             $$""""
@@ -106,7 +114,7 @@ public class GraphQLOperationsBot : IMiniBot
 
               """");
 
-        foreach (var enumType in metadata.Enumerations.OrderBy(x => x.Name))
+        foreach (var enumType in (metadata.Enumerations ?? []).OrderBy(x => x.Name))
         {
             GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
                 $"""
@@ -125,7 +133,7 @@ public class GraphQLOperationsBot : IMiniBot
 
                   """);
             
-            foreach (var value in enumType.Values)
+            foreach (var value in enumType.Values ?? [])
             {
                 GraphQLOperations.AddText(enumValues.Id, $$"""
                                                            [EnumMember(Value = "{{value.Name}}")]
@@ -134,7 +142,7 @@ public class GraphQLOperationsBot : IMiniBot
             }
         }
         
-        foreach (var inputObjectType in metadata.InputObjectTypes.OrderBy(x => x.Name))
+        foreach (var inputObjectType in (metadata.InputObjectTypes ?? []).OrderBy(x => x.Name))
         {
             GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
                 $"""
@@ -152,9 +160,9 @@ public class GraphQLOperationsBot : IMiniBot
 
                   """);
 
-            foreach (var field in inputObjectType.Fields)
+            foreach (var field in inputObjectType.Fields ?? [])
             {
-                var type = GetVariableCSharpType(field.Type, out var _);
+                var type = GetVariableCSharpType(field.Type.Text.ToTypeRef(), out var _);
                 GraphQLOperations.AddText(properties.Id,
                     $$"""
 
@@ -165,7 +173,7 @@ public class GraphQLOperationsBot : IMiniBot
             }
         }
 
-        foreach (var operation in metadata.Operations.OrderBy(x => x.Name))
+        foreach (var operation in (metadata.Operations ?? []).OrderBy(x => x.Name))
         {
             if (string.IsNullOrWhiteSpace(operation.Name))
             {
@@ -235,9 +243,9 @@ public class GraphQLOperationsBot : IMiniBot
 
                  """);
 
-            foreach (var variable in operation.Variables)
+            foreach (var variable in operation.Variables ?? [])
             {
-                var type = GetVariableCSharpType(variable.Type, out var enumName);
+                var type = GetVariableCSharpType(variable.Type.Text.ToTypeRef(), out var enumName);
                 GraphQLOperations.AddText(parameters.Id, $$"""{{type}} {{variable.Name}}""");
 
                 GraphQLOperations.AddText(variables.Id, $$"""
@@ -252,7 +260,7 @@ public class GraphQLOperationsBot : IMiniBot
             }
 
             var rootType =
-                metadata.ObjectTypes.FirstOrDefault(objType => objType.Name.Equals(operation.OperationType.ToString(), StringComparison.OrdinalIgnoreCase));
+                (metadata.ObjectTypes ?? []).FirstOrDefault(objType => objType.Name.Equals(operation.OperationType.ToString(), StringComparison.OrdinalIgnoreCase));
 
             if (rootType is null)
             {
@@ -268,103 +276,105 @@ public class GraphQLOperationsBot : IMiniBot
             }
         }
         
-        void AddText(GraphQLOperation operation, CaretRef properties, CaretRef jsonSerializerContextAttributes, string path,
-            GraphQLObjectType objectType)
+        void AddText(ParseGraphQLSchemaAndOperationsOperation operation, CaretRef properties, CaretRef jsonSerializerContextAttributes, string path,
+            ParseGraphQLSchemaAndOperationsObjectType objectType)
         {
-            foreach (var selection in operation.Selections)
+            var selections = operation.NestedSelection?.ToSelections() ?? [];
+            
+            foreach (var selection in selections)
             {
-                AddSelectionText(properties, jsonSerializerContextAttributes, path, objectType, selection);
+                AddSelectionText(properties, path, objectType, selection);
             }
         }
 
-        void AddSelectionText(CaretRef properties, CaretRef jsonSerializerContextAttributes, string path, GraphQLObjectType objectType,
-            IGraphQLSelection selection)
+        void AddSelectionText(CaretRef properties, string path, ParseGraphQLSchemaAndOperationsObjectType objectType, Selection selection)
         {
-            if (selection is GraphQLFieldSelection fieldSelection)
+            if (selection.FieldSelection is not null)
             {
-                var field = objectType.Fields.FirstOrDefault(x => x.Name == fieldSelection.Name);
+                var field = (objectType.Fields ?? []).FirstOrDefault(x => x.Name == selection.FieldSelection.Name);
 
                 if (field is null)
                 {
                     Imports.Log(new LogEvent()
                     {
                         Level = LogEventLevel.Error, Message = "Cannot find field {Field}",
-                        Args = [fieldSelection.Name]
+                        Args = [selection.FieldSelection.Name]
                     });
                 }
                 else
                 {
-                    var type = GetSelectionType(path, fieldSelection, field.Type, out var isEnum);
+                    (string, bool) type = GetSelectionType(path, selection, field.Type.Text.ToTypeRef());
 
                     GraphQLOperations.AddText(properties.Id,
                         $$"""
 
-                          [JsonPropertyName("{{selection.Name}}")]
-                          public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
+                          [JsonPropertyName("{{selection.FieldSelection.Name}}")]
+                          public {{GetIsRequired(type.Item1)}} {{type.Item1}} {{selection.FieldSelection.Name.Pascalize()}} { get; set; }
 
                           """);
                 }
             }
-            else if (selection is GraphQLFragmentSpreadSelection fragmentSpreadSelection)
+            else if (selection.FragmentSpreadSelection is not null)
             {
-                var fragment = metadata.Fragments.FirstOrDefault(x => x.Name == fragmentSpreadSelection.Name);
-
-                if (fragment is null)
-                {
-                    Imports.Log(new LogEvent() { Level = LogEventLevel.Error, Message = "Cannot find fragment {Fragment}", Args = [fragmentSpreadSelection.Name] });
-                }
-                else
-                {
-                    foreach (var fragmentSelection in fragment.Selections)
-                    {
-                        AddSelectionText(properties, jsonSerializerContextAttributes, path, objectType, fragmentSelection);
-                    }
-                }
+                throw new NotImplementedException("Fragment spread selection is not implemented.");
+                // var fragment = metadata.Fragments.FirstOrDefault(x => x.Name == fragmentSpreadSelection.Name);
+                //
+                // if (fragment is null)
+                // {
+                //     Imports.Log(new LogEvent() { Level = LogEventLevel.Error, Message = "Cannot find fragment {Fragment}", Args = [fragmentSpreadSelection.Name] });
+                // }
+                // else
+                // {
+                //     foreach (var fragmentSelection in fragment.Selections)
+                //     {
+                //         AddSelectionText(properties, jsonSerializerContextAttributes, path, objectType, fragmentSelection);
+                //     }
+                // }
             }
         }
         
-        string GetSelectionType(string path, GraphQLFieldSelection selection, TypeRef type, out bool isEnum)
+        (string type, bool isEnum) GetSelectionType(string path, Selection selection, TypeRef type)
         {
-            isEnum = false;
             if (type.Name == "NotNull")
             {
-                var result = GetSelectionType(path, selection, type.GenericArguments[0], out isEnum);
+                (string, bool) x = GetSelectionType(path, selection, type.GenericArguments[0]);
+                var result = x.Item1;
                 if (result.EndsWith("?"))
                 {
                     result = result.Substring(0, result.Length - 1);
                 }
 
-                return result;
+                return (result, x.Item2);
             }
 
             if (type.Name == "List")
             {
-                return $"List<{GetSelectionType(path, selection, type.GenericArguments[0], out isEnum)}>?";
+                (string, bool) b = GetSelectionType(path, selection, type.GenericArguments[0]);
+                return ($"List<{b.Item1}>?", false);
             }
 
             if (type.Name == "String")
             {
-                return "string?";
+                return ("string?", false);
             }
 
             if (type.Name == "Boolean")
             {
-                return "bool?";
+                return ("bool?", false);
             }
 
             if (type.Name == "Int")
             {
-                return "int?";
+                return ("int?", false);
             }
 
-            var enumType = metadata.Enumerations.FirstOrDefault(enumType => enumType.Name == type.Name);
+            var enumType = (metadata.Enumerations ?? []).FirstOrDefault(enumType => enumType.Name == type.Name);
             if (enumType is not null)
             {
-                isEnum = true;
-                return enumType.Name.Pascalize() + "?";
+                return (enumType.Name.Pascalize() + "?", true);
             }
             
-            var objectType = metadata.ObjectTypes.FirstOrDefault(objType => objType.Name == type.Name);
+            var objectType = (metadata.ObjectTypes ?? []).FirstOrDefault(objType => objType.Name == type.Name);
             if (objectType is not null)
             {
                 GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
@@ -381,20 +391,22 @@ public class GraphQLOperationsBot : IMiniBot
                       }
 
                       """);
-
-                foreach (var subselection in selection.Selections)
-                {
-                    AddSelectionText(properties, jsonSerializerContextAttributes, path + " " + (selection.Alias ?? selection.Name), objectType, subselection);
-                }
                 
-                return path.Pascalize() + "?";
+                foreach (var subselection in selection.Children)
+                {
+                    var name = subselection.FieldSelection?.Name ?? subselection.FragmentSpreadSelection!.Name;
+                    name = ((string)name).Singularize();
+                    AddSelectionText(properties, $"{path} {name}", objectType, subselection);
+                }
+
+                return (path.Pascalize() + "?", false);
             }
 
             GraphQLOperations.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
-            
-            return "???";
-        }
 
+            return ("???", false);
+        }
+        
         string GetVariableCSharpType(TypeRef type, out string? enumName)
         {
             if (type.Name == "NotNull")
@@ -431,14 +443,14 @@ public class GraphQLOperationsBot : IMiniBot
                 return "int?";
             }
 
-            var enumType = metadata.Enumerations.FirstOrDefault(enumType => enumType.Name == type.Name);
+            var enumType = (metadata.Enumerations ?? []).FirstOrDefault(enumType => enumType.Name == type.Name);
             if (enumType is not null)
             {
                 enumName = enumType.Name.Pascalize();
                 return enumType.Name.Pascalize() + "?";
             }
             
-            var objectType = metadata.InputObjectTypes.FirstOrDefault(objType => objType.Name == type.Name);
+            var objectType = (metadata.InputObjectTypes ?? []).FirstOrDefault(objType => objType.Name == type.Name);
             if (objectType is not null)
             {
                 enumName = null;

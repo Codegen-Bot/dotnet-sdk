@@ -29,5 +29,97 @@ query GetSchema($botFilePath: String!) {
   botSpec(botFilePath: $botFilePath) {
     consumedSchemaPath
     excludeConfigurationFromConsumedSchema
+    providedSchemaPath
+  }
+}
+
+query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
+  graphQL(additionalFiles: $graphql) {
+    objectTypes {
+      name
+      fields {
+        name
+        arguments {
+          name
+          type {
+            text
+          }
+        }
+        type {
+          text
+        }
+      }
+    }
+    inputObjectTypes {
+      name
+      fields {
+        name
+        type {
+          text
+        }
+      }
+    }
+    enumerations {
+      name
+      values {
+        name
+      }
+    }
+    operations {
+      name
+      operationType
+      text
+      variables {
+        name
+        type {
+          text
+        }
+      }
+      nestedSelection {
+        depth
+        fieldSelection {
+          name
+          alias
+        }
+        fragmentSpreadSelection {
+          name
+        }
+      }
+    }
+  }
+}
+
+query ParseGraphQLSchema($graphql: String!) {
+  graphQL(additionalFiles: [$graphql]) {
+    objectTypes {
+      name
+      fields {
+        name
+        arguments {
+          name
+          type {
+            text
+          }
+        }
+        type {
+          text
+        }
+      }
+    }
+    inputObjectTypes {
+      name
+      fields {
+        name
+        type {
+          text
+        }
+      }
+    }
+    enumerations {
+      name
+      values {
+        name
+      }
+    }
   }
 }

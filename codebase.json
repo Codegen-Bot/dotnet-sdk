@@ -11,6 +11,10 @@
       "botVersion": "1.0.0"
     },
     {
+      "botId": "bot://parse/graphql",
+      "botVersion": "1.0.0"
+    },
+    {
       "botId": "bot://core/log",
       "botVersion": "1.0.0"
     },
@@ -66,7 +70,7 @@
     },
     {
       "botId": "bot://hub/dotnet/botfactory",
-      "botVersion": "0.0.1-alpha15",
+      "botVersion": "0.0.1-alpha38",
       "configuration": {
         "id": "bot://hub/dotnet/botfactory",
         "outputPath": "DotnetBotfactory",

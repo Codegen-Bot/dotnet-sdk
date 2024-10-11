@@ -146,7 +146,7 @@ public class CopyBot : IMiniBot
         }
     }
 
-    private static string MakeParametric(GetConfigurationConfiguration copybot, string fileContentsText, string openBraces,
+    private static string MakeParametric(GetConfigurationCopybot copybot, string fileContentsText, string openBraces,
         string closeBraces)
     {
         foreach (var fieldDefinition in copybot.FieldDefinitions ?? [])

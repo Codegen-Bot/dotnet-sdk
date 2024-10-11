@@ -61,7 +61,8 @@ public class CSharpBot : IMiniBot
                 </PropertyGroup>
                 <ItemGroup>
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
-                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.160" />
+                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.163" />
+                  <!-- This is used by the GraphQL client to properly serialize enums -->
                   <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
                   <PackageReference Include="Humanizer" Version="2.14.1" />
                   {{CaretRef.New(out var packageRefs)}}
@@ -450,20 +451,9 @@ public class CSharpBot : IMiniBot
                     {
                         var request = Pdk.GetInputString();
                     
-                        var task = _graphqlServer.ExecuteAsync(request, _serviceProvider, CancellationToken.None);
-                        task.Wait();
+                        var result = _graphqlServer.Execute(request, _serviceProvider);
                     
-                        if (task.IsFaulted)
-                        {
-                            Imports.Log(new LogEvent()
-                            {
-                                Level = LogEventLevel.Critical,
-                                Message = "Failed to process GraphQL request: {ExceptionType} {Message}, {StackTrace}",
-                                Args = [task.Exception.GetType().Name, task.Exception.Message, task.Exception.StackTrace ?? "",]
-                            });
-                        }
-                        
-                        Pdk.SetOutput(task.Result);
+                        Pdk.SetOutput(result);
                     
                         return 0;
                     }
