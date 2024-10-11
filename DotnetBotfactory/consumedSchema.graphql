@@ -191,6 +191,8 @@ type Mutation {
 type NestedSelection @source(name: "NestedSelection", schema: "graphql") {
   depth: Int!
   selection: GraphQLSelection!
+  fieldSelection: GraphQLFieldSelection
+  fragmentSpreadSelection: GraphQLFragmentSpreadSelection
 }
 
 type Query {
