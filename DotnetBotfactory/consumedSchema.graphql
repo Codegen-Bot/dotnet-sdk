@@ -154,6 +154,7 @@ type GraphQLOperation @source(name: "GraphQLOperation", schema: "graphql") {
   operationType: GraphQLOperationType!
   selections: [GraphQLSelection!]!
   fieldSelections: [GraphQLFieldSelection!]!
+  nestedSelection: [NestedSelection!]!
   fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
   directives: [GraphQLDirective!]!
   variables: [GraphQLVariable!]!
@@ -185,6 +186,11 @@ type Mutation {
   addKeyedTextByTags(tags: [CaretTagInput!]! key: String! textAndCarets: String! caretDelimiterLength: Int! = 9): [Caret!]! @delegate(schema: "output", path: "addKeyedTextByTags")
   addTextByTags(tags: [CaretTagInput!] textAndCarets: String! caretDelimiterLength: Int! = 9): [Caret!]! @delegate(schema: "output", path: "addTextByTags")
   log(severity: LogSeverity! message: String! arguments: [String!]): String! @delegate(schema: "log", path: "log")
+}
+
+type NestedSelection @source(name: "NestedSelection", schema: "graphql") {
+  depth: Int!
+  selection: GraphQLSelection!
 }
 
 type Query {
