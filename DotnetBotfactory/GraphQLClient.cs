@@ -114,6 +114,10 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariables))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsNestedSelection))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsNestedSelectionFieldSelection))]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsNestedSelectionFragmentSpreadSelection)
+)]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
@@ -523,6 +527,13 @@ public static partial class GraphQLOperations
                       }
                       nestedSelection {
                         depth
+                        fieldSelection {
+                          name
+                          alias
+                        }
+                        fragmentSpreadSelection {
+                          name
+                        }
                       }
                     }
                   }
@@ -1247,6 +1258,27 @@ public class ParseGraphQLSchemaAndOperationsOperationsNestedSelection
 {
     [JsonPropertyName("depth")]
     public required int Depth { get; set; }
+
+    [JsonPropertyName("fieldSelection")]
+    public ParseGraphQLSchemaAndOperationsOperationsNestedSelectionFieldSelection? FieldSelection { get; set; }
+
+    [JsonPropertyName("fragmentSpreadSelection")]
+    public ParseGraphQLSchemaAndOperationsOperationsNestedSelectionFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsNestedSelectionFieldSelection
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsNestedSelectionFragmentSpreadSelection
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
 }
 
 public class ReadTextFileData
