@@ -71,6 +71,20 @@ public class GraphQLError
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
+[JsonSerializable(typeof(ParseGraphQLVariables))]
+[JsonSerializable(typeof(ParseGraphQLData))]
+[JsonSerializable(typeof(GraphQLResponse<ParseGraphQLData>))]
+[JsonSerializable(typeof(ParseGraphQL))]
+[JsonSerializable(typeof(ParseGraphQLGraphQL))]
+[JsonSerializable(typeof(ParseGraphQLGraphQLObjectTypes))]
+[JsonSerializable(typeof(ParseGraphQLGraphQLObjectTypesFields))]
+[JsonSerializable(typeof(ParseGraphQLGraphQLObjectTypesFieldsArguments))]
+[JsonSerializable(typeof(ParseGraphQLGraphQLObjectTypesFields))]
+[JsonSerializable(typeof(ParseGraphQLGraphQL))]
+[JsonSerializable(typeof(ParseGraphQLGraphQLInputObjectTypes))]
+[JsonSerializable(typeof(ParseGraphQLGraphQLInputObjectTypesFields))]
+[JsonSerializable(typeof(ParseGraphQLGraphQL))]
+[JsonSerializable(typeof(ParseGraphQLGraphQLEnumerations))]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
@@ -340,6 +354,59 @@ public static partial class GraphQLOperations
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request Log.");
+    }
+
+    public static ParseGraphQLData ParseGraphQL(string graphql)
+    {
+        var request = new GraphQLRequest<ParseGraphQLVariables>
+        {
+            Query = """
+                query ParseGraphQL($graphql: String!) {
+                  graphQL(additionalFiles: [ $graphql ]) {
+                    objectTypes {
+                      name
+                      fields {
+                        name
+                        arguments {
+                          name
+                          type {
+                            text
+                          }
+                        }
+                        type {
+                          text
+                        }
+                      }
+                    }
+                    inputObjectTypes {
+                      name
+                      fields {
+                        name
+                        type {
+                          text
+                        }
+                      }
+                    }
+                    enumerations {
+                      name
+                      values {
+                        name
+                      }
+                    }
+                  }
+                }
+                """,
+            OperationName = "ParseGraphQL",
+            Variables = new ParseGraphQLVariables() { Graphql = graphql },
+        };
+
+        var response = Imports.GraphQL(request);
+        var result = JsonSerializer.Deserialize<GraphQLResponse<ParseGraphQLData>>(
+            response,
+            GraphQLOperationsJsonSerializerContext.Default.GraphQLResponseParseGraphQLData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request ParseGraphQL.");
     }
 
     public static ReadTextFileData ReadTextFile(string textFilePath)
@@ -777,6 +844,111 @@ public class LogVariables
 
     [JsonPropertyName("arguments")]
     public List<string>? Arguments { get; set; }
+}
+
+public class ParseGraphQLData
+{
+    [JsonPropertyName("graphQL")]
+    public required ParseGraphQL GraphQL { get; set; }
+}
+
+public class ParseGraphQLVariables
+{
+    [JsonPropertyName("graphql")]
+    public required string Graphql { get; set; }
+}
+
+public class ParseGraphQL
+{
+    [JsonPropertyName("objectTypes")]
+    public List<ParseGraphQLGraphQL>? ObjectTypes { get; set; }
+
+    [JsonPropertyName("inputObjectTypes")]
+    public List<ParseGraphQLGraphQL>? InputObjectTypes { get; set; }
+
+    [JsonPropertyName("enumerations")]
+    public List<ParseGraphQLGraphQL>? Enumerations { get; set; }
+}
+
+public class ParseGraphQLGraphQL
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fields")]
+    public List<ParseGraphQLGraphQLObjectTypes>? Fields { get; set; }
+}
+
+public class ParseGraphQLGraphQLObjectTypes
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("arguments")]
+    public List<ParseGraphQLGraphQLObjectTypesFields>? Arguments { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLGraphQLObjectTypesFields Type { get; set; }
+}
+
+public class ParseGraphQLGraphQLObjectTypesFields
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLGraphQLObjectTypesFieldsArguments Type { get; set; }
+}
+
+public class ParseGraphQLGraphQLObjectTypesFieldsArguments
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
+public class ParseGraphQLGraphQLObjectTypesFields
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
+public class ParseGraphQLGraphQL
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fields")]
+    public List<ParseGraphQLGraphQLInputObjectTypes>? Fields { get; set; }
+}
+
+public class ParseGraphQLGraphQLInputObjectTypes
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLGraphQLInputObjectTypesFields Type { get; set; }
+}
+
+public class ParseGraphQLGraphQLInputObjectTypesFields
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
+public class ParseGraphQLGraphQL
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("values")]
+    public List<ParseGraphQLGraphQLEnumerations>? Values { get; set; }
+}
+
+public class ParseGraphQLGraphQLEnumerations
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
 }
 
 public class ReadTextFileData
