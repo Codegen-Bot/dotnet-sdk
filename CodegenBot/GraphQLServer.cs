@@ -59,13 +59,13 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
                 if (error.Exception is null)
                 {
                     logger.LogError(
-                        "Failed to process GraphQL request; error message is {ErrorMessage}, path is {Path}, location is {Location}, code is {ErrorCode}, request was {Request}",
+                        "Failed to process GraphQL request inside dotnet bot; error message is {ErrorMessage}, path is {Path}, location is {Location}, code is {ErrorCode}, request was {Request}",
                         error.Message, error.Path, locations, error.Code, requestBody);
                 }
                 else
                 {
                     logger.LogError(error.Exception,
-                        "Failed to process GraphQL request; error message is {ErrorMessage}, path is {Path}, location is {Location}, code is {ErrorCode} request was {Request}",
+                        "Failed to process GraphQL request inside dotnet bot; error message is {ErrorMessage}, path is {Path}, location is {Location}, code is {ErrorCode} request was {Request}",
                         error.Message, error.Path, locations, error.Code, requestBody);
                 }
             }
