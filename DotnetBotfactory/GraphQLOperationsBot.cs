@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using System.IO;
 using System.Linq;
 using CodegenBot;
@@ -203,7 +202,7 @@ public class GraphQLOperationsBot : IMiniBot
                            },
                        };
                    
-                       var response = Imports.GraphQL(request);
+                       var response = Imports.GraphQL(request, GraphQLOperationsJsonSerializerContext.Default.GraphQLRequest{{operation.Name.Pascalize()}}Variables);
                        var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLOperationsJsonSerializerContext.Default.GraphQLResponse{{operation.Name.Pascalize()}}Data);
                        return result?.Data ?? throw new InvalidOperationException("Received null data for request {{operation.Name.Pascalize()}}.");
                    }
@@ -230,36 +229,26 @@ public class GraphQLOperationsBot : IMiniBot
                   
                   """);
             
+            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+                $"""
+                 [JsonSerializable(typeof(GraphQLRequest<{operation.Name.Pascalize()}Variables>))]
+
+                 """);
+
             foreach (var variable in operation.Variables)
             {
                 var type = GetVariableCSharpType(variable.Type, out var enumName);
                 GraphQLOperations.AddText(parameters.Id, $$"""{{type}} {{variable.Name}}""");
 
-//                 if (enumName is not null)
-//                 {
-//                     GraphQLOperations.AddText(variables.Id, $$"""
-//                                                               {{variable.Name.Pascalize()}} = {{variable.Name}}
-//
-//                                                               """);
-//                     GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
-//                                                               [JsonConverter(typeof(JsonStringEnumConverter<{{enumName}}>))]
-//                                                               [JsonPropertyName("{{variable.Name}}")]
-//                                                               public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
-//
-//                                                               """);
-//                 }
-//                 else
-                {
-                    GraphQLOperations.AddText(variables.Id, $$"""
-                                                              {{variable.Name.Pascalize()}} = {{variable.Name}}
+                GraphQLOperations.AddText(variables.Id, $$"""
+                                                          {{variable.Name.Pascalize()}} = {{variable.Name}}
 
-                                                              """);
-                    GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
-                                                                                [JsonPropertyName("{{variable.Name}}")]
-                                                                                public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
+                                                          """);
+                GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
+                                                                            [JsonPropertyName("{{variable.Name}}")]
+                                                                            public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
-                                                                                """);
-                }
+                                                                            """);
             }
 
             var rootType =
@@ -307,27 +296,13 @@ public class GraphQLOperationsBot : IMiniBot
                 {
                     var type = GetSelectionType(path, fieldSelection, field.Type, out var isEnum);
 
-                    // if (isEnum)
-                    // {
-                    //     GraphQLOperations.AddText(properties.Id,
-                    //         $$"""
-                    //
-                    //           [JsonConverter(typeof(JsonStringEnumConverter<{{type.TrimEnd('?')}}>))]
-                    //           [JsonPropertyName("{{selection.Name}}")]
-                    //           public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
-                    //
-                    //           """);
-                    // }
-                    // else
-                    {
-                        GraphQLOperations.AddText(properties.Id,
-                            $$"""
+                    GraphQLOperations.AddText(properties.Id,
+                        $$"""
 
-                              [JsonPropertyName("{{selection.Name}}")]
-                              public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
+                          [JsonPropertyName("{{selection.Name}}")]
+                          public {{GetIsRequired(type)}} {{type}} {{(fieldSelection.Alias ?? fieldSelection.Name).Pascalize()}} { get; set; }
 
-                              """);
-                    }
+                          """);
                 }
             }
             else if (selection is GraphQLFragmentSpreadSelection fragmentSpreadSelection)
