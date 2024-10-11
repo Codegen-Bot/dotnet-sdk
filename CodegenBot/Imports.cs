@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using CodegenBot;
 using Extism;
 
@@ -15,9 +16,9 @@ public class Imports
     [DllImport("extism", EntryPoint = "cgb_graphql")]
     public static extern ulong ExternGraphQL(ulong offset);
 
-    public static string GraphQL<T>(GraphQLRequest<T> request)
+    public static string GraphQL<T>(GraphQLRequest<T> request, JsonTypeInfo<GraphQLRequest<T>> jsonTypeInfo)
     {
-        var json = request.ToJsonString();
+        var json = request.ToJsonString(jsonTypeInfo);
         using var block = Pdk.Allocate(json);
         var ptr = ExternGraphQL(block.Offset);
         var response = MemoryBlock.Find(ptr).ReadString();

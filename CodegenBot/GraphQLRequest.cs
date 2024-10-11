@@ -1,25 +1,25 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace CodegenBot;
 
 public class GraphQLRequest<TVariables>
 {
     [JsonPropertyName("query")]
-    public string Query { get; set; }
+    public required string Query { get; set; }
     [JsonPropertyName("operationName")]
     public string? OperationName { get; set; }
     [JsonPropertyName("variables")]
     public TVariables? Variables { get; set; }
 
-    public static GraphQLRequest<TVariables> FromJsonString<TVariables>(string requestBody)
+    public static GraphQLRequest<TVariables>? FromJsonString(string requestBody, JsonTypeInfo<GraphQLRequest<TVariables>> jsonTypeInfo)
     {
-        
-        return JsonSerializer.Deserialize<GraphQLRequest<TVariables>>(requestBody, new JsonSerializerOptions() { WriteIndented = true });
+        return JsonSerializer.Deserialize(requestBody, jsonTypeInfo);
     }
 
-    public string ToJsonString()
+    public string ToJsonString(JsonTypeInfo<GraphQLRequest<TVariables>> jsonTypeInfo)
     {
-        return JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true });
+        return JsonSerializer.Serialize(this, jsonTypeInfo);
     }
 }

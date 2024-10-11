@@ -13,7 +13,7 @@ public class LogEvent
     [JsonPropertyName("level")]
     public LogEventLevel Level { get; set; }
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public required string Message { get; set; }
     [JsonPropertyName("args")]
     public string[]? Args { get; set; }
 }

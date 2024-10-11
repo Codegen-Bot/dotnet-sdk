@@ -33,6 +33,17 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
             await requestExecutorResolver.GetRequestExecutorAsync(cancellationToken: cancellationToken);
 
         var req = GraphQLRequest.FromJsonString(requestBody);
+
+        if (req is null)
+        {
+            Imports.Log(new LogEvent()
+            {
+                Level = LogEventLevel.Critical,
+                Message = "Failed to parse JSON request in dotnet bot",
+                Args = [],
+            });
+            throw new InvalidOperationException("Failed to parse JSON request in dotnet bot");
+        }
         
         // Here services is the outer service provider that is part of the general application,
         // whereas inMemoryGraphQLServerServices is the service provider that HotChocolate uses to resolve all its
@@ -44,6 +55,18 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
                 ConvertJsonToQueryRequest(req, services), cancellationToken);
 
         var jsonResult = JsonNode.Parse(result.ToJson());
+        
+        if (jsonResult is null) 
+        {
+            Imports.Log(new LogEvent()
+            {
+                Level = LogEventLevel.Critical,
+                Message = "Failed to parse JSON response in dotnet bot",
+                Args = [],
+            });
+            
+            throw new InvalidOperationException("Failed to parse JSON response in dotnet bot");
+        }
 
         if (result.Errors is not null && result.Errors.Count > 0)
         {
@@ -96,13 +119,13 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
         {
             foreach (var variable in req.Variables)
             {
-                object getValue(object obj)
+                object? getValue(object? obj)
                 {
                     if (obj is JsonElement jsonElement)
                     {
                         if (jsonElement.ValueKind == JsonValueKind.String)
                         {
-                            return jsonElement.GetString();
+                            return jsonElement.GetString()!;
                         }
 
                         if (jsonElement.ValueKind == JsonValueKind.Number)
@@ -124,7 +147,7 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
 
                         if (jsonElement.ValueKind is JsonValueKind.Object)
                         {
-                            var result = new Dictionary<string, object>();
+                            var result = new Dictionary<string, object?>();
                             foreach (var prop in jsonElement.EnumerateObject())
                             {
                                 result[prop.Name] = getValue(prop.Value);
@@ -149,24 +172,31 @@ public class GraphQLServer(IServiceProvider services, IRequestExecutorResolver r
         var request = requestBuilder.Create();
         return request;
     }
-    
-    private class GraphQLRequest
+}
+
+internal class GraphQLRequest
+{
+    [JsonPropertyName("query")]
+    public required string Query { get; set; }
+    [JsonPropertyName("operationName")]
+    public string? OperationName { get; set; }
+    [JsonPropertyName("variables")]
+    public Dictionary<string, object?>? Variables { get; set; }
+
+    public static GraphQLRequest? FromJsonString(string requestBody)
     {
-        [JsonPropertyName("query")]
-        public string Query { get; set; }
-        [JsonPropertyName("operationName")]
-        public string? OperationName { get; set; }
-        [JsonPropertyName("variables")]
-        public Dictionary<string, object?>? Variables { get; set; }
-
-        public static GraphQLRequest FromJsonString(string requestBody)
-        {
-            return JsonSerializer.Deserialize<GraphQLRequest>(requestBody, new JsonSerializerOptions() { WriteIndented = true });
-        }
-
-        public string ToJsonString()
-        {
-            return JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true });
-        }
+        return JsonSerializer.Deserialize(requestBody, GraphQLRequestJsonSerializerContext.Default.GraphQLRequest);
     }
+
+    public string ToJsonString()
+    {
+        return JsonSerializer.Serialize(this, GraphQLRequestJsonSerializerContext.Default.GraphQLRequest);
+    }
+}
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(GraphQLRequest))]
+internal partial class GraphQLRequestJsonSerializerContext : JsonSerializerContext
+{
+    
 }

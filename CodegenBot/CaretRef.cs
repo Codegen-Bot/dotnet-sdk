@@ -8,10 +8,10 @@ namespace CodegenBot;
 /// </summary>
 public class CaretRef
 {
-    public string Id { get; init; }
-    public string Separator { get; init; }
-    public string Indentation { get; init; }
-    public IReadOnlyList<CaretTag> Tags { get; init; }
+    public required string Id { get; init; }
+    public required string Separator { get; init; }
+    public required string Indentation { get; init; }
+    public IReadOnlyList<CaretTag>? Tags { get; init; }
 
     public static CaretRef New(string id, string separator = "", string indentation = "")
     {
@@ -30,6 +30,7 @@ public class CaretRef
             Id = Guid.NewGuid().ToString(),
             Separator = separator,
             Tags = tags,
+            Indentation = "",
         };
         return caretRef;
     }
@@ -53,6 +54,7 @@ public class CaretRef
             Id = Guid.NewGuid().ToString(),
             Separator = "",
             Tags = tags,
+            Indentation = "",
         };
         return caretRef;
     }
@@ -64,6 +66,7 @@ public class CaretRef
             Id = Guid.NewGuid().ToString(),
             Separator = separator,
             Tags = tags,
+            Indentation = "",
         };
         return caretRef;
     }
@@ -75,6 +78,7 @@ public class CaretRef
             Id = Guid.NewGuid().ToString(),
             Separator = "",
             Tags = tags,
+            Indentation = "",
         };
         return caretRef;
     }
