@@ -29,7 +29,9 @@ public class GraphQLError
 [JsonSerializable(typeof(DotnetVersion))]
 [JsonSerializable(typeof(FileKind))]
 [JsonSerializable(typeof(FileVersion))]
+[JsonSerializable(typeof(GraphQLOperationType))]
 [JsonSerializable(typeof(LogSeverity))]
+[JsonSerializable(typeof(AdditionalFileInput))]
 [JsonSerializable(typeof(BotDependencyInput))]
 [JsonSerializable(typeof(CaretTagInput))]
 [JsonSerializable(typeof(AddFileVariables))]
@@ -474,6 +476,19 @@ public enum FileVersion
 }
 
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public enum GraphQLOperationType
+{
+    [EnumMember(Value = "QUERY")]
+    QUERY,
+
+    [EnumMember(Value = "MUTATION")]
+    MUTATION,
+
+    [EnumMember(Value = "SUBSCRIPTION")]
+    SUBSCRIPTION,
+}
+
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public enum LogSeverity
 {
     [EnumMember(Value = "TRACE")]
@@ -493,6 +508,15 @@ public enum LogSeverity
 
     [EnumMember(Value = "CRITICAL")]
     CRITICAL,
+}
+
+public class AdditionalFileInput
+{
+    [JsonPropertyName("filePath")]
+    public required string FilePath { get; set; }
+
+    [JsonPropertyName("content")]
+    public required string Content { get; set; }
 }
 
 public class BotDependencyInput
