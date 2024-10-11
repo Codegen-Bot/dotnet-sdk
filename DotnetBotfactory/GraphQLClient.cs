@@ -508,14 +508,14 @@ public static partial class GraphQLOperations
     }
 
     public static ParseGraphQLSchemaAndOperationsData ParseGraphQLSchemaAndOperations(
-        string graphql
+        List<string>? graphql
     )
     {
         var request = new GraphQLRequest<ParseGraphQLSchemaAndOperationsVariables>
         {
             Query = """
-                query ParseGraphQLSchemaAndOperations($graphql: String!) {
-                  graphQL(additionalFiles: [ $graphql ]) {
+                query ParseGraphQLSchemaAndOperations($graphql: [String!]) {
+                  graphQL(additionalFiles: $graphql) {
                     objectTypes {
                       name
                       fields {
@@ -1177,7 +1177,7 @@ public class ParseGraphQLSchemaAndOperationsData
 public class ParseGraphQLSchemaAndOperationsVariables
 {
     [JsonPropertyName("graphql")]
-    public required string Graphql { get; set; }
+    public List<string>? Graphql { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperations
