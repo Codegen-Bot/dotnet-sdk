@@ -14,6 +14,7 @@ public class GraphQLRequest<TVariables>
 
     public static GraphQLRequest<TVariables> FromJsonString<TVariables>(string requestBody)
     {
+        
         return JsonSerializer.Deserialize<GraphQLRequest<TVariables>>(requestBody, new JsonSerializerOptions() { WriteIndented = true });
     }
 
