@@ -682,6 +682,7 @@ public static partial class GraphQLOperations
                     }
                     operations {
                       name
+                      operationType
                       fieldSelections {
                         name
                         fieldSelections {
@@ -1630,6 +1631,9 @@ public class ParseGraphQLSchemaAndOperationsOperations
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    [JsonPropertyName("operationType")]
+    public required GraphQLOperationType OperationType { get; set; }
 
     [JsonPropertyName("fieldSelections")]
     public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelections>? FieldSelections { get; set; }
