@@ -8,7 +8,7 @@ public class GraphQLServerMiniBot : IMiniBot
 {
     public void Execute()
     {
-        var configuration = GraphQLOperations.GetConfiguration().Configuration;
+        var configuration = GraphQLClient.GetConfiguration().Configuration;
 
         if (!configuration.ProvideApi)
         {
@@ -17,10 +17,10 @@ public class GraphQLServerMiniBot : IMiniBot
         
         var rootNamespace = configuration.ProjectName.Replace("-", " ").Pascalize();
 
-        var botSpec = GraphQLOperations.GetSchema($"{configuration.OutputPath}/bot.json").BotSpec;
+        var botSpec = GraphQLClient.GetSchema($"{configuration.OutputPath}/bot.json").BotSpec;
 
         var schemaFilePath =  botSpec?.ProvidedSchemaPath;
-        var schema = schemaFilePath is null ? null : GraphQLOperations.ReadTextFile(schemaFilePath)?.ReadTextFile;
+        var schema = schemaFilePath is null ? null : GraphQLClient.ReadTextFile(schemaFilePath)?.ReadTextFile;
 
         if (schema is null)
         {
@@ -33,9 +33,9 @@ public class GraphQLServerMiniBot : IMiniBot
             return;
         }
 
-        var parsedSchema = GraphQLOperations.ParseGraphQLSchema(schema).GraphQL;
+        var parsedSchema = GraphQLClient.ParseGraphQLSchema(schema).GraphQL;
         
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/GraphQLServer.cs",
+        GraphQLClient.AddFile($"{configuration.OutputPath}/GraphQLServer.cs",
             $$""""
               using System;
               using System.Collections.Generic;
@@ -63,7 +63,7 @@ public class GraphQLServerMiniBot : IMiniBot
          
          foreach (var objectType in parsedSchema.ObjectTypes)
          {
-             GraphQLOperations.AddText(typeDefinitions.Id,
+             GraphQLClient.AddText(typeDefinitions.Id,
                  $$"""
                  
                  public partial class {{objectType.Name}}

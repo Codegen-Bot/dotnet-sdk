@@ -11,7 +11,7 @@ public class CopyBot : IMiniBot
 {
     public void Execute()
     {
-        var configuration = GraphQLOperations.GetConfiguration().Configuration;
+        var configuration = GraphQLClient.GetConfiguration().Configuration;
         var copybots = configuration.Copybots ?? [];
 
         var fields = new HashSet<string>();
@@ -23,7 +23,7 @@ public class CopyBot : IMiniBot
                 fields.Add(field.FieldName);
             }
             
-            GraphQLOperations.AddFile($"{configuration.OutputPath}/{copybot.Name}.cs",
+            GraphQLClient.AddFile($"{configuration.OutputPath}/{copybot.Name}.cs",
                 $$""""
                   using Humanizer;
                   
@@ -33,14 +33,14 @@ public class CopyBot : IMiniBot
                   {
                       public void Execute()
                       {
-                          var configuration = GraphQLOperations.GetConfiguration().Configuration;
+                          var configuration = GraphQLClient.GetConfiguration().Configuration;
                           
                           {{CaretRef.New(out var execute, separator: "", indentation: "        ")}}
                       }
                   }
                   """");
 
-            GraphQLOperations.AddTextByTags(
+            GraphQLClient.AddTextByTags(
                 [
                     new CaretTagInput() { Name = "outputPath", Value = configuration.OutputPath },
                     new CaretTagInput() { Name = "location", Value = "Exports.cs/miniBots" },
@@ -50,7 +50,7 @@ public class CopyBot : IMiniBot
                 """
             );
 
-            var files = GraphQLOperations.GetFiles(copybot.Whitelist ?? [], []).Files ?? [];
+            var files = GraphQLClient.GetFiles(copybot.Whitelist ?? [], []).Files ?? [];
 
             if (files.Count == 0)
             {
@@ -94,7 +94,7 @@ public class CopyBot : IMiniBot
                 
                 var relativePath = file.Path.Replace(copybot.InputDirectory, "");
                 
-                var fileContents = GraphQLOperations.ReadTextFile(file.Path);
+                var fileContents = GraphQLClient.ReadTextFile(file.Path);
 
                 var dollarSigns = string.Join("", Enumerable.Repeat('$', Math.Max(MaxConsecutiveOccurrences(fileContents.ReadTextFile ?? "", '{', 1), MaxConsecutiveOccurrences(fileContents.ReadTextFile ?? "", '}', 1)) + 1));
                 
@@ -106,10 +106,10 @@ public class CopyBot : IMiniBot
 
                 relativePath = MakeParametric(copybot, relativePath, "{", "}");
                 
-                GraphQLOperations.AddText(execute.Id,
+                GraphQLClient.AddText(execute.Id,
                     $$"""
                     
-                    GraphQLOperations.AddFile($"{configuration.OutputPath}/{{relativePath.Trim('/')}}",
+                    GraphQLClient.AddFile($"{configuration.OutputPath}/{{relativePath.Trim('/')}}",
                         {{dollarSigns}}{{doubleQuotes}}
                         {{CaretRef.New(out var fileContentsCaret, separator: "", indentation: "            " + string.Join("", Enumerable.Repeat(' ', dollarSigns.Length)))}}
                         {{doubleQuotes}});
@@ -120,13 +120,13 @@ public class CopyBot : IMiniBot
 
                 fileContentsText = MakeParametric(copybot, fileContentsText, openBraces, closeBraces);
 
-                GraphQLOperations.AddText(fileContentsCaret.Id, fileContentsText);
+                GraphQLClient.AddText(fileContentsCaret.Id, fileContentsText);
             }
         }
 
         foreach (var field in fields)
         {
-            GraphQLOperations.AddTextByTags([
+            GraphQLClient.AddTextByTags([
                     new CaretTagInput() { Name = "outputPath", Value = configuration.OutputPath },
                     new CaretTagInput() { Name = "location", Value = "configurationSchema.graphql/Configuration" },
                 ],
@@ -135,7 +135,7 @@ public class CopyBot : IMiniBot
                  
                  """);
 
-            GraphQLOperations.AddTextByTags([
+            GraphQLClient.AddTextByTags([
                     new CaretTagInput() { Name = "outputPath", Value = configuration.OutputPath },
                     new CaretTagInput() { Name = "location", Value = "operations.graphql/GetConfiguration/configuration" },
                 ],

@@ -11,20 +11,20 @@ public class GraphQLClientMiniBot : IMiniBot
 {
     public void Execute()
     {
-        var configuration = GraphQLOperations.GetConfiguration().Configuration;
+        var configuration = GraphQLClient.GetConfiguration().Configuration;
         
         var rootNamespace = configuration.ProjectName.Replace("-", " ").Pascalize();
 
-        var files = GraphQLOperations.GetFiles(["**/*.graphql"], []).Files;
+        var files = GraphQLClient.GetFiles(["**/*.graphql"], []).Files;
         
-        var schema = GraphQLOperations.GetSchema($"{configuration.OutputPath}/bot.json");
+        var schema = GraphQLClient.GetSchema($"{configuration.OutputPath}/bot.json");
 
         string? schemaPath = null;
         if (schema.BotSpec?.ConsumedSchemaPath is not null && schema.BotSchema is not null)
         {
             schemaPath = Path.Combine(configuration.OutputPath, schema.BotSpec?.ConsumedSchemaPath!)
                 .Replace("\\", "/");
-            GraphQLOperations.AddFile(schemaPath,
+            GraphQLClient.AddFile(schemaPath,
                 schema.BotSchema!);
         }
 
@@ -46,8 +46,8 @@ public class GraphQLClientMiniBot : IMiniBot
             
             if (fileContents is null)
             {
-                fileContents = GraphQLOperations.ReadTextFileWithVersion(file.Path, FileVersion.HEAD).ReadTextFile
-                               ?? GraphQLOperations.ReadTextFile(file.Path).ReadTextFile;
+                fileContents = GraphQLClient.ReadTextFileWithVersion(file.Path, FileVersion.HEAD).ReadTextFile
+                               ?? GraphQLClient.ReadTextFile(file.Path).ReadTextFile;
             }
             
             if (fileContents is null)
@@ -68,9 +68,9 @@ public class GraphQLClientMiniBot : IMiniBot
             });
         }
 
-        var metadata = GraphQLOperations.ParseGraphQLSchemaAndOperations(fileContentses).GraphQL;
+        var metadata = GraphQLClient.ParseGraphQLSchemaAndOperations(fileContentses).GraphQL;
         
-        GraphQLOperations.AddFile($"{configuration.OutputPath}/GraphQLClient.cs",
+        GraphQLClient.AddFile($"{configuration.OutputPath}/GraphQLClient.cs",
             $$""""
               using System;
               using System.Collections.Generic;
@@ -114,13 +114,13 @@ public class GraphQLClientMiniBot : IMiniBot
 
         foreach (var enumType in (metadata.Enumerations ?? []).OrderBy(x => x.Name))
         {
-            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+            GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                 $"""
                 [JsonSerializable(typeof({enumType.Name.Pascalize()}))]
                 
                 """);
             
-            GraphQLOperations.AddText(typeDefinitions.Id,
+            GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
 
                   [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
@@ -133,7 +133,7 @@ public class GraphQLClientMiniBot : IMiniBot
             
             foreach (var value in enumType.Values ?? [])
             {
-                GraphQLOperations.AddText(enumValues.Id, $$"""
+                GraphQLClient.AddText(enumValues.Id, $$"""
                                                            [EnumMember(Value = "{{value.Name}}")]
                                                            {{value.Name}},
                                                            """);
@@ -142,13 +142,13 @@ public class GraphQLClientMiniBot : IMiniBot
         
         foreach (var inputObjectType in (metadata.InputObjectTypes ?? []).OrderBy(x => x.Name))
         {
-            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+            GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                 $"""
                  [JsonSerializable(typeof({inputObjectType.Name.Pascalize()}))]
 
                  """);
             
-            GraphQLOperations.AddText(typeDefinitions.Id,
+            GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
 
                   public class {{inputObjectType.Name.Pascalize()}}
@@ -161,7 +161,7 @@ public class GraphQLClientMiniBot : IMiniBot
             foreach (var field in inputObjectType.Fields ?? [])
             {
                 var type = GetVariableCSharpType(field.Type.Text.ToTypeRef(), out var _);
-                GraphQLOperations.AddText(properties.Id,
+                GraphQLClient.AddText(properties.Id,
                     $$"""
 
                       [JsonPropertyName("{{field.Name}}")]
@@ -184,7 +184,7 @@ public class GraphQLClientMiniBot : IMiniBot
                 continue;
             }
             
-            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+            GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                 $"""
                  [JsonSerializable(typeof({operation.Name.Pascalize()}Variables))]
                  [JsonSerializable(typeof({operation.Name.Pascalize()}Data))]
@@ -192,7 +192,7 @@ public class GraphQLClientMiniBot : IMiniBot
 
                  """);
 
-            GraphQLOperations.AddText(operations.Id,
+            GraphQLClient.AddText(operations.Id,
                 $$""""
                    public static {{operation.Name.Pascalize()}}Data {{operation.Name}}({{CaretRef.New(out var parameters, separator: ", ")}})
                    {
@@ -214,9 +214,9 @@ public class GraphQLClientMiniBot : IMiniBot
                    }
                    """");
 
-            GraphQLOperations.AddText(queryText.Id, operation.Text);
+            GraphQLClient.AddText(queryText.Id, operation.Text);
 
-            GraphQLOperations.AddText(typeDefinitions.Id,
+            GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
                   public class {{operation.Name.Pascalize()}}Data
                   {
@@ -225,7 +225,7 @@ public class GraphQLClientMiniBot : IMiniBot
                   
                   """);
 
-            GraphQLOperations.AddText(typeDefinitions.Id,
+            GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
                   
                   public class {{operation.Name.Pascalize()}}Variables
@@ -235,7 +235,7 @@ public class GraphQLClientMiniBot : IMiniBot
                   
                   """);
             
-            GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+            GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                 $"""
                  [JsonSerializable(typeof(GraphQLRequest<{operation.Name.Pascalize()}Variables>))]
 
@@ -244,13 +244,13 @@ public class GraphQLClientMiniBot : IMiniBot
             foreach (var variable in operation.Variables ?? [])
             {
                 var type = GetVariableCSharpType(variable.Type.Text.ToTypeRef(), out var enumName);
-                GraphQLOperations.AddText(parameters.Id, $$"""{{type}} {{variable.Name}}""");
+                GraphQLClient.AddText(parameters.Id, $$"""{{type}} {{variable.Name}}""");
 
-                GraphQLOperations.AddText(variables.Id, $$"""
+                GraphQLClient.AddText(variables.Id, $$"""
                                                           {{variable.Name.Pascalize()}} = {{variable.Name}}
 
                                                           """);
-                GraphQLOperations.AddText(variablePropertyDefinitions.Id, $$"""
+                GraphQLClient.AddText(variablePropertyDefinitions.Id, $$"""
                                                                             [JsonPropertyName("{{variable.Name}}")]
                                                                             public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
@@ -303,7 +303,7 @@ public class GraphQLClientMiniBot : IMiniBot
                 {
                     (string, bool) type = GetSelectionType(path, selection, field.Type.Text.ToTypeRef());
 
-                    GraphQLOperations.AddText(properties.Id,
+                    GraphQLClient.AddText(properties.Id,
                         $$"""
 
                           [JsonPropertyName("{{selection.FieldSelection.Name}}")]
@@ -375,13 +375,13 @@ public class GraphQLClientMiniBot : IMiniBot
             var objectType = (metadata.ObjectTypes ?? []).FirstOrDefault(objType => objType.Name == type.Name);
             if (objectType is not null)
             {
-                GraphQLOperations.AddText(jsonSerializerContextAttributes.Id,
+                GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                     $"""
                      [JsonSerializable(typeof({path.Pascalize()}))]
 
                      """);
 
-                GraphQLOperations.AddText(typeDefinitions.Id,
+                GraphQLClient.AddText(typeDefinitions.Id,
                     $$"""
                       public class {{path.Pascalize()}}
                       {
@@ -400,7 +400,7 @@ public class GraphQLClientMiniBot : IMiniBot
                 return (path.Pascalize() + "?", false);
             }
 
-            GraphQLOperations.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
+            GraphQLClient.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
 
             return ("???", false);
         }
@@ -455,7 +455,7 @@ public class GraphQLClientMiniBot : IMiniBot
                 return objectType.Name + "?";
             }
 
-            GraphQLOperations.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
+            GraphQLClient.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
             
             enumName = null;
             return "???";
