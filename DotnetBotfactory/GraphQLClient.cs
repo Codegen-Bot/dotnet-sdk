@@ -173,6 +173,18 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerations))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerationsValues))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperations))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariables))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArguments))]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArguments)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArguments)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments)
+)]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelections))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationsFieldSelectionsFieldSelections))]
 [JsonSerializable(
@@ -683,6 +695,24 @@ public static partial class GraphQLOperations
                     operations {
                       name
                       operationType
+                      variables {
+                        name
+                        type {
+                          name
+                          genericArguments {
+                            name
+                            genericArguments {
+                              name
+                              genericArguments {
+                                name
+                                genericArguments {
+                                  name
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
                       fieldSelections {
                         name
                         fieldSelections {
@@ -1635,8 +1665,62 @@ public class ParseGraphQLSchemaAndOperationsOperations
     [JsonPropertyName("operationType")]
     public required GraphQLOperationType OperationType { get; set; }
 
+    [JsonPropertyName("variables")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsVariables>? Variables { get; set; }
+
     [JsonPropertyName("fieldSelections")]
     public List<ParseGraphQLSchemaAndOperationsOperationsFieldSelections>? FieldSelections { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsVariables
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLSchemaAndOperationsOperationsVariablesType Type { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsVariablesType
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("genericArguments")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArguments>? GenericArguments { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArguments
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("genericArguments")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArguments>? GenericArguments { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArguments
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("genericArguments")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArguments
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("genericArguments")]
+    public List<ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments>? GenericArguments { get; set; }
+}
+
+public class ParseGraphQLSchemaAndOperationsOperationsVariablesTypeGenericArgumentsGenericArgumentsGenericArgumentsGenericArguments
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
 }
 
 public class ParseGraphQLSchemaAndOperationsOperationsFieldSelections
