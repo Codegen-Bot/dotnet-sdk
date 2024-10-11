@@ -695,6 +695,7 @@ public static partial class GraphQLOperations
                     operations {
                       name
                       operationType
+                      text
                       variables {
                         name
                         type {
@@ -1664,6 +1665,9 @@ public class ParseGraphQLSchemaAndOperationsOperations
 
     [JsonPropertyName("operationType")]
     public required GraphQLOperationType OperationType { get; set; }
+
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 
     [JsonPropertyName("variables")]
     public List<ParseGraphQLSchemaAndOperationsOperationsVariables>? Variables { get; set; }
