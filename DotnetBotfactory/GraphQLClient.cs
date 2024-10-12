@@ -87,8 +87,8 @@ public class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperations))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeField))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldArgument))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldArgumentType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypeField))]
@@ -416,7 +416,7 @@ public static partial class GraphQLClient
                       name
                       fields {
                         name
-                        arguments {
+                        parameters {
                           name
                           type {
                             text
@@ -974,23 +974,23 @@ public class ParseGraphQLSchemaAndOperationsObjectTypeField
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
-    [JsonPropertyName("arguments")]
-    public required List<ParseGraphQLSchemaAndOperationsObjectTypeFieldArgument> Arguments { get; set; }
+    [JsonPropertyName("parameters")]
+    public required List<ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter> Parameters { get; set; }
 
     [JsonPropertyName("type")]
     public required ParseGraphQLSchemaAndOperationsObjectTypeFieldType Type { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsObjectTypeFieldArgument
+public class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsObjectTypeFieldArgumentType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType Type { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsObjectTypeFieldArgumentType
+public class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
