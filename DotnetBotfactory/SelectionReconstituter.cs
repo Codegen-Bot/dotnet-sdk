@@ -3,7 +3,6 @@ using CodegenBot;
 
 namespace DotnetBotfactory;
 
-
 public class Selection
 {
     public ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelection? FieldSelection { get; set; }

@@ -61,7 +61,7 @@ public class CSharpBot : IMiniBot
                 </PropertyGroup>
                 <ItemGroup>
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
-                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.163" />
+                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.235" />
                   <!-- This is used by the GraphQL client to properly serialize enums -->
                   <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
                   <PackageReference Include="Humanizer" Version="2.14.1" />
@@ -125,19 +125,20 @@ public class CSharpBot : IMiniBot
                 "configurationSchema": "configurationSchema.graphql",
                 "consumedSchema": "consumedSchema.graphql",
                 "wasm": "bin/Release/net8.0/wasi-wasm/AppBundle/{{configuration.ProjectName}}.wasm",
-                {{CaretRef.New(out var botJsonFields)}}
+                {{CaretRef.New(out var botJsonFields, new CaretTag("location", "bot.json"), new CaretTag("botId", configuration.Id))}}
                 "deduplicateConfigurationSchema": true,
                 "dependencies": {
                   "bot://core/output": "1.0.0",
                   "bot://core/filesystem": "1.0.0",
                   "bot://core/log": "1.0.0",
+                  {{CaretRef.New(new CaretTag("location", "bot.json/dependencies"), new CaretTag("botId", configuration.Id))}}
                   "bot://core/ready": "1.0.0"
                 },
                 "exec": {
                   "devenv": "dotnet workload install wasi-experimental",
                   "build": "dotnet build -c Release -r wasi-wasm",
                   "build-docker": "docker run -v .:/src codegenbot/dotnet-bot-builder:net8.0"
-                  {{CaretRef.New(out var botJsonExecs)}}
+                  {{CaretRef.New(out var botJsonExecs, new CaretTag("location", "bot.json/exec"), new CaretTag("botId", configuration.Id))}}
                 }
               }
               """);
@@ -204,7 +205,7 @@ public class CSharpBot : IMiniBot
 
               """");
 
-        GraphQLClient.AddFile($"{configuration.OutputPath}/defaultOperations.graphql",
+        GraphQLClient.AddFile($"{configuration.OutputPath}/defaultClientOperations.graphql",
             $$""""
               query GetFiles($whitelist: [String!]! $blacklist: [String!]!) {
                   files(whitelist: $whitelist blacklist: $blacklist) {
@@ -451,7 +452,7 @@ public class CSharpBot : IMiniBot
                     {
                         var request = Pdk.GetInputString();
                     
-                        var result = _graphqlServer.Execute(request, _serviceProvider);
+                        var result = _graphqlServer.Execute(request);
                     
                         Pdk.SetOutput(result);
                     
@@ -478,33 +479,11 @@ public class CSharpBot : IMiniBot
             GraphQLClient.AddText(staticConstructor.Id,
                 $$"""
 
-                  private static GraphQLServer _graphqlServer;
-                  private static IServiceProvider _serviceProvider;
+                  private static GraphQLServer _graphqlServer = new();
                   
-                  static Exports()
-                  {
-                      var services = new ServiceCollection();
-                  
-                      services.AddLogging(x => x.AddProvider(new CustomLoggerProvider()));
-                      
-                      // Register services here that will be injected into
-                      // GraphQL servers, if needed
-                      
-                      services.AddGraphQL()
-                          .AddQueryType<Query>(x => x.Name("Query"));
-                      
-                      _serviceProvider = services.BuildServiceProvider();
-                      var requestExecutorResolver =
-                          _serviceProvider.GetRequiredService<IRequestExecutorResolver>();
-                      
-                      _graphqlServer = new GraphQLServer(_serviceProvider, requestExecutorResolver);
-                  }
-
                   """);
         }
 
-        //var projectGuid = 
-        
         GraphQLClient.AddTextByTags(
             [
                 new CaretTagInput() { Name = "location", Value = ".sln/Project" }

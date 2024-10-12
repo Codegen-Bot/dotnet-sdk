@@ -82,7 +82,7 @@ public class GraphQLClientMiniBot : IMiniBot
               
               namespace {{rootNamespace}};
               
-              public class GraphQLResponse<T>
+              public partial class GraphQLResponse<T>
               {
                   [JsonPropertyName("data")]
                   public T? Data { get; set; }
@@ -91,7 +91,7 @@ public class GraphQLClientMiniBot : IMiniBot
                   public List<GraphQLError>? Errors { get; set; }
               }
               
-              public class GraphQLError
+              public partial class GraphQLError
               {
                   [JsonPropertyName("message")]
                   public required string Message { get; set; }
@@ -151,7 +151,7 @@ public class GraphQLClientMiniBot : IMiniBot
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
 
-                  public class {{inputObjectType.Name.Pascalize()}}
+                  public partial class {{inputObjectType.Name.Pascalize()}}
                   {
                       {{CaretRef.New(out var properties)}}
                   }
@@ -218,7 +218,7 @@ public class GraphQLClientMiniBot : IMiniBot
 
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
-                  public class {{operation.Name.Pascalize()}}Data
+                  public partial class {{operation.Name.Pascalize()}}Data
                   {
                       {{CaretRef.New(out var properties)}}
                   }
@@ -228,7 +228,7 @@ public class GraphQLClientMiniBot : IMiniBot
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
                   
-                  public class {{operation.Name.Pascalize()}}Variables
+                  public partial class {{operation.Name.Pascalize()}}Variables
                   {
                   {{CaretRef.New(out var variablePropertyDefinitions)}}
                   }
