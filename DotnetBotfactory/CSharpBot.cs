@@ -501,18 +501,6 @@ public class CSharpBot : IMiniBot
                   }
 
                   """);
-
-            GraphQLClient.AddFile($"{configuration.OutputPath}/Query.cs",
-                $$"""
-
-                  namespace {{rootNamespace}};
-
-                  public class Query
-                  {
-                      public string Hello(string name) => $"Hello, {name}!";
-                  }
-
-                  """);
         }
 
         //var projectGuid = 

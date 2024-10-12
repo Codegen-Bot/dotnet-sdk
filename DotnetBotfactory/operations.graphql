@@ -88,38 +88,3 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
     }
   }
 }
-
-query ParseGraphQLSchema($graphql: String!) {
-  graphQL(additionalFiles: [$graphql]) {
-    objectTypes {
-      name
-      fields {
-        name
-        arguments {
-          name
-          type {
-            text
-          }
-        }
-        type {
-          text
-        }
-      }
-    }
-    inputObjectTypes {
-      name
-      fields {
-        name
-        type {
-          text
-        }
-      }
-    }
-    enumerations {
-      name
-      values {
-        name
-      }
-    }
-  }
-}

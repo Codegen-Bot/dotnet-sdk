@@ -1,4 +1,4 @@
-using System.Reflection.Metadata;
+using System.IO;
 using CodegenBot;
 using Humanizer;
 
@@ -20,20 +20,42 @@ public class GraphQLServerMiniBot : IMiniBot
         var botSpec = GraphQLClient.GetSchema($"{configuration.OutputPath}/bot.json").BotSpec;
 
         var schemaFilePath =  botSpec?.ProvidedSchemaPath;
-        var schema = schemaFilePath is null ? null : GraphQLClient.ReadTextFile(schemaFilePath)?.ReadTextFile;
+
+        if (schemaFilePath is null)
+        {
+            Imports.Log(new LogEvent()
+            {
+                Level = LogEventLevel.Critical,
+                Message = "bot.json did not have a providedSchema setting",
+                Args = []
+            });
+            return;
+        }
+
+        var schema = GraphQLClient.ReadTextFile(Path.Combine(configuration.OutputPath, schemaFilePath).Replace("\\", "/")).ReadTextFile;
 
         if (schema is null)
         {
             Imports.Log(new LogEvent()
             {
                 Level = LogEventLevel.Critical,
-                Message = "Cannot find providedSchema",
+                Message = "bot.json contained a providedSchema setting but the file did not exist",
                 Args = []
             });
             return;
         }
 
-        var parsedSchema = GraphQLClient.ParseGraphQLSchema(schema).GraphQL;
+        var metadata = GraphQLClient.ParseGraphQLSchemaAndOperations([new AdditionalFileInput()
+            {
+                FilePath = schemaFilePath!,
+                Content = schema!,
+            }]).GraphQL;
+
+        var parsedSchema = GraphQLClient.ParseGraphQLSchemaAndOperations([new AdditionalFileInput()
+        {
+            FilePath = schemaFilePath!,
+            Content = schema,
+        }]).GraphQL;
         
         GraphQLClient.AddFile($"{configuration.OutputPath}/GraphQLServer.cs",
             $$""""
@@ -60,22 +82,40 @@ public class GraphQLServerMiniBot : IMiniBot
               {{CaretRef.New(out var typeDefinitions)}}
 
               """");
-         
+
          foreach (var objectType in parsedSchema.ObjectTypes)
          {
+             GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
+                 $$"""
+                 [JsonSerializable(typeof({{objectType.Name}}))]
+
+                 """);
+
              GraphQLClient.AddText(typeDefinitions.Id,
                  $$"""
-                 
+
                  public partial class {{objectType.Name}}
                  {
                      {{CaretRef.New(out var body)}}
                  }
-                 
+
                  """);
 
              foreach (var field in objectType.Fields)
              {
-                 
+                 var type = GraphQLCSharpTypes.GetVariableCSharpType(field.Type.Text.ToTypeRef(), out var enumName,
+                     metadata);
+
+                 if (!type.EndsWith("?"))
+                 {
+                     type = $"{type}?";
+                 }
+
+                 GraphQLClient.AddText(body.Id,
+                     $$"""
+                     public {{type}} {{field.Name.Pascalize()}} { get; set; }
+                     
+                     """);
              }
          }
     }

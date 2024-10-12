@@ -130,7 +130,7 @@ public class GraphQLClientMiniBot : IMiniBot
                   }
 
                   """);
-            
+
             foreach (var value in enumType.Values ?? [])
             {
                 GraphQLClient.AddText(enumValues.Id, $$"""
@@ -160,12 +160,12 @@ public class GraphQLClientMiniBot : IMiniBot
 
             foreach (var field in inputObjectType.Fields ?? [])
             {
-                var type = GetVariableCSharpType(field.Type.Text.ToTypeRef(), out var _);
+                var type = GraphQLCSharpTypes.GetVariableCSharpType(field.Type.Text.ToTypeRef(), out var _, metadata);
                 GraphQLClient.AddText(properties.Id,
                     $$"""
 
                       [JsonPropertyName("{{field.Name}}")]
-                      public {{GetIsRequired(type)}} {{type}} {{field.Name.Pascalize()}} { get; set; }
+                      public {{GraphQLCSharpTypes.GetIsRequired(type)}} {{type}} {{field.Name.Pascalize()}} { get; set; }
 
                       """);
             }
@@ -243,7 +243,7 @@ public class GraphQLClientMiniBot : IMiniBot
 
             foreach (var variable in operation.Variables ?? [])
             {
-                var type = GetVariableCSharpType(variable.Type.Text.ToTypeRef(), out var enumName);
+                var type = GraphQLCSharpTypes.GetVariableCSharpType(variable.Type.Text.ToTypeRef(), out var enumName, metadata);
                 GraphQLClient.AddText(parameters.Id, $$"""{{type}} {{variable.Name}}""");
 
                 GraphQLClient.AddText(variables.Id, $$"""
@@ -252,7 +252,7 @@ public class GraphQLClientMiniBot : IMiniBot
                                                           """);
                 GraphQLClient.AddText(variablePropertyDefinitions.Id, $$"""
                                                                             [JsonPropertyName("{{variable.Name}}")]
-                                                                            public {{GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
+                                                                            public {{GraphQLCSharpTypes.GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
                                                                             """);
             }
@@ -281,194 +281,9 @@ public class GraphQLClientMiniBot : IMiniBot
             
             foreach (var selection in selections)
             {
-                AddSelectionText(properties, path, objectType, selection);
+                GraphQLCSharpTypes.AddSelectionText(properties, path, objectType, selection, metadata, jsonSerializerContextAttributes, typeDefinitions);
             }
         }
 
-        void AddSelectionText(CaretRef properties, string path, ParseGraphQLSchemaAndOperationsObjectType objectType, Selection selection)
-        {
-            if (selection.FieldSelection is not null)
-            {
-                var field = (objectType.Fields ?? []).FirstOrDefault(x => x.Name == selection.FieldSelection.Name);
-
-                if (field is null)
-                {
-                    Imports.Log(new LogEvent()
-                    {
-                        Level = LogEventLevel.Error, Message = "Cannot find field {Field}",
-                        Args = [selection.FieldSelection.Name]
-                    });
-                }
-                else
-                {
-                    (string, bool) type = GetSelectionType(path, selection, field.Type.Text.ToTypeRef());
-
-                    GraphQLClient.AddText(properties.Id,
-                        $$"""
-
-                          [JsonPropertyName("{{selection.FieldSelection.Name}}")]
-                          public {{GetIsRequired(type.Item1)}} {{type.Item1}} {{selection.FieldSelection.Name.Pascalize()}} { get; set; }
-
-                          """);
-                }
-            }
-            else if (selection.FragmentSpreadSelection is not null)
-            {
-                throw new NotImplementedException("Fragment spread selection is not implemented.");
-                // var fragment = metadata.Fragments.FirstOrDefault(x => x.Name == fragmentSpreadSelection.Name);
-                //
-                // if (fragment is null)
-                // {
-                //     Imports.Log(new LogEvent() { Level = LogEventLevel.Error, Message = "Cannot find fragment {Fragment}", Args = [fragmentSpreadSelection.Name] });
-                // }
-                // else
-                // {
-                //     foreach (var fragmentSelection in fragment.Selections)
-                //     {
-                //         AddSelectionText(properties, jsonSerializerContextAttributes, path, objectType, fragmentSelection);
-                //     }
-                // }
-            }
-        }
-        
-        (string type, bool isEnum) GetSelectionType(string path, Selection selection, TypeRef type)
-        {
-            if (type.Name == "NotNull")
-            {
-                (string, bool) x = GetSelectionType(path, selection, type.GenericArguments[0]);
-                var result = x.Item1;
-                if (result.EndsWith("?"))
-                {
-                    result = result.Substring(0, result.Length - 1);
-                }
-
-                return (result, x.Item2);
-            }
-
-            if (type.Name == "List")
-            {
-                (string, bool) b = GetSelectionType(path, selection, type.GenericArguments[0]);
-                return ($"List<{b.Item1}>?", false);
-            }
-
-            if (type.Name == "String")
-            {
-                return ("string?", false);
-            }
-
-            if (type.Name == "Boolean")
-            {
-                return ("bool?", false);
-            }
-
-            if (type.Name == "Int")
-            {
-                return ("int?", false);
-            }
-
-            var enumType = (metadata.Enumerations ?? []).FirstOrDefault(enumType => enumType.Name == type.Name);
-            if (enumType is not null)
-            {
-                return (enumType.Name.Pascalize() + "?", true);
-            }
-            
-            var objectType = (metadata.ObjectTypes ?? []).FirstOrDefault(objType => objType.Name == type.Name);
-            if (objectType is not null)
-            {
-                GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
-                    $"""
-                     [JsonSerializable(typeof({path.Pascalize()}))]
-
-                     """);
-
-                GraphQLClient.AddText(typeDefinitions.Id,
-                    $$"""
-                      public class {{path.Pascalize()}}
-                      {
-                          {{CaretRef.New(out var properties)}}
-                      }
-
-                      """);
-                
-                foreach (var subselection in selection.Children)
-                {
-                    var name = subselection.FieldSelection?.Name ?? subselection.FragmentSpreadSelection!.Name;
-                    name = ((string)name).Singularize();
-                    AddSelectionText(properties, $"{path} {name}", objectType, subselection);
-                }
-
-                return (path.Pascalize() + "?", false);
-            }
-
-            GraphQLClient.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
-
-            return ("???", false);
-        }
-        
-        string GetVariableCSharpType(TypeRef type, out string? enumName)
-        {
-            if (type.Name == "NotNull")
-            {
-                var result = GetVariableCSharpType(type.GenericArguments[0], out enumName);
-                if (result.EndsWith("?"))
-                {
-                    result = result.Substring(0, result.Length - 1);
-                }
-
-                return result;
-            }
-
-            if (type.Name == "List")
-            {
-                return $"List<{GetVariableCSharpType(type.GenericArguments[0], out enumName)}>?";
-            }
-
-            if (type.Name == "String")
-            {
-                enumName = null;
-                return "string?";
-            }
-
-            if (type.Name == "Boolean")
-            {
-                enumName = null;
-                return "bool?";
-            }
-
-            if (type.Name == "Int")
-            {
-                enumName = null;
-                return "int?";
-            }
-
-            var enumType = (metadata.Enumerations ?? []).FirstOrDefault(enumType => enumType.Name == type.Name);
-            if (enumType is not null)
-            {
-                enumName = enumType.Name.Pascalize();
-                return enumType.Name.Pascalize() + "?";
-            }
-            
-            var objectType = (metadata.InputObjectTypes ?? []).FirstOrDefault(objType => objType.Name == type.Name);
-            if (objectType is not null)
-            {
-                enumName = null;
-                return objectType.Name + "?";
-            }
-
-            GraphQLClient.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
-            
-            enumName = null;
-            return "???";
-        }
-
-        string GetIsRequired(string typeRef)
-        {
-            if (!typeRef.EndsWith("?"))
-            {
-                return "required ";
-            }
-
-            return "";
-        }
     }
 }

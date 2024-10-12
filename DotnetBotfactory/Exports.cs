@@ -27,6 +27,7 @@ public class Exports
                 new CSharpBot(),
                 new CopyBot(),
                 new GraphQLClientMiniBot(),
+                new GraphQLServerMiniBot(),
                 new RustBot(),
                 new TypescriptBot(),
                 new GoBot(),
