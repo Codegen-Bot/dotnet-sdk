@@ -13,7 +13,6 @@
         <PackageReference Include="Extism.Pdk" Version="1.0.3" />
         <PackageReference Include="System.Text.Json" Version="8.0.5" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-      <PackageReference Include="HotChocolate" Version="13.9.11" />
 	  <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
