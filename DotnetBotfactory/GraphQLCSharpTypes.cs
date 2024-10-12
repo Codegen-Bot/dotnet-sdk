@@ -117,7 +117,7 @@ public static class GraphQLCSharpTypes
 
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
-                  public class {{path.Pascalize()}}
+                  public partial class {{path.Pascalize()}}
                   {
                       {{CaretRef.New(out var properties)}}
                   }

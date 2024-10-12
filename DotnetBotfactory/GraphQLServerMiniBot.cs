@@ -94,6 +94,11 @@ public class GraphQLServerMiniBot : IMiniBot
                       fieldSelection {
                         name
                         alias
+                        arguments {
+                          name
+                          type { text }
+                          value
+                        }
                       }
                       fragmentSpreadSelection {
                         name
@@ -139,12 +144,11 @@ public class GraphQLServerMiniBot : IMiniBot
                                  "Could not parse GraphQL request JSON",
                              ],
                          }, GraphQLServerJsonSerializerContext.Default.GraphQLServerErrorResponse);
-                         return;
                       }
                       
-                      var query = GraphQLClient.ParseGraphQLOperation(request.Query).GraphQL.Operations.SingleOrDefault();
+                      var query = GraphQLClient.ParseGraphQLOperation([new AdditionalFileInput() { FilePath = "tmp.graphql", Content = request.Query } ]).GraphQL.Operations.SingleOrDefault();
                       
-                      if (request is null)
+                      if (query is null)
                       {
                           return JsonSerializer.Serialize(new GraphQLServerErrorResponse()
                          {
@@ -152,29 +156,22 @@ public class GraphQLServerMiniBot : IMiniBot
                                  "Could not parse GraphQL request query",
                              ],
                          }, GraphQLServerJsonSerializerContext.Default.GraphQLServerErrorResponse);
-                         return;
                       }
                       
                       var result = new JsonObject();
                       
                       {{CaretRef.New(out var handleOperationType)}}
-                      else
-                      {
-                          Imports.Log(new LogEvent()
-                          {
-                              Level = LogEventLevel.Critical,
-                              Message = "Invalid operation type {OperationType}",
-                              Args = [query.OperationType.ToString()],
-                          });
-                      }
+              
+                      var resultString = result.ToJsonString();
+                      return resultString;
                   }
               
-              {{CaretRef.New(out var serverBody)}}
+                  {{CaretRef.New(out var serverBody)}}
               }
               
               public class GraphQLServerErrorResponse
               {
-                  public List<string> Errors { get; set; }
+                  public required List<string> Errors { get; set; }
               }
               
               public class GraphQLServerRequest
@@ -188,13 +185,21 @@ public class GraphQLServerMiniBot : IMiniBot
               
                   public static GraphQLServerRequest? FromJsonString(string requestBody)
                   {
-                      return JsonSerializer.Deserialize(requestBody, GraphQLServerRequestJsonSerializerContext.Default.GraphQLRequest);
+                      return JsonSerializer.Deserialize(requestBody, GraphQLServerJsonSerializerContext.Default.GraphQLServerRequest);
                   }
               
                   public string ToJsonString()
                   {
-                      return JsonSerializer.Serialize(this, GraphQLServerRequestJsonSerializerContext.Default.GraphQLRequest);
+                      return JsonSerializer.Serialize(this, GraphQLServerJsonSerializerContext.Default.GraphQLServerRequest);
                   }
+              }
+              
+              public partial class ParseGraphQLOperationOperationNestedSelection
+                  : INestedSelection<
+                     ParseGraphQLOperationOperationNestedSelectionFieldSelection,
+                     ParseGraphQLOperationOperationNestedSelectionFragmentSpreadSelection
+                  >
+              {
               }
               
               {{CaretRef.New(out var typeDefinitions)}}
@@ -210,12 +215,12 @@ public class GraphQLServerMiniBot : IMiniBot
                 """
                 if (query.OperationType == GraphQLOperationType.QUERY)
                 {
-                    Query.AddSelectedFields(result, query.Variables, query.FieldSelection, query.FragmentSpreadSelection);
+                    Query.AddSelectedFields(query.Variables, query.NestedSelection.ToSelections(), result);
                 }
                 
                 """);
             maybeElse = "else ";
-            AddAddSelectedFields(parsedSchema, queryType, new TypeRef() { Name = "Query", Text = "Query!", GenericArguments = [] }, serverBody, typeDefinitions);
+            AddObjectTypeResolver(parsedSchema, queryType, null, new TypeRef() { Name = "Query", Text = "Query!", GenericArguments = [] }, serverBody, typeDefinitions);
         }
 
         var mutationType = parsedSchema.ObjectTypes.FirstOrDefault(x => x.Name == "Mutation");
@@ -226,36 +231,193 @@ public class GraphQLServerMiniBot : IMiniBot
                 $$"""
                 {{maybeElse}}if (query.OperationType == GraphQLOperationType.MUTATION)
                 {
-                    Mutation.AddSelectedFields(result, query.Variables, query.FieldSelection, query.FragmentSpreadSelection);
+                    Mutation.AddSelectedFields(query.Variables, query.NestedSelection.ToSelections(), result);
                 }
                 """);
-            AddAddSelectedFields(parsedSchema, mutationType, new TypeRef() { Name = "Mutation", Text = "Mutation!", GenericArguments = [] }, serverBody, typeDefinitions);
+            AddObjectTypeResolver(parsedSchema, mutationType, null, new TypeRef() { Name = "Mutation", Text = "Mutation!", GenericArguments = [] }, serverBody, typeDefinitions);
+            maybeElse = "else";
+        }
+
+        GraphQLClient.AddText(handleOperationType.Id,
+            $$"""
+            {{maybeElse}}
+            {
+                Imports.Log(new LogEvent()
+                {
+                    Level = LogEventLevel.Critical,
+                    Message = "Invalid operation type {OperationType}",
+                    Args = [query.OperationType.ToString()],
+                });
+            }
+            """);
+    }
+
+    private void AddResolver(ParseGraphQLSchemaAndOperations parsedSchema,
+        ParseGraphQLSchemaAndOperationsObjectTypeField field, CaretRef parentBody,
+        CaretRef typeDefinitions)
+    {
+        var typeRef = field.Type.Text.ToTypeRef();
+        
+        var objectType = parsedSchema.ObjectTypes.FirstOrDefault(x => x.Name == typeRef.Name);
+        if (objectType is not null)
+        {
+            AddObjectTypeResolver(parsedSchema, objectType, field, typeRef, parentBody, typeDefinitions);
+        }
+        
+        var enumType = parsedSchema.Enumerations.FirstOrDefault(x => x.Name == typeRef.Name);
+        if (enumType is not null)
+        {
+            AddEnumResolver(parsedSchema, enumType, field, parentBody, typeDefinitions);
+        }
+        
+        AddScalarResolver(parsedSchema, field, parentBody, typeDefinitions);
+    }
+
+    private void AddScalarResolver(ParseGraphQLSchemaAndOperations parsedSchema, ParseGraphQLSchemaAndOperationsObjectTypeField field, CaretRef parentBody, CaretRef typeDefinitions)
+    {
+        var typeRef = field.Type.Text.ToTypeRef();
+        var type = GraphQLCSharpTypes.GetVariableCSharpType(typeRef, out var _, parsedSchema);
+
+        if (field.Parameters.Count > 0)
+        {
+            GraphQLClient.AddText(parentBody.Id,
+                $$"""
+                  public {{type}} {{field.Name.Pascalize()}}({{CaretRef.New(out var arguments, separator: ", ")}})
+                  {
+                  }
+
+                  """);
+
+            foreach (var arg in field.Parameters)
+            {
+                var argType = GraphQLCSharpTypes.GetVariableCSharpType(arg.Type.Text.ToTypeRef(), out var _, parsedSchema);
+                GraphQLClient.AddText(arguments.Id, $"{argType} {arg.Name.Camelize()}");
+            }
+        }
+        else
+        {
+            GraphQLClient.AddText(parentBody.Id,
+                $$"""
+                  public {{type}} {{field.Name.Pascalize()}} { get; set; }
+
+                  """);
         }
     }
 
-    private void AddAddSelectedFields(ParseGraphQLSchemaAndOperations parsedSchema,
-        ParseGraphQLSchemaAndOperationsObjectType type, TypeRef typeRef, CaretRef parentBody,
+    private void AddEnumResolver(ParseGraphQLSchemaAndOperations parsedSchema,
+        ParseGraphQLSchemaAndOperationsEnumeration type, ParseGraphQLSchemaAndOperationsObjectTypeField field, CaretRef parentBody,
         CaretRef typeDefinitions)
     {
-        GraphQLClient.AddText(parentBody.Id,
+        if (field.Parameters.Count > 0)
+        {
+            GraphQLClient.AddText(parentBody.Id,
+                $$"""
+                  public {{type.Name}} {{type.Name}}({{CaretRef.New(out var arguments, separator: ", ")}})
+                  {
+                  }
+
+                  """);
+
+            foreach (var arg in field.Parameters)
+            {
+                var argType = GraphQLCSharpTypes.GetVariableCSharpType(arg.Type.Text.ToTypeRef(), out var _, parsedSchema);
+                GraphQLClient.AddText(arguments.Id, $"{argType} {arg.Name.Camelize()}");
+            }
+        }
+        else
+        {
+            GraphQLClient.AddText(parentBody.Id,
+                $$"""
+                  public {{type.Name}} {{type.Name}} { get; }
+
+                  """);
+        }
+
+        GraphQLClient.AddText(typeDefinitions.Id,
             $$"""
-            public {{type.Name}} { get; set; }
-            
-            """);
+              public enum {{type.Name.Pascalize()}}
+              {
+                  {{CaretRef.New(out var body)}}
+              }
+
+              """);
+
+        foreach (var value in type.Values)
+        {
+            GraphQLClient.AddText(body.Id,
+                $"""
+                {value.Name}
+                
+                """);
+        }
+    }
+    
+    private void AddObjectTypeResolver(ParseGraphQLSchemaAndOperations parsedSchema,
+        ParseGraphQLSchemaAndOperationsObjectType type,
+        ParseGraphQLSchemaAndOperationsObjectTypeField? field, TypeRef typeRef,
+        CaretRef parentBody,
+        CaretRef typeDefinitions)
+    {
+        if (field is not null && field.Parameters.Count > 0)
+        {
+            GraphQLClient.AddText(parentBody.Id,
+                $$"""
+                  public {{type.Name}} {{type.Name}}({{CaretRef.New(out var arguments, separator: ", ")}})
+                  {
+                  }
+
+                  """);
+
+            foreach (var arg in field.Parameters)
+            {
+                var argType = GraphQLCSharpTypes.GetVariableCSharpType(arg.Type.Text.ToTypeRef(), out var _, parsedSchema);
+                GraphQLClient.AddText(arguments.Id, $"{argType} {arg.Name.Camelize()}");
+            }
+        }
+        else
+        {
+            GraphQLClient.AddText(parentBody.Id,
+                $$"""
+                  public {{type.Name}} {{type.Name}} { get; } = new();
+
+                  """);
+        }
 
         GraphQLClient.AddText(typeDefinitions.Id,
             $$"""
             public partial class {{type.Name.Pascalize()}}
             {
-                public void AddSelectedFields()
+                public void AddSelectedFields(IReadOnlyList<ParseGraphQLOperationOperationVariable> variables, IReadOnlyList<Selection<
+            ParseGraphQLOperationOperationNestedSelectionFieldSelection,
+            ParseGraphQLOperationOperationNestedSelectionFragmentSpreadSelection>> selections, JsonObject result)
                 {
+                    foreach (var selection in selections)
+                    {
+                        {{CaretRef.New(out var addSelectedFieldsBody)}}
+                    }
+                    
                 }
             
                 {{CaretRef.New(out var body)}}
             }
             
             """);
-        
-        
+
+        foreach (var subfield in type.Fields)
+        {
+            GraphQLClient.AddText(addSelectedFieldsBody.Id,
+                $$"""
+                if (selection.FieldSelection is not null && selection.FieldSelection.Name == "{{subfield.Name}}")
+                {
+                    result[selection.FieldSelection.Alias ?? selection.FieldSelection.Name] = {{subfield.Name.Pascalize()}}();
+                }
+                else if (selection.FragmentSpreadSelection is not null && selection.FragmentSpreadSelection.Name == "{{subfield.Name}}")
+                {
+                    result[selection.FragmentSpreadSelection.Name] = {{subfield.Name.Pascalize()}}();
+                }
+                
+                """);
+            AddResolver(parsedSchema, subfield, body, typeDefinitions);
+        }
     }
 }

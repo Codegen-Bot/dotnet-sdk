@@ -405,42 +405,42 @@ public class CSharpBot : IMiniBot
                 "providedSchema": "providedSchema.graphql",
                 """);
 
-            GraphQLClient.AddText(botJsonExecs.Id,
-                """
-                , "schema": "dotnet run"
-                """);
+            // GraphQLClient.AddText(botJsonExecs.Id,
+            //     """
+            //     , "schema": "dotnet run"
+            //     """);
             
-            GraphQLClient.AddText(packageRefs.Id,
-                """
-                <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-                
-                """);
+            // GraphQLClient.AddText(packageRefs.Id,
+            //     """
+            //     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+            //     
+            //     """);
             
-            GraphQLClient.AddText(mainBody.Id,
-                """
-                // However this is also used to export the GraphQL schema
-                
-                var schema = _graphqlServer.GetGraphQLSchema();
-                
-                var providedSchemaFilePath = ProvidedSchemaUtility.CalculateProvidedSchemaPath();
-                
-                if (providedSchemaFilePath is null)
-                {
-                    return;
-                }
-                
-                Console.WriteLine($"Writing provided schema to {providedSchemaFilePath}");
-                File.WriteAllText(providedSchemaFilePath, schema);
-                """);
+            // GraphQLClient.AddText(mainBody.Id,
+            //     """
+            //     // However this is also used to export the GraphQL schema
+            //     
+            //     var schema = _graphqlServer.GetGraphQLSchema();
+            //     
+            //     var providedSchemaFilePath = ProvidedSchemaUtility.CalculateProvidedSchemaPath();
+            //     
+            //     if (providedSchemaFilePath is null)
+            //     {
+            //         return;
+            //     }
+            //     
+            //     Console.WriteLine($"Writing provided schema to {providedSchemaFilePath}");
+            //     File.WriteAllText(providedSchemaFilePath, schema);
+            //     """);
             
-            GraphQLClient.AddText(exportsUsings.Id,
-                """
-                using Microsoft.Extensions.DependencyInjection;
-                using Microsoft.Extensions.Logging;
-                using HotChocolate.Execution;
-                using System.IO;
-                
-                """);
+            // GraphQLClient.AddText(exportsUsings.Id,
+            //     """
+            //     using Microsoft.Extensions.DependencyInjection;
+            //     using Microsoft.Extensions.Logging;
+            //     using HotChocolate.Execution;
+            //     using System.IO;
+            //     
+            //     """);
 
             GraphQLClient.AddText(graphql.Id,
                 $$"""

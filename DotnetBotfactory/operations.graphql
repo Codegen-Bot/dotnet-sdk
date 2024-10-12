@@ -39,7 +39,7 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
       name
       fields {
         name
-        arguments {
+        parameters {
           name
           type {
             text
