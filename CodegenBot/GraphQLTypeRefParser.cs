@@ -43,6 +43,16 @@ public static class GraphQLTypeRefParser
 
 public class TypeRef
 {
+    public TypeRef Skip(Func<TypeRef, bool> predicate)
+    {
+        if (GenericArguments.Count > 0 && predicate(this))
+        {
+            return GenericArguments[0].Skip(predicate);
+        }
+
+        return this;
+    }
+    
     public required string Name { get; set; }
     public required string Text { get; set; }
     public required List<TypeRef> GenericArguments { get; set; }
