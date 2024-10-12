@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using HotChocolate.Utilities;
-
-namespace DotnetBotfactory;
+namespace CodegenBot;
 
 public static class GraphQLTypeRefParser
 {
