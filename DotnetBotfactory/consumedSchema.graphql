@@ -77,7 +77,6 @@ type GraphQLField @source(name: "GraphQLField", schema: "graphql") {
   name: String!
   type: TypeRef!
   parameters: [GraphQLParameter!]!
-  arguments: [GraphQLParameter!]!
   directives: [GraphQLDirective!]!
   description: String
 }
