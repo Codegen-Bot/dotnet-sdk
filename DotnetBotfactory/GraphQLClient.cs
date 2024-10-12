@@ -8,7 +8,7 @@ using CodegenBot;
 
 namespace DotnetBotfactory;
 
-public class GraphQLResponse<T>
+public partial class GraphQLResponse<T>
 {
     [JsonPropertyName("data")]
     public T? Data { get; set; }
@@ -17,7 +17,7 @@ public class GraphQLResponse<T>
     public List<GraphQLError>? Errors { get; set; }
 }
 
-public class GraphQLError
+public partial class GraphQLError
 {
     [JsonPropertyName("message")]
     public required string Message { get; set; }
@@ -39,6 +39,16 @@ public class GraphQLError
 [JsonSerializable(typeof(GraphQLResponse<AddFileData>))]
 [JsonSerializable(typeof(GraphQLRequest<AddFileVariables>))]
 [JsonSerializable(typeof(AddFile))]
+[JsonSerializable(typeof(AddFileVariables))]
+[JsonSerializable(typeof(AddFileData))]
+[JsonSerializable(typeof(GraphQLResponse<AddFileData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddFileVariables>))]
+[JsonSerializable(typeof(AddFile))]
+[JsonSerializable(typeof(AddKeyedTextVariables))]
+[JsonSerializable(typeof(AddKeyedTextData))]
+[JsonSerializable(typeof(GraphQLResponse<AddKeyedTextData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddKeyedTextVariables>))]
+[JsonSerializable(typeof(AddKeyedText))]
 [JsonSerializable(typeof(AddKeyedTextVariables))]
 [JsonSerializable(typeof(AddKeyedTextData))]
 [JsonSerializable(typeof(GraphQLResponse<AddKeyedTextData>))]
@@ -49,11 +59,26 @@ public class GraphQLError
 [JsonSerializable(typeof(GraphQLResponse<AddKeyedTextByTagsData>))]
 [JsonSerializable(typeof(GraphQLRequest<AddKeyedTextByTagsVariables>))]
 [JsonSerializable(typeof(AddKeyedTextByTags))]
+[JsonSerializable(typeof(AddKeyedTextByTagsVariables))]
+[JsonSerializable(typeof(AddKeyedTextByTagsData))]
+[JsonSerializable(typeof(GraphQLResponse<AddKeyedTextByTagsData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddKeyedTextByTagsVariables>))]
+[JsonSerializable(typeof(AddKeyedTextByTags))]
 [JsonSerializable(typeof(AddTextVariables))]
 [JsonSerializable(typeof(AddTextData))]
 [JsonSerializable(typeof(GraphQLResponse<AddTextData>))]
 [JsonSerializable(typeof(GraphQLRequest<AddTextVariables>))]
 [JsonSerializable(typeof(AddText))]
+[JsonSerializable(typeof(AddTextVariables))]
+[JsonSerializable(typeof(AddTextData))]
+[JsonSerializable(typeof(GraphQLResponse<AddTextData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddTextVariables>))]
+[JsonSerializable(typeof(AddText))]
+[JsonSerializable(typeof(AddTextByTagsVariables))]
+[JsonSerializable(typeof(AddTextByTagsData))]
+[JsonSerializable(typeof(GraphQLResponse<AddTextByTagsData>))]
+[JsonSerializable(typeof(GraphQLRequest<AddTextByTagsVariables>))]
+[JsonSerializable(typeof(AddTextByTags))]
 [JsonSerializable(typeof(AddTextByTagsVariables))]
 [JsonSerializable(typeof(AddTextByTagsData))]
 [JsonSerializable(typeof(GraphQLResponse<AddTextByTagsData>))]
@@ -71,11 +96,20 @@ public class GraphQLError
 [JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
 [JsonSerializable(typeof(GraphQLRequest<GetFilesVariables>))]
 [JsonSerializable(typeof(GetFiles))]
+[JsonSerializable(typeof(GetFilesVariables))]
+[JsonSerializable(typeof(GetFilesData))]
+[JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
+[JsonSerializable(typeof(GraphQLRequest<GetFilesVariables>))]
+[JsonSerializable(typeof(GetFiles))]
 [JsonSerializable(typeof(GetSchemaVariables))]
 [JsonSerializable(typeof(GetSchemaData))]
 [JsonSerializable(typeof(GraphQLResponse<GetSchemaData>))]
 [JsonSerializable(typeof(GraphQLRequest<GetSchemaVariables>))]
 [JsonSerializable(typeof(GetSchema))]
+[JsonSerializable(typeof(LogVariables))]
+[JsonSerializable(typeof(LogData))]
+[JsonSerializable(typeof(GraphQLResponse<LogData>))]
+[JsonSerializable(typeof(GraphQLRequest<LogVariables>))]
 [JsonSerializable(typeof(LogVariables))]
 [JsonSerializable(typeof(LogData))]
 [JsonSerializable(typeof(GraphQLResponse<LogData>))]
@@ -103,6 +137,10 @@ public class GraphQLError
 [JsonSerializable(
     typeof(ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection)
 )]
+[JsonSerializable(typeof(ReadTextFileVariables))]
+[JsonSerializable(typeof(ReadTextFileData))]
+[JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
+[JsonSerializable(typeof(GraphQLRequest<ReadTextFileVariables>))]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
@@ -144,6 +182,69 @@ public static partial class GraphQLClient
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request AddFile.");
+    }
+
+    public static AddFileData AddFile(string filePath, string textAndCarets)
+    {
+        var request = new GraphQLRequest<AddFileVariables>
+        {
+            Query = """
+                mutation AddFile($filePath: String!, $textAndCarets: String!) {
+                  addFile(filePath: $filePath, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
+            OperationName = "AddFile",
+            Variables = new AddFileVariables()
+            {
+                FilePath = filePath,
+                TextAndCarets = textAndCarets,
+            },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddFileVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<AddFileData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddFileData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddFile.");
+    }
+
+    public static AddKeyedTextData AddKeyedText(string key, string caretId, string textAndCarets)
+    {
+        var request = new GraphQLRequest<AddKeyedTextVariables>
+        {
+            Query = """
+                mutation AddKeyedText($key: String!, $caretId: String!, $textAndCarets: String!) {
+                  addKeyedText(key: $key, caretId: $caretId, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
+            OperationName = "AddKeyedText",
+            Variables = new AddKeyedTextVariables()
+            {
+                Key = key,
+                CaretId = caretId,
+                TextAndCarets = textAndCarets,
+            },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddKeyedTextVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddKeyedTextData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddKeyedText.");
     }
 
     public static AddKeyedTextData AddKeyedText(string key, string caretId, string textAndCarets)
@@ -216,6 +317,44 @@ public static partial class GraphQLClient
             );
     }
 
+    public static AddKeyedTextByTagsData AddKeyedTextByTags(
+        string key,
+        List<CaretTagInput> tags,
+        string textAndCarets
+    )
+    {
+        var request = new GraphQLRequest<AddKeyedTextByTagsVariables>
+        {
+            Query = """
+                mutation AddKeyedTextByTags($key: String!, $tags: [CaretTagInput!]!, $textAndCarets: String!) {
+                  addKeyedTextByTags(key: $key, tags: $tags, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
+            OperationName = "AddKeyedTextByTags",
+            Variables = new AddKeyedTextByTagsVariables()
+            {
+                Key = key,
+                Tags = tags,
+                TextAndCarets = textAndCarets,
+            },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddKeyedTextByTagsVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<AddKeyedTextByTagsData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddKeyedTextByTagsData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException(
+                "Received null data for request AddKeyedTextByTags."
+            );
+    }
+
     public static AddTextData AddText(string caretId, string textAndCarets)
     {
         var request = new GraphQLRequest<AddTextVariables>
@@ -241,6 +380,60 @@ public static partial class GraphQLClient
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request AddText.");
+    }
+
+    public static AddTextData AddText(string caretId, string textAndCarets)
+    {
+        var request = new GraphQLRequest<AddTextVariables>
+        {
+            Query = """
+                mutation AddText($caretId: String!, $textAndCarets: String!) {
+                  addText(caretId: $caretId, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
+            OperationName = "AddText",
+            Variables = new AddTextVariables() { CaretId = caretId, TextAndCarets = textAndCarets },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddTextVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddTextData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddText.");
+    }
+
+    public static AddTextByTagsData AddTextByTags(List<CaretTagInput> tags, string textAndCarets)
+    {
+        var request = new GraphQLRequest<AddTextByTagsVariables>
+        {
+            Query = """
+                mutation AddTextByTags($tags: [CaretTagInput!]!, $textAndCarets: String!) {
+                  addTextByTags(tags: $tags, textAndCarets: $textAndCarets) {
+                    id
+                  }
+                }
+                """,
+            OperationName = "AddTextByTags",
+            Variables = new AddTextByTagsVariables() { Tags = tags, TextAndCarets = textAndCarets },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestAddTextByTagsVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<AddTextByTagsData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseAddTextByTagsData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request AddTextByTags.");
     }
 
     public static AddTextByTagsData AddTextByTags(List<CaretTagInput> tags, string textAndCarets)
@@ -343,6 +536,34 @@ public static partial class GraphQLClient
             ?? throw new InvalidOperationException("Received null data for request GetFiles.");
     }
 
+    public static GetFilesData GetFiles(List<string> whitelist, List<string> blacklist)
+    {
+        var request = new GraphQLRequest<GetFilesVariables>
+        {
+            Query = """
+                query GetFiles($whitelist: [String!]!, $blacklist: [String!]!) {
+                  files(whitelist: $whitelist, blacklist: $blacklist) {
+                    path
+                    kind
+                  }
+                }
+                """,
+            OperationName = "GetFiles",
+            Variables = new GetFilesVariables() { Whitelist = whitelist, Blacklist = blacklist },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestGetFilesVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetFilesData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseGetFilesData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request GetFiles.");
+    }
+
     public static GetSchemaData GetSchema(string botFilePath)
     {
         var request = new GraphQLRequest<GetSchemaVariables>
@@ -371,6 +592,36 @@ public static partial class GraphQLClient
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request GetSchema.");
+    }
+
+    public static LogData Log(LogSeverity severity, string message, List<string>? arguments)
+    {
+        var request = new GraphQLRequest<LogVariables>
+        {
+            Query = """
+                mutation Log($severity: LogSeverity!, $message: String!, $arguments: [String!]) {
+                  log(severity: $severity, message: $message, arguments: $arguments)
+                }
+                """,
+            OperationName = "Log",
+            Variables = new LogVariables()
+            {
+                Severity = severity,
+                Message = message,
+                Arguments = arguments,
+            },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestLogVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<LogData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseLogData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request Log.");
     }
 
     public static LogData Log(LogSeverity severity, string message, List<string>? arguments)
@@ -488,6 +739,31 @@ public static partial class GraphQLClient
             ?? throw new InvalidOperationException(
                 "Received null data for request ParseGraphQLSchemaAndOperations."
             );
+    }
+
+    public static ReadTextFileData ReadTextFile(string textFilePath)
+    {
+        var request = new GraphQLRequest<ReadTextFileVariables>
+        {
+            Query = """
+                query ReadTextFile($textFilePath: String!) {
+                  readTextFile(textFilePath: $textFilePath)
+                }
+                """,
+            OperationName = "ReadTextFile",
+            Variables = new ReadTextFileVariables() { TextFilePath = textFilePath },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestReadTextFileVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<ReadTextFileData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseReadTextFileData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request ReadTextFile.");
     }
 
     public static ReadTextFileData ReadTextFile(string textFilePath)
@@ -664,7 +940,7 @@ public enum LogSeverity
     CRITICAL,
 }
 
-public class AdditionalFileInput
+public partial class AdditionalFileInput
 {
     [JsonPropertyName("filePath")]
     public required string FilePath { get; set; }
@@ -673,7 +949,7 @@ public class AdditionalFileInput
     public required string Content { get; set; }
 }
 
-public class BotDependencyInput
+public partial class BotDependencyInput
 {
     [JsonPropertyName("botId")]
     public required string BotId { get; set; }
@@ -682,7 +958,7 @@ public class BotDependencyInput
     public required string BotVersion { get; set; }
 }
 
-public class CaretTagInput
+public partial class CaretTagInput
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -691,13 +967,13 @@ public class CaretTagInput
     public required string Value { get; set; }
 }
 
-public class AddFileData
+public partial class AddFileData
 {
     [JsonPropertyName("addFile")]
     public required AddFile AddFile { get; set; }
 }
 
-public class AddFileVariables
+public partial class AddFileVariables
 {
     [JsonPropertyName("filePath")]
     public required string FilePath { get; set; }
@@ -706,19 +982,40 @@ public class AddFileVariables
     public required string TextAndCarets { get; set; }
 }
 
-public class AddFile
+public partial class AddFile
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 }
 
-public class AddKeyedTextData
+public partial class AddFileData
+{
+    [JsonPropertyName("addFile")]
+    public required AddFile AddFile { get; set; }
+}
+
+public partial class AddFileVariables
+{
+    [JsonPropertyName("filePath")]
+    public required string FilePath { get; set; }
+
+    [JsonPropertyName("textAndCarets")]
+    public required string TextAndCarets { get; set; }
+}
+
+public partial class AddFile
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+}
+
+public partial class AddKeyedTextData
 {
     [JsonPropertyName("addKeyedText")]
     public required AddKeyedText AddKeyedText { get; set; }
 }
 
-public class AddKeyedTextVariables
+public partial class AddKeyedTextVariables
 {
     [JsonPropertyName("key")]
     public required string Key { get; set; }
@@ -730,19 +1027,43 @@ public class AddKeyedTextVariables
     public required string TextAndCarets { get; set; }
 }
 
-public class AddKeyedText
+public partial class AddKeyedText
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 }
 
-public class AddKeyedTextByTagsData
+public partial class AddKeyedTextData
+{
+    [JsonPropertyName("addKeyedText")]
+    public required AddKeyedText AddKeyedText { get; set; }
+}
+
+public partial class AddKeyedTextVariables
+{
+    [JsonPropertyName("key")]
+    public required string Key { get; set; }
+
+    [JsonPropertyName("caretId")]
+    public required string CaretId { get; set; }
+
+    [JsonPropertyName("textAndCarets")]
+    public required string TextAndCarets { get; set; }
+}
+
+public partial class AddKeyedText
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+}
+
+public partial class AddKeyedTextByTagsData
 {
     [JsonPropertyName("addKeyedTextByTags")]
     public required List<AddKeyedTextByTags> AddKeyedTextByTags { get; set; }
 }
 
-public class AddKeyedTextByTagsVariables
+public partial class AddKeyedTextByTagsVariables
 {
     [JsonPropertyName("key")]
     public required string Key { get; set; }
@@ -754,19 +1075,43 @@ public class AddKeyedTextByTagsVariables
     public required string TextAndCarets { get; set; }
 }
 
-public class AddKeyedTextByTags
+public partial class AddKeyedTextByTags
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 }
 
-public class AddTextData
+public partial class AddKeyedTextByTagsData
+{
+    [JsonPropertyName("addKeyedTextByTags")]
+    public required List<AddKeyedTextByTags> AddKeyedTextByTags { get; set; }
+}
+
+public partial class AddKeyedTextByTagsVariables
+{
+    [JsonPropertyName("key")]
+    public required string Key { get; set; }
+
+    [JsonPropertyName("tags")]
+    public required List<CaretTagInput> Tags { get; set; }
+
+    [JsonPropertyName("textAndCarets")]
+    public required string TextAndCarets { get; set; }
+}
+
+public partial class AddKeyedTextByTags
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+}
+
+public partial class AddTextData
 {
     [JsonPropertyName("addText")]
     public required AddText AddText { get; set; }
 }
 
-public class AddTextVariables
+public partial class AddTextVariables
 {
     [JsonPropertyName("caretId")]
     public required string CaretId { get; set; }
@@ -775,19 +1120,40 @@ public class AddTextVariables
     public required string TextAndCarets { get; set; }
 }
 
-public class AddText
+public partial class AddText
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 }
 
-public class AddTextByTagsData
+public partial class AddTextData
+{
+    [JsonPropertyName("addText")]
+    public required AddText AddText { get; set; }
+}
+
+public partial class AddTextVariables
+{
+    [JsonPropertyName("caretId")]
+    public required string CaretId { get; set; }
+
+    [JsonPropertyName("textAndCarets")]
+    public required string TextAndCarets { get; set; }
+}
+
+public partial class AddText
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+}
+
+public partial class AddTextByTagsData
 {
     [JsonPropertyName("addTextByTags")]
     public required List<AddTextByTags> AddTextByTags { get; set; }
 }
 
-public class AddTextByTagsVariables
+public partial class AddTextByTagsVariables
 {
     [JsonPropertyName("tags")]
     public required List<CaretTagInput> Tags { get; set; }
@@ -796,21 +1162,42 @@ public class AddTextByTagsVariables
     public required string TextAndCarets { get; set; }
 }
 
-public class AddTextByTags
+public partial class AddTextByTags
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 }
 
-public class GetConfigurationData
+public partial class AddTextByTagsData
+{
+    [JsonPropertyName("addTextByTags")]
+    public required List<AddTextByTags> AddTextByTags { get; set; }
+}
+
+public partial class AddTextByTagsVariables
+{
+    [JsonPropertyName("tags")]
+    public required List<CaretTagInput> Tags { get; set; }
+
+    [JsonPropertyName("textAndCarets")]
+    public required string TextAndCarets { get; set; }
+}
+
+public partial class AddTextByTags
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+}
+
+public partial class GetConfigurationData
 {
     [JsonPropertyName("configuration")]
     public required GetConfiguration Configuration { get; set; }
 }
 
-public class GetConfigurationVariables { }
+public partial class GetConfigurationVariables { }
 
-public class GetConfiguration
+public partial class GetConfiguration
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
@@ -837,7 +1224,7 @@ public class GetConfiguration
     public required List<GetConfigurationCopybot> Copybots { get; set; }
 }
 
-public class GetConfigurationCopybot
+public partial class GetConfigurationCopybot
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -852,7 +1239,7 @@ public class GetConfigurationCopybot
     public required List<GetConfigurationCopybotFieldDefinition> FieldDefinitions { get; set; }
 }
 
-public class GetConfigurationCopybotFieldDefinition
+public partial class GetConfigurationCopybotFieldDefinition
 {
     [JsonPropertyName("needle")]
     public required string Needle { get; set; }
@@ -864,13 +1251,13 @@ public class GetConfigurationCopybotFieldDefinition
     public List<DotnetCopybotStringVariant>? Variants { get; set; }
 }
 
-public class GetFilesData
+public partial class GetFilesData
 {
     [JsonPropertyName("files")]
     public required List<GetFiles> Files { get; set; }
 }
 
-public class GetFilesVariables
+public partial class GetFilesVariables
 {
     [JsonPropertyName("whitelist")]
     public required List<string> Whitelist { get; set; }
@@ -879,7 +1266,7 @@ public class GetFilesVariables
     public required List<string> Blacklist { get; set; }
 }
 
-public class GetFiles
+public partial class GetFiles
 {
     [JsonPropertyName("path")]
     public required string Path { get; set; }
@@ -888,7 +1275,31 @@ public class GetFiles
     public required FileKind Kind { get; set; }
 }
 
-public class GetSchemaData
+public partial class GetFilesData
+{
+    [JsonPropertyName("files")]
+    public required List<GetFiles> Files { get; set; }
+}
+
+public partial class GetFilesVariables
+{
+    [JsonPropertyName("whitelist")]
+    public required List<string> Whitelist { get; set; }
+
+    [JsonPropertyName("blacklist")]
+    public required List<string> Blacklist { get; set; }
+}
+
+public partial class GetFiles
+{
+    [JsonPropertyName("path")]
+    public required string Path { get; set; }
+
+    [JsonPropertyName("kind")]
+    public required FileKind Kind { get; set; }
+}
+
+public partial class GetSchemaData
 {
     [JsonPropertyName("botSchema")]
     public string? BotSchema { get; set; }
@@ -897,13 +1308,13 @@ public class GetSchemaData
     public GetSchema? BotSpec { get; set; }
 }
 
-public class GetSchemaVariables
+public partial class GetSchemaVariables
 {
     [JsonPropertyName("botFilePath")]
     public required string BotFilePath { get; set; }
 }
 
-public class GetSchema
+public partial class GetSchema
 {
     [JsonPropertyName("consumedSchemaPath")]
     public string? ConsumedSchemaPath { get; set; }
@@ -915,13 +1326,13 @@ public class GetSchema
     public string? ProvidedSchemaPath { get; set; }
 }
 
-public class LogData
+public partial class LogData
 {
     [JsonPropertyName("log")]
     public required string Log { get; set; }
 }
 
-public class LogVariables
+public partial class LogVariables
 {
     [JsonPropertyName("severity")]
     public required LogSeverity Severity { get; set; }
@@ -933,19 +1344,37 @@ public class LogVariables
     public List<string>? Arguments { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsData
+public partial class LogData
+{
+    [JsonPropertyName("log")]
+    public required string Log { get; set; }
+}
+
+public partial class LogVariables
+{
+    [JsonPropertyName("severity")]
+    public required LogSeverity Severity { get; set; }
+
+    [JsonPropertyName("message")]
+    public required string Message { get; set; }
+
+    [JsonPropertyName("arguments")]
+    public List<string>? Arguments { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsData
 {
     [JsonPropertyName("graphQL")]
     public required ParseGraphQLSchemaAndOperations GraphQL { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsVariables
+public partial class ParseGraphQLSchemaAndOperationsVariables
 {
     [JsonPropertyName("graphql")]
     public required List<AdditionalFileInput> Graphql { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperations
+public partial class ParseGraphQLSchemaAndOperations
 {
     [JsonPropertyName("objectTypes")]
     public required List<ParseGraphQLSchemaAndOperationsObjectType> ObjectTypes { get; set; }
@@ -960,7 +1389,7 @@ public class ParseGraphQLSchemaAndOperations
     public required List<ParseGraphQLSchemaAndOperationsOperation> Operations { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsObjectType
+public partial class ParseGraphQLSchemaAndOperationsObjectType
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -969,7 +1398,7 @@ public class ParseGraphQLSchemaAndOperationsObjectType
     public required List<ParseGraphQLSchemaAndOperationsObjectTypeField> Fields { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsObjectTypeField
+public partial class ParseGraphQLSchemaAndOperationsObjectTypeField
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -981,7 +1410,7 @@ public class ParseGraphQLSchemaAndOperationsObjectTypeField
     public required ParseGraphQLSchemaAndOperationsObjectTypeFieldType Type { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter
+public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -990,19 +1419,19 @@ public class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter
     public required ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType Type { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType
+public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsObjectTypeFieldType
+public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsInputObjectType
+public partial class ParseGraphQLSchemaAndOperationsInputObjectType
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1011,7 +1440,7 @@ public class ParseGraphQLSchemaAndOperationsInputObjectType
     public required List<ParseGraphQLSchemaAndOperationsInputObjectTypeField> Fields { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsInputObjectTypeField
+public partial class ParseGraphQLSchemaAndOperationsInputObjectTypeField
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1020,13 +1449,13 @@ public class ParseGraphQLSchemaAndOperationsInputObjectTypeField
     public required ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType Type { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType
+public partial class ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsEnumeration
+public partial class ParseGraphQLSchemaAndOperationsEnumeration
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1035,13 +1464,13 @@ public class ParseGraphQLSchemaAndOperationsEnumeration
     public required List<ParseGraphQLSchemaAndOperationsEnumerationValue> Values { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsEnumerationValue
+public partial class ParseGraphQLSchemaAndOperationsEnumerationValue
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsOperation
+public partial class ParseGraphQLSchemaAndOperationsOperation
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }
@@ -1059,7 +1488,7 @@ public class ParseGraphQLSchemaAndOperationsOperation
     public required List<ParseGraphQLSchemaAndOperationsOperationNestedSelection> NestedSelection { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsOperationVariable
+public partial class ParseGraphQLSchemaAndOperationsOperationVariable
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1068,13 +1497,13 @@ public class ParseGraphQLSchemaAndOperationsOperationVariable
     public required ParseGraphQLSchemaAndOperationsOperationVariableType Type { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsOperationVariableType
+public partial class ParseGraphQLSchemaAndOperationsOperationVariableType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsOperationNestedSelection
+public partial class ParseGraphQLSchemaAndOperationsOperationNestedSelection
 {
     [JsonPropertyName("depth")]
     public required int Depth { get; set; }
@@ -1086,7 +1515,7 @@ public class ParseGraphQLSchemaAndOperationsOperationNestedSelection
     public ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelection
+public partial class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelection
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1095,31 +1524,43 @@ public class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelecti
     public string? Alias { get; set; }
 }
 
-public class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection
+public partial class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 }
 
-public class ReadTextFileData
+public partial class ReadTextFileData
 {
     [JsonPropertyName("readTextFile")]
     public string? ReadTextFile { get; set; }
 }
 
-public class ReadTextFileVariables
+public partial class ReadTextFileVariables
 {
     [JsonPropertyName("textFilePath")]
     public required string TextFilePath { get; set; }
 }
 
-public class ReadTextFileWithVersionData
+public partial class ReadTextFileData
 {
     [JsonPropertyName("readTextFile")]
     public string? ReadTextFile { get; set; }
 }
 
-public class ReadTextFileWithVersionVariables
+public partial class ReadTextFileVariables
+{
+    [JsonPropertyName("textFilePath")]
+    public required string TextFilePath { get; set; }
+}
+
+public partial class ReadTextFileWithVersionData
+{
+    [JsonPropertyName("readTextFile")]
+    public string? ReadTextFile { get; set; }
+}
+
+public partial class ReadTextFileWithVersionVariables
 {
     [JsonPropertyName("textFilePath")]
     public required string TextFilePath { get; set; }
