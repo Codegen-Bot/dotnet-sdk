@@ -98,6 +98,17 @@ public partial class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragment))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentVariable))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentVariableType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentDenestedSelection))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItem))]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemFieldSelection)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemFragmentSpreadSelection)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemInlineFragmentSelection)
+)]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperation))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationVariable))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationVariableType))]
@@ -457,6 +468,21 @@ public static partial class GraphQLClient
                         name
                         type {
                           text
+                        }
+                      }
+                      denestedSelections {
+                        depth
+                        item {
+                          fieldSelection {
+                            name
+                            alias
+                          }
+                          fragmentSpreadSelection {
+                            fragmentName
+                          }
+                          inlineFragmentSelection {
+                            typeName
+                          }
                         }
                       }
                     }
@@ -1074,6 +1100,9 @@ public partial class ParseGraphQLSchemaAndOperationsFragment
 
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentVariable> Variables { get; set; }
+
+    [JsonPropertyName("denestedSelections")]
+    public required List<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection> DenestedSelections { get; set; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsFragmentVariable
@@ -1089,6 +1118,48 @@ public partial class ParseGraphQLSchemaAndOperationsFragmentVariableType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelection
+{
+    [JsonPropertyName("depth")]
+    public required int Depth { get; set; }
+
+    [JsonPropertyName("item")]
+    public required ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItem Item { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItem
+{
+    [JsonPropertyName("fieldSelection")]
+    public ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemFieldSelection? FieldSelection { get; set; }
+
+    [JsonPropertyName("fragmentSpreadSelection")]
+    public ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
+
+    [JsonPropertyName("inlineFragmentSelection")]
+    public ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemInlineFragmentSelection? InlineFragmentSelection { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemFieldSelection
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemFragmentSpreadSelection
+{
+    [JsonPropertyName("fragmentName")]
+    public required string FragmentName { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItemInlineFragmentSelection
+{
+    [JsonPropertyName("typeName")]
+    public required string TypeName { get; set; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsOperation
