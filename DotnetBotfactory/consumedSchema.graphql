@@ -139,6 +139,10 @@ type GraphQLInlineFragmentSelection implements GraphQLSelection @source(name: "G
   name: String!
   typeName: String!
   text: String!
+  selections: [GraphQLSelection!]!
+  fieldSelections: [GraphQLFieldSelection!]!
+  fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
+  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
 }
 
 type GraphQLInputField @source(name: "GraphQLInputField", schema: "graphql") {
@@ -202,7 +206,6 @@ type GraphQLOperation @source(name: "GraphQLOperation", schema: "graphql") {
   operationType: GraphQLOperationType!
   selections: [GraphQLSelection!]!
   denestedSelections: [DenestedOfSelectionItem!]!
-  nestedSelection: [NestedSelection!]!
   fieldSelections: [GraphQLFieldSelection!]!
   fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
   inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
@@ -260,13 +263,6 @@ type Mutation {
   log(severity: LogSeverity! message: String! arguments: [String!]): String! @delegate(schema: "log", path: "log")
 }
 
-type NestedSelection @source(name: "NestedSelection", schema: "graphql") {
-  depth: Int!
-  selection: GraphQLSelection!
-  fieldSelection: GraphQLFieldSelection
-  fragmentSpreadSelection: GraphQLFragmentSpreadSelection
-}
-
 type Query {
   noop: String
   botSpec(botFilePath: String!): BotSpec @delegate(schema: "schema", path: "botSpec")
@@ -291,6 +287,7 @@ type SelectionItem @source(name: "SelectionItem", schema: "graphql") {
   selection: GraphQLSelection!
   fieldSelection: GraphQLFieldSelection
   fragmentSpreadSelection: GraphQLFragmentSpreadSelection
+  inlineFragmentSelection: GraphQLInlineFragmentSelection
 }
 
 type TypeRef @source(name: "TypeRef", schema: "graphql") {
