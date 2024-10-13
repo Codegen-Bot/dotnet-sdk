@@ -109,6 +109,9 @@ public partial class GraphQLError
 [JsonSerializable(
     typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFragmentSpreadSelection)
 )]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemInlineFragmentSelection)
+)]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileData>))]
@@ -475,8 +478,10 @@ public static partial class GraphQLClient
                             alias
                           }
                           fragmentSpreadSelection {
-                            name
                             fragmentName
+                          }
+                          inlineFragmentSelection {
+                            typeName
                           }
                         }
                       }
@@ -1135,6 +1140,9 @@ public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionIt
 
     [JsonPropertyName("fragmentSpreadSelection")]
     public ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
+
+    [JsonPropertyName("inlineFragmentSelection")]
+    public ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemInlineFragmentSelection? InlineFragmentSelection { get; set; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFieldSelection
@@ -1148,11 +1156,14 @@ public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionIt
 
 public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFragmentSpreadSelection
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
     [JsonPropertyName("fragmentName")]
     public required string FragmentName { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemInlineFragmentSelection
+{
+    [JsonPropertyName("typeName")]
+    public required string TypeName { get; set; }
 }
 
 public partial class ReadTextFileData
