@@ -7,6 +7,10 @@ interface GraphQLSelection @source(name: "GraphQLSelection", schema: "graphql") 
   name: String!
 }
 
+interface GraphQLValue @source(name: "GraphQLValue", schema: "graphql") {
+  text: String!
+}
+
 type BotSpec @source(name: "BotSpec", schema: "schema") {
   unparse: String!
   readMePath: String
@@ -41,6 +45,11 @@ type Configuration @source(name: "Configuration", schema: "Configuration") {
   outputPath: String!
 }
 
+type DenestedOfSelectionItem @source(name: "DenestedOfSelectionItem", schema: "graphql") {
+  depth: Int!
+  item: SelectionItem!
+}
+
 type File @source(name: "File", schema: "filesystem") {
   path: String!
   kind: FileKind!
@@ -48,7 +57,12 @@ type File @source(name: "File", schema: "filesystem") {
 
 type GraphQLArgument @source(name: "GraphQLArgument", schema: "graphql") {
   name: String!
-  value: String!
+  value: GraphQLValue!
+}
+
+type GraphQLBooleanValue implements GraphQLValue @source(name: "GraphQLBooleanValue", schema: "graphql") {
+  value: Boolean!
+  text: String!
 }
 
 type GraphQLDirective @source(name: "GraphQLDirective", schema: "graphql") {
@@ -60,6 +74,11 @@ type GraphQLDirectiveType @source(name: "GraphQLDirectiveType", schema: "graphql
   name: String!
   parameters: [GraphQLParameter!]!
   isRepeatable: Boolean!
+}
+
+type GraphQLEnumValue implements GraphQLValue @source(name: "GraphQLEnumValue", schema: "graphql") {
+  value: String!
+  text: String!
 }
 
 type GraphQLEnumeration @source(name: "GraphQLEnumeration", schema: "graphql") {
@@ -91,6 +110,11 @@ type GraphQLFieldSelection implements GraphQLSelection @source(name: "GraphQLFie
   arguments: [GraphQLArgument!]!
 }
 
+type GraphQLFloatValue implements GraphQLValue @source(name: "GraphQLFloatValue", schema: "graphql") {
+  value: String!
+  text: String!
+}
+
 type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
   name: String!
   typeCondition: String!
@@ -109,7 +133,7 @@ type GraphQLInputField @source(name: "GraphQLInputField", schema: "graphql") {
   name: String!
   type: TypeRef!
   directives: [GraphQLDirective!]!
-  value: String
+  value: GraphQLValue
 }
 
 type GraphQLInputObjectType @source(name: "GraphQLInputObjectType", schema: "graphql") {
@@ -118,10 +142,20 @@ type GraphQLInputObjectType @source(name: "GraphQLInputObjectType", schema: "gra
   directives: [GraphQLDirective!]!
 }
 
+type GraphQLIntValue implements GraphQLValue @source(name: "GraphQLIntValue", schema: "graphql") {
+  value: String!
+  text: String!
+}
+
 type GraphQLInterfaceType @source(name: "GraphQLInterfaceType", schema: "graphql") {
   name: String!
   fields: [GraphQLField!]!
   directives: [GraphQLDirective!]!
+}
+
+type GraphQLListValue implements GraphQLValue @source(name: "GraphQLListValue", schema: "graphql") {
+  value: [GraphQLValue!]!
+  text: String!
 }
 
 type GraphQLMetadata @source(name: "GraphQLMetadata", schema: "graphql") {
@@ -135,10 +169,19 @@ type GraphQLMetadata @source(name: "GraphQLMetadata", schema: "graphql") {
   enumerations: [GraphQLEnumeration!]!
 }
 
+type GraphQLNullValue implements GraphQLValue @source(name: "GraphQLNullValue", schema: "graphql") {
+  text: String!
+}
+
 type GraphQLObjectType @source(name: "GraphQLObjectType", schema: "graphql") {
   name: String!
   fields: [GraphQLField!]!
   directives: [GraphQLDirective!]!
+}
+
+type GraphQLObjectValue implements GraphQLValue @source(name: "GraphQLObjectValue", schema: "graphql") {
+  value: [KeyValuePairOfStringAndGraphQLValue!]!
+  text: String!
 }
 
 type GraphQLOperation @source(name: "GraphQLOperation", schema: "graphql") {
@@ -147,6 +190,7 @@ type GraphQLOperation @source(name: "GraphQLOperation", schema: "graphql") {
   operationType: GraphQLOperationType!
   selections: [GraphQLSelection!]!
   fieldSelections: [GraphQLFieldSelection!]!
+  denestedSelections: [DenestedOfSelectionItem!]!
   nestedSelection: [NestedSelection!]!
   fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
   directives: [GraphQLDirective!]!
@@ -157,7 +201,7 @@ type GraphQLParameter @source(name: "GraphQLParameter", schema: "graphql") {
   name: String!
   type: TypeRef!
   directives: [GraphQLDirective!]!
-  defaultValue: String
+  defaultValue: GraphQLValue
 }
 
 type GraphQLScalarType @source(name: "GraphQLScalarType", schema: "graphql") {
@@ -165,11 +209,26 @@ type GraphQLScalarType @source(name: "GraphQLScalarType", schema: "graphql") {
   directives: [GraphQLDirective!]!
 }
 
+type GraphQLStringValue implements GraphQLValue @source(name: "GraphQLStringValue", schema: "graphql") {
+  value: String!
+  text: String!
+}
+
 type GraphQLVariable @source(name: "GraphQLVariable", schema: "graphql") {
   name: String!
   type: TypeRef!
   directives: [GraphQLDirective!]!
-  value: String
+  defaultValue: GraphQLValue
+}
+
+type GraphQLVariableValue implements GraphQLValue @source(name: "GraphQLVariableValue", schema: "graphql") {
+  name: String!
+  text: String!
+}
+
+type KeyValuePairOfStringAndGraphQLValue @source(name: "KeyValuePairOfStringAndGraphQLValue", schema: "graphql") {
+  key: String!
+  value: GraphQLValue!
 }
 
 type KeyValuePairOfStringAndString @source(name: "KeyValuePairOfStringAndString", schema: "schema") {
@@ -213,6 +272,12 @@ type Query {
   "Reads high-level information about things defined in GraphQL files"
   graphQL(fileWhitelist: [String!] additionalFiles: [AdditionalFileInput!]!): GraphQLMetadata! @delegate(schema: "graphql", path: "graphQL")
   configuration: Configuration! @delegate(schema: "Configuration", path: "configuration")
+}
+
+type SelectionItem @source(name: "SelectionItem", schema: "graphql") {
+  selection: GraphQLSelection!
+  fieldSelection: GraphQLFieldSelection
+  fragmentSpreadSelection: GraphQLFragmentSpreadSelection
 }
 
 type TypeRef @source(name: "TypeRef", schema: "graphql") {
