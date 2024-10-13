@@ -108,6 +108,7 @@ type GraphQLFieldSelection implements GraphQLSelection @source(name: "GraphQLFie
   selections: [GraphQLSelection!]!
   fieldSelections: [GraphQLFieldSelection!]!
   fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
+  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
   directives: [GraphQLDirective!]!
   arguments: [GraphQLArgument!]!
 }
@@ -124,6 +125,7 @@ type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
   selections: [GraphQLSelection!]!
   fieldSelections: [GraphQLFieldSelection!]!
   fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
+  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
   directives: [GraphQLDirective!]!
 }
 
@@ -199,10 +201,11 @@ type GraphQLOperation @source(name: "GraphQLOperation", schema: "graphql") {
   text: String!
   operationType: GraphQLOperationType!
   selections: [GraphQLSelection!]!
-  fieldSelections: [GraphQLFieldSelection!]!
   denestedSelections: [DenestedOfSelectionItem!]!
   nestedSelection: [NestedSelection!]!
+  fieldSelections: [GraphQLFieldSelection!]!
   fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
+  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
   directives: [GraphQLDirective!]!
   variables: [GraphQLVariable!]!
 }
