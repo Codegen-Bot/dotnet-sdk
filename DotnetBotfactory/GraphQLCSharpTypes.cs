@@ -146,9 +146,27 @@ public static class GraphQLCSharpTypes
                     }
                     else
                     {
-                        // TODO - implement this
-                        //AddSelectionText(properties, path, objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                        throw new NotImplementedException("Nope");
+                        // var renested = fragment.DenestedSelections.Renest(x => x.Depth,
+                        //     (item, children) =>
+                        //     {
+                        //         return new Selection()
+                        //         {
+                        //             Item = new ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItem()
+                        //             {
+                        //                 FieldSelection = item.Item.FieldSelection,
+                        //             },
+                        //         };
+                        //     });
+                        // foreach (var subsubselection in renested)
+                        // {
+                        //     AddSelectionText(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                        // }
                     }
+                }
+                else if (subselection.Item.InlineFragmentSelection is not null)
+                {
+                    
                 }
             }
 

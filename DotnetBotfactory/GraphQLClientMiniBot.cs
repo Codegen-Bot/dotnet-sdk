@@ -16,7 +16,7 @@ public class GraphQLClientMiniBot : IMiniBot
         var rootNamespace = configuration.ProjectName.Replace("-", " ").Pascalize();
 
         var files = GraphQLClient.GetFiles(["**/*.graphql"], []).Files;
-        
+
         var schema = GraphQLClient.GetSchema($"{configuration.OutputPath}/bot.json");
 
         string? schemaPath = null;
@@ -323,6 +323,5 @@ public class GraphQLClientMiniBot : IMiniBot
                 GraphQLCSharpTypes.AddSelectionText(properties, path, objectType, selection, metadata, jsonSerializerContextAttributes, typeDefinitions);
             }
         }
-
     }
 }

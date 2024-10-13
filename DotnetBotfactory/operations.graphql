@@ -73,6 +73,21 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
           text
         }
       }
+      denestedSelections {
+        depth
+        item {
+          fieldSelection {
+            name
+            alias
+          }
+          fragmentSpreadSelection {
+            fragmentName
+          }
+          inlineFragmentSelection {
+            typeName
+          }
+        }
+      }
     }
     operations {
       name
