@@ -5,7 +5,6 @@ schema {
 
 interface GraphQLSelection @source(name: "GraphQLSelection", schema: "graphql") {
   text: String!
-  name: String!
 }
 
 interface GraphQLValue @source(name: "GraphQLValue", schema: "graphql") {
@@ -130,13 +129,11 @@ type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
 }
 
 type GraphQLFragmentSpreadSelection implements GraphQLSelection @source(name: "GraphQLFragmentSpreadSelection", schema: "graphql") {
-  name: String!
   fragmentName: String!
   text: String!
 }
 
 type GraphQLInlineFragmentSelection implements GraphQLSelection @source(name: "GraphQLInlineFragmentSelection", schema: "graphql") {
-  name: String!
   typeName: String!
   text: String!
   selections: [GraphQLSelection!]!
