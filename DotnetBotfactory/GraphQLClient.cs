@@ -95,13 +95,19 @@ public partial class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumeration))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerationValue))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragment))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentVariable))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentVariableType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperation))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationVariable))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationVariableType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationNestedSelection))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelection))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelection))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItem))]
 [JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection)
+    typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFieldSelection)
+)]
+[JsonSerializable(
+    typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFragmentSpreadSelection)
 )]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
@@ -442,6 +448,15 @@ public static partial class GraphQLClient
                         name
                       }
                     }
+                    fragments {
+                      name
+                      variables {
+                        name
+                        type {
+                          text
+                        }
+                      }
+                    }
                     operations {
                       name
                       operationType
@@ -452,14 +467,17 @@ public static partial class GraphQLClient
                           text
                         }
                       }
-                      nestedSelection {
+                      denestedSelections {
                         depth
-                        fieldSelection {
-                          name
-                          alias
-                        }
-                        fragmentSpreadSelection {
-                          name
+                        item {
+                          fieldSelection {
+                            name
+                            alias
+                          }
+                          fragmentSpreadSelection {
+                            name
+                            fragmentName
+                          }
                         }
                       }
                     }
@@ -956,6 +974,9 @@ public partial class ParseGraphQLSchemaAndOperations
     [JsonPropertyName("enumerations")]
     public required List<ParseGraphQLSchemaAndOperationsEnumeration> Enumerations { get; set; }
 
+    [JsonPropertyName("fragments")]
+    public required List<ParseGraphQLSchemaAndOperationsFragment> Fragments { get; set; }
+
     [JsonPropertyName("operations")]
     public required List<ParseGraphQLSchemaAndOperationsOperation> Operations { get; set; }
 }
@@ -1041,6 +1062,30 @@ public partial class ParseGraphQLSchemaAndOperationsEnumerationValue
     public required string Name { get; set; }
 }
 
+public partial class ParseGraphQLSchemaAndOperationsFragment
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("variables")]
+    public required List<ParseGraphQLSchemaAndOperationsFragmentVariable> Variables { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsFragmentVariable
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLSchemaAndOperationsFragmentVariableType Type { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsFragmentVariableType
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
 public partial class ParseGraphQLSchemaAndOperationsOperation
 {
     [JsonPropertyName("name")]
@@ -1055,8 +1100,8 @@ public partial class ParseGraphQLSchemaAndOperationsOperation
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsOperationVariable> Variables { get; set; }
 
-    [JsonPropertyName("nestedSelection")]
-    public required List<ParseGraphQLSchemaAndOperationsOperationNestedSelection> NestedSelection { get; set; }
+    [JsonPropertyName("denestedSelections")]
+    public required List<ParseGraphQLSchemaAndOperationsOperationDenestedSelection> DenestedSelections { get; set; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsOperationVariable
@@ -1074,19 +1119,25 @@ public partial class ParseGraphQLSchemaAndOperationsOperationVariableType
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsOperationNestedSelection
+public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelection
 {
     [JsonPropertyName("depth")]
     public required int Depth { get; set; }
 
-    [JsonPropertyName("fieldSelection")]
-    public ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelection? FieldSelection { get; set; }
-
-    [JsonPropertyName("fragmentSpreadSelection")]
-    public ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
+    [JsonPropertyName("item")]
+    public required ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItem Item { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelection
+public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItem
+{
+    [JsonPropertyName("fieldSelection")]
+    public ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFieldSelection? FieldSelection { get; set; }
+
+    [JsonPropertyName("fragmentSpreadSelection")]
+    public ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFieldSelection
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1095,10 +1146,13 @@ public partial class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFiel
     public string? Alias { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection
+public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItemFragmentSpreadSelection
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
+
+    [JsonPropertyName("fragmentName")]
+    public required string FragmentName { get; set; }
 }
 
 public partial class ReadTextFileData
