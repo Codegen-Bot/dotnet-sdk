@@ -4,6 +4,7 @@ schema {
 }
 
 interface GraphQLSelection @source(name: "GraphQLSelection", schema: "graphql") {
+  text: String!
   name: String!
 }
 
@@ -102,6 +103,7 @@ type GraphQLField @source(name: "GraphQLField", schema: "graphql") {
 
 type GraphQLFieldSelection implements GraphQLSelection @source(name: "GraphQLFieldSelection", schema: "graphql") {
   name: String!
+  text: String!
   alias: String
   selections: [GraphQLSelection!]!
   fieldSelections: [GraphQLFieldSelection!]!
@@ -127,6 +129,12 @@ type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
 
 type GraphQLFragmentSpreadSelection implements GraphQLSelection @source(name: "GraphQLFragmentSpreadSelection", schema: "graphql") {
   name: String!
+  text: String!
+}
+
+type GraphQLInlineFragmentSelection implements GraphQLSelection @source(name: "GraphQLInlineFragmentSelection", schema: "graphql") {
+  name: String!
+  text: String!
 }
 
 type GraphQLInputField @source(name: "GraphQLInputField", schema: "graphql") {
