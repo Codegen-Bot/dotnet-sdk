@@ -127,9 +127,7 @@ public static class GraphQLCSharpTypes
             
             foreach (var subselection in selection.Children)
             {
-                var name = subselection.Item.FieldSelection?.Name ?? subselection.Item.FragmentSpreadSelection!.Name;
-                name = ((string)name).Singularize();
-                AddSelectionText(properties, $"{path} {name}", objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                AddSelectionText(properties, path, objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
             }
 
             return new (path.Pascalize() + "?", false);

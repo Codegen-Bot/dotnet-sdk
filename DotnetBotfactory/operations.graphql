@@ -92,8 +92,10 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
             alias
           }
           fragmentSpreadSelection {
-            name
             fragmentName
+          }
+          inlineFragmentSelection {
+            typeName
           }
         }
       }
