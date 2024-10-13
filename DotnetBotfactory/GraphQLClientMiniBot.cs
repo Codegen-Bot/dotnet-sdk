@@ -68,6 +68,25 @@ public class GraphQLClientMiniBot : IMiniBot
             });
         }
 
+        var typeNames = new HashSet<string>();
+
+        bool TypeNameAlreadyExists(string name)
+        {
+            if (typeNames.Contains(name))
+            {
+                Imports.Log(new LogEvent()
+                {
+                    Level = LogEventLevel.Critical,
+                    Message = "Type {Type} was already generated",
+                    Args = [name],
+                });
+                return true;
+            }
+
+            typeNames.Add(name);
+            return false;
+        }
+        
         var metadata = GraphQLClient.ParseGraphQLSchemaAndOperations(fileContentses).GraphQL;
         
         GraphQLClient.AddFile($"{configuration.OutputPath}/GraphQLClient.cs",
@@ -114,6 +133,11 @@ public class GraphQLClientMiniBot : IMiniBot
 
         foreach (var enumType in (metadata.Enumerations ?? []).OrderBy(x => x.Name))
         {
+            if (TypeNameAlreadyExists(enumType.Name))
+            {
+                continue;
+            }
+            
             GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                 $"""
                 [JsonSerializable(typeof({enumType.Name.Pascalize()}))]
@@ -142,6 +166,11 @@ public class GraphQLClientMiniBot : IMiniBot
         
         foreach (var inputObjectType in (metadata.InputObjectTypes ?? []).OrderBy(x => x.Name))
         {
+            if (TypeNameAlreadyExists(inputObjectType.Name))
+            {
+                continue;
+            }
+            
             GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                 $"""
                  [JsonSerializable(typeof({inputObjectType.Name.Pascalize()}))]
@@ -181,6 +210,16 @@ public class GraphQLClientMiniBot : IMiniBot
                     Message = "This operation has no name, so code won't be generated for it: {Operation}",
                     Args = [operation.Text],
                 });
+                continue;
+            }
+            
+            if (TypeNameAlreadyExists(operation.Name.Pascalize() + "Variables"))
+            {
+                continue;
+            }
+            
+            if (TypeNameAlreadyExists(operation.Name.Pascalize() + "Data"))
+            {
                 continue;
             }
             

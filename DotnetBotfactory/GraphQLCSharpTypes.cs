@@ -127,7 +127,29 @@ public static class GraphQLCSharpTypes
             
             foreach (var subselection in selection.Children)
             {
-                AddSelectionText(properties, path, objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                if (subselection.Item.FieldSelection is not null)
+                {
+                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection.Name.Singularize(), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                }
+                else if (subselection.Item.FragmentSpreadSelection is not null)
+                {
+                    var fragment = metadata.Fragments.FirstOrDefault(x =>
+                        x.Name == subselection.Item.FragmentSpreadSelection.FragmentName);
+                    if (fragment is null)
+                    {
+                        Imports.Log(new LogEvent()
+                        {
+                            Level = LogEventLevel.Critical,
+                            Message = "Cannot find fragment {FragmentName} (path {Path}",
+                            Args = [subselection.Item.FragmentSpreadSelection.FragmentName, path],
+                        });
+                    }
+                    else
+                    {
+                        // TODO - implement this
+                        //AddSelectionText(properties, path, objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                    }
+                }
             }
 
             return new (path.Pascalize() + "?", false);
