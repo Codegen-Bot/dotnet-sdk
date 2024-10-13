@@ -277,7 +277,7 @@ public class GraphQLClientMiniBot : IMiniBot
         void AddText(ParseGraphQLSchemaAndOperationsOperation operation, CaretRef properties, CaretRef jsonSerializerContextAttributes, string path,
             ParseGraphQLSchemaAndOperationsObjectType objectType)
         {
-            var selections = operation.NestedSelection?.ToSelections() ?? [];
+            var selections = operation.DenestedSelections?.ToSelections() ?? [];
             
             foreach (var selection in selections)
             {

@@ -5,12 +5,7 @@ namespace DotnetBotfactory;
 
 public class Selection
 {
-    public ParseGraphQLSchemaAndOperationsOperationNestedSelectionFieldSelection? FieldSelection { get; set; }
-    public ParseGraphQLSchemaAndOperationsOperationNestedSelectionFragmentSpreadSelection? FragmentSpreadSelection
-    {
-        get;
-        set;
-    }
+    public required ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItem Item { get; set; }
 
     public List<Selection> Children { get; set; } = new();
 }
@@ -18,7 +13,7 @@ public class Selection
 public static class SelectionExtensions
 {
     public static IReadOnlyList<Selection> ToSelections(
-        this IEnumerable<ParseGraphQLSchemaAndOperationsOperationNestedSelection> selections)
+        this IEnumerable<ParseGraphQLSchemaAndOperationsOperationDenestedSelection> selections)
     {
         var result = new List<Selection>();
         var stack = new Stack<Selection>();
@@ -29,8 +24,7 @@ public static class SelectionExtensions
         {
             var convertedItem = new Selection()
             {
-                FieldSelection = selection.FieldSelection,
-                FragmentSpreadSelection = selection.FragmentSpreadSelection,
+                Item = selection.Item,
                 Children = new List<Selection>(),
             };
             

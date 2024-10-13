@@ -65,6 +65,15 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
         name
       }
     }
+    fragments {
+      name
+      variables {
+        name
+        type {
+          text
+        }
+      }
+    }
     operations {
       name
       operationType
@@ -75,14 +84,17 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
           text
         }
       }
-      nestedSelection {
+      denestedSelections {
         depth
-        fieldSelection {
-          name
-          alias
-        }
-        fragmentSpreadSelection {
-          name
+        item {
+          fieldSelection {
+            name
+            alias
+          }
+          fragmentSpreadSelection {
+            name
+            fragmentName
+          }
         }
       }
     }

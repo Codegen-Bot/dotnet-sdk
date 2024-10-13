@@ -282,9 +282,7 @@ public class GraphQLServerMiniBot : IMiniBot
         {
             GraphQLClient.AddText(parentBody.Id,
                 $$"""
-                  public {{type}} {{field.Name.Pascalize()}}({{CaretRef.New(out var arguments, separator: ", ")}})
-                  {
-                  }
+                  public partial {{type}} {{field.Name.Pascalize()}}({{CaretRef.New(out var arguments, separator: ", ")}});
 
                   """);
 
@@ -312,9 +310,7 @@ public class GraphQLServerMiniBot : IMiniBot
         {
             GraphQLClient.AddText(parentBody.Id,
                 $$"""
-                  public {{type.Name}} {{type.Name}}({{CaretRef.New(out var arguments, separator: ", ")}})
-                  {
-                  }
+                  public partial {{type.Name}} {{type.Name}}({{CaretRef.New(out var arguments, separator: ", ")}});
 
                   """);
 
@@ -362,9 +358,7 @@ public class GraphQLServerMiniBot : IMiniBot
         {
             GraphQLClient.AddText(parentBody.Id,
                 $$"""
-                  public {{type.Name}} {{type.Name}}({{CaretRef.New(out var arguments, separator: ", ")}})
-                  {
-                  }
+                  public partial {{type.Name}} {{type.Name}}({{CaretRef.New(out var arguments, separator: ", ")}});
 
                   """);
 
@@ -409,14 +403,22 @@ public class GraphQLServerMiniBot : IMiniBot
                 $$"""
                 if (selection.FieldSelection is not null && selection.FieldSelection.Name == "{{subfield.Name}}")
                 {
-                    result[selection.FieldSelection.Alias ?? selection.FieldSelection.Name] = {{subfield.Name.Pascalize()}}();
+                    result[selection.FieldSelection.Alias ?? selection.FieldSelection.Name] = {{subfield.Name.Pascalize()}}({{CaretRef.New(out var arguments)}});
+                    continue;
                 }
-                else if (selection.FragmentSpreadSelection is not null && selection.FragmentSpreadSelection.Name == "{{subfield.Name}}")
+                if (selection.FragmentSpreadSelection is not null && selection.FragmentSpreadSelection.Name == "{{subfield.Name}}")
                 {
-                    result[selection.FragmentSpreadSelection.Name] = {{subfield.Name.Pascalize()}}();
+                    result[selection.FragmentSpreadSelection.Name] = {{subfield.Name.Pascalize()}}({{arguments}});
+                    continue;
                 }
                 
                 """);
+
+            foreach (var parameter in subfield.Parameters)
+            {
+                //if (parameter)
+            }
+            
             AddResolver(parsedSchema, subfield, body, typeDefinitions);
         }
     }

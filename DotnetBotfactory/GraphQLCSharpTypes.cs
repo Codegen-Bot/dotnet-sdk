@@ -21,16 +21,16 @@ public static class GraphQLCSharpTypes
     
     public static void AddSelectionText(CaretRef properties, string path, ParseGraphQLSchemaAndOperationsObjectType objectType, Selection selection, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions)
     {
-        if (selection.FieldSelection is not null)
+        if (selection.Item.FieldSelection is not null)
         {
-            var field = (objectType.Fields ?? []).FirstOrDefault(x => x.Name == selection.FieldSelection.Name);
+            var field = (objectType.Fields ?? []).FirstOrDefault(x => x.Name == selection.Item.FieldSelection.Name);
 
             if (field is null)
             {
                 Imports.Log(new LogEvent()
                 {
                     Level = LogEventLevel.Error, Message = "Cannot find field {Field}",
-                    Args = [selection.FieldSelection.Name]
+                    Args = [selection.Item.FieldSelection.Name]
                 });
             }
             else
@@ -40,14 +40,15 @@ public static class GraphQLCSharpTypes
                 GraphQLClient.AddText(properties.Id,
                     $$"""
 
-                      [JsonPropertyName("{{selection.FieldSelection.Name}}")]
-                      public {{GetIsRequired(type.Name)}} {{type.Name}} {{selection.FieldSelection.Name.Pascalize()}} { get; set; }
+                      [JsonPropertyName("{{selection.Item.FieldSelection.Name}}")]
+                      public {{GetIsRequired(type.Name)}} {{type.Name}} {{selection.Item.FieldSelection.Name.Pascalize()}} { get; set; }
 
                       """);
             }
         }
-        else if (selection.FragmentSpreadSelection is not null)
+        else if (selection.Item.FragmentSpreadSelection is not null)
         {
+            //AddSelectionText(properties, path, objectType, selection.FragmentSpreadSelection.);
             throw new NotImplementedException("Fragment spread selection is not implemented.");
             // var fragment = metadata.Fragments.FirstOrDefault(x => x.Name == fragmentSpreadSelection.Name);
             //
@@ -126,7 +127,7 @@ public static class GraphQLCSharpTypes
             
             foreach (var subselection in selection.Children)
             {
-                var name = subselection.FieldSelection?.Name ?? subselection.FragmentSpreadSelection!.Name;
+                var name = subselection.Item.FieldSelection?.Name ?? subselection.Item.FragmentSpreadSelection!.Name;
                 name = ((string)name).Singularize();
                 AddSelectionText(properties, $"{path} {name}", objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
             }
