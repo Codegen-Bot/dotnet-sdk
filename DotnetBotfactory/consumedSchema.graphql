@@ -122,6 +122,7 @@ type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
   typeCondition: String!
   variables: [GraphQLVariable!]!
   selections: [GraphQLSelection!]!
+  denestedSelections: [DenestedOfSelectionItem!]!
   fieldSelections: [GraphQLFieldSelection!]!
   fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
   inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
