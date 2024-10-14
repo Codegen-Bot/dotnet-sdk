@@ -37,6 +37,7 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
   graphQL(additionalFiles: $graphql) {
     objectTypes {
       name
+      interfaces
       fields {
         name
         parameters {
@@ -159,15 +160,19 @@ query GetCaret($caretId: String!) {
 fragment DenestedSelections on DenestedOfSelectionItem {
   depth
   item {
-    fieldSelection {
-      name
-      alias
-    }
-    fragmentSpreadSelection {
-      fragmentName
-    }
-    inlineFragmentSelection {
-      typeName
+    selection {
+      text
+      __typename
+      ...on GraphQLFieldSelection {
+        name
+        alias
+      }
+      ...on GraphQLFragmentSpreadSelection {
+        fragmentName
+      }
+      ...on GraphQLInlineFragmentSelection {
+        typeName
+      }
     }
   }
 }

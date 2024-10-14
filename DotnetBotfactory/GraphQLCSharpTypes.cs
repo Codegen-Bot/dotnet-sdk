@@ -10,13 +10,8 @@ public static class GraphQLCSharpTypes
 {
     public record SelectionType(string Name, bool IsEnum);
     
-    public static string GetIsRequired(string typeRef, IObjectOrInterface? objectType)
+    public static string GetIsRequired(string typeRef)
     {
-        if (objectType is ParseGraphQLSchemaAndOperationsInterfaceType)
-        {
-            return "";
-        }
-        
         if (!typeRef.EndsWith("?"))
         {
             return "required ";
@@ -25,7 +20,7 @@ public static class GraphQLCSharpTypes
         return "";
     }
     
-    public static void AddSelectionText(CaretRef properties, string path, IObjectOrInterface objectType,
+    public static void AddProperty(CaretRef properties, string path, IObjectOrInterface objectType,
         Renested<ISelection> selection, ParseGraphQLSchemaAndOperations metadata,
         CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions, HashSet<string> typesWritten,
         string? interfaceName)
@@ -46,13 +41,25 @@ public static class GraphQLCSharpTypes
             {
                 var type = GetSelectionType(path, selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
 
-                GraphQLClient.AddText(properties.Id,
-                    $$"""
+                if (objectType is ParseGraphQLSchemaAndOperationsInterfaceType)
+                {
+                    GraphQLClient.AddText(properties.Id,
+                        $$"""
 
-                      [JsonPropertyName("{{selection.Item.FieldSelection1.Name}}")]
-                      public {{GetIsRequired(type.Name, objectType)}} {{type.Name}} {{selection.Item.FieldSelection1.Name.Pascalize()}} { get; set; }
+                          {{type.Name}} {{selection.Item.FieldSelection1.Name.Pascalize()}} { get; set; }
 
-                      """);
+                          """);
+                }
+                else
+                {
+                    GraphQLClient.AddText(properties.Id,
+                        $$"""
+
+                          [JsonPropertyName("{{selection.Item.FieldSelection1.Name}}")]
+                          public {{GetIsRequired(type.Name)}} {{type.Name}} {{selection.Item.FieldSelection1.Name.Pascalize()}} { get; set; }
+
+                          """);
+                }
             }
         }
         else if (selection.Item.FragmentSpreadSelection1 is not null)
@@ -69,7 +76,7 @@ public static class GraphQLCSharpTypes
                     .Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, ISelection>(x => x.Depth, (x, _) => x);
                 foreach (var fragmentSelection in renestedSelections)
                 {
-                    AddSelectionText(properties, path, objectType, fragmentSelection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
+                    AddProperty(properties, path, objectType, fragmentSelection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                 }
             }
         }
@@ -142,9 +149,9 @@ public static class GraphQLCSharpTypes
             {
                 GraphQLClient.AddText(extends.Id, $" : {interfaceName.Pascalize()}");
                 
-                if (!typesWritten.Contains(interfaceName.Pascalize()))
+                if (!typesWritten.Contains($"{interfaceName.Pascalize()}"))
                 {
-                    typesWritten.Add(interfaceName.Pascalize());
+                    typesWritten.Add($"{interfaceName.Pascalize()}");
 
                     GraphQLClient.AddText(typeDefinitions.Id,
                         $$"""
@@ -161,7 +168,7 @@ public static class GraphQLCSharpTypes
             {
                 if (subselection.Item.FieldSelection1 is not null)
                 {
-                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
+                    AddProperty(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
                 }
                 else if (subselection.Item.FragmentSpreadSelection1 is not null)
                 {
@@ -178,7 +185,7 @@ public static class GraphQLCSharpTypes
                     }
                     else
                     {
-                        interfaceName = $"I{fragment.Name}";
+                        interfaceName = $"I{fragment.Name.Pascalize()}";
 
                         GraphQLClient.AddText(extends.Id, $" : {interfaceName}");
                         CaretRef? interfaceProperties = null;
@@ -201,7 +208,7 @@ public static class GraphQLCSharpTypes
                             (item, children) => item);
                         foreach (var subsubselection in renested)
                         {
-                            AddSelectionText(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
+                            AddProperty(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                         }
 
                         // if (interfaceProperties is not null)
@@ -267,7 +274,7 @@ public static class GraphQLCSharpTypes
             {
                 if (subselection.Item.FieldSelection1 is not null)
                 {
-                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
+                    AddProperty(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
                 }
                 else if (subselection.Item.FragmentSpreadSelection1 is not null)
                 {
@@ -302,7 +309,7 @@ public static class GraphQLCSharpTypes
                                 (item, children) => item);
                             foreach (var subsubselection in renested)
                             {
-                                AddSelectionText(properties, path, fragmentObjectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
+                                AddProperty(properties, path, fragmentObjectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                             }
                         }
                     }
@@ -323,18 +330,18 @@ public static class GraphQLCSharpTypes
 
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
-                  public partial interface {{path.Pascalize()}}
+                  public partial interface I{{path.Pascalize()}}
                   {
                       {{CaretRef.New(out var properties)}}
                   }
 
                   """);
-            
+
             foreach (var subselection in selection.Children)
             {
                 if (subselection.Item.FieldSelection1 is not null)
                 {
-                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
+                    AddProperty(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
                 }
                 else if (subselection.Item.FragmentSpreadSelection1 is not null)
                 {
@@ -355,9 +362,34 @@ public static class GraphQLCSharpTypes
                             (item, children) => item);
                         foreach (var subsubselection in renested)
                         {
-                            AddSelectionText(properties, path, interfaceType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
+                            AddProperty(properties, path, interfaceType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                         }
                     }
+                }
+                else if (subselection.Item.InlineFragmentSelection1 is not null)
+                {
+                    var inlineObjectType = metadata.ObjectTypes!.FirstOrDefault(x =>
+                        x.Name == subselection.Item.InlineFragmentSelection1.TypeName);
+
+                    if (inlineObjectType is null)
+                    {
+                        Imports.Log(new LogEvent()
+                        {
+                            Level = LogEventLevel.Critical,
+                            Message = "Cannot find object type {ObjectType} (path {Path})",
+                            Args = [subselection.Item.InlineFragmentSelection1.TypeName, path],
+                        });
+                        throw new InvalidOperationException();
+                    }
+                    
+                    GraphQLClient.AddText(typeDefinitions.Id,
+                        $$"""
+                          public partial class {{(path + inlineObjectType.Name).Pascalize()}} I{{path.Pascalize()}}
+                          {
+                              {{CaretRef.New(out var innerProperties)}}
+                          }
+
+                          """);
                 }
             }
 

@@ -195,7 +195,7 @@ public class GraphQLClientMiniBot : IMiniBot
                     $$"""
 
                       [JsonPropertyName("{{field.Name}}")]
-                      public {{GraphQLCSharpTypes.GetIsRequired(type, null)}} {{type}} {{field.Name.Pascalize()}} { get; set; }
+                      public {{GraphQLCSharpTypes.GetIsRequired(type)}} {{type}} {{field.Name.Pascalize()}} { get; set; }
 
                       """);
             }
@@ -304,7 +304,7 @@ public class GraphQLClientMiniBot : IMiniBot
                                                           """);
                 GraphQLClient.AddText(variablePropertyDefinitions.Id, $$"""
                                                                             [JsonPropertyName("{{variable.Name}}")]
-                                                                            public {{GraphQLCSharpTypes.GetIsRequired(type, null)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
+                                                                            public {{GraphQLCSharpTypes.GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
                                                                             """);
             }
@@ -333,7 +333,7 @@ public class GraphQLClientMiniBot : IMiniBot
             
             foreach (var selection in selections)
             {
-                GraphQLCSharpTypes.AddSelectionText(properties, path, objectType, selection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, null);
+                GraphQLCSharpTypes.AddProperty(properties, path, objectType, selection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, null);
             }
         }
     }
