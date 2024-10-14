@@ -492,9 +492,6 @@ public static partial class GraphQLClient
                           text
                         }
                       }
-                      selections {
-                        ... Selection
-                      }
                       denestedSelections {
                         depth
                         item {
@@ -520,9 +517,6 @@ public static partial class GraphQLClient
                         type {
                           text
                         }
-                      }
-                      selections {
-                        ... Selection
                       }
                       denestedSelections {
                         depth
@@ -1180,9 +1174,6 @@ public partial class ParseGraphQLSchemaAndOperationsFragment
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentVariable> Variables { get; set; }
 
-    [JsonPropertyName("selections")]
-    public required List<object> Selections { get; set; }
-
     [JsonPropertyName("denestedSelections")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection> DenestedSelections { get; set; }
 }
@@ -1257,9 +1248,6 @@ public partial class ParseGraphQLSchemaAndOperationsOperation
 
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsOperationVariable> Variables { get; set; }
-
-    [JsonPropertyName("selections")]
-    public required List<object> Selections { get; set; }
 
     [JsonPropertyName("denestedSelections")]
     public required List<ParseGraphQLSchemaAndOperationsOperationDenestedSelection> DenestedSelections { get; set; }
