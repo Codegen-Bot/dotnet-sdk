@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodegenBot;
 using Humanizer;
@@ -24,7 +25,10 @@ public static class GraphQLCSharpTypes
         return "";
     }
     
-    public static void AddSelectionText(CaretRef properties, string path, IObjectOrInterface objectType, Renested<ISelection> selection, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions)
+    public static void AddSelectionText(CaretRef properties, string path, IObjectOrInterface objectType,
+        Renested<ISelection> selection, ParseGraphQLSchemaAndOperations metadata,
+        CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions, HashSet<string> typesWritten,
+        string? interfaceName)
     {
         if (selection.Item.FieldSelection1 is not null)
         {
@@ -40,7 +44,7 @@ public static class GraphQLCSharpTypes
             }
             else
             {
-                var type = GetSelectionType(path, selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions);
+                var type = GetSelectionType(path, selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
 
                 GraphQLClient.AddText(properties.Id,
                     $$"""
@@ -65,7 +69,7 @@ public static class GraphQLCSharpTypes
                     .Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, ISelection>(x => x.Depth, (x, _) => x);
                 foreach (var fragmentSelection in renestedSelections)
                 {
-                    AddSelectionText(properties, path, objectType, fragmentSelection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                    AddSelectionText(properties, path, objectType, fragmentSelection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                 }
             }
         }
@@ -75,11 +79,11 @@ public static class GraphQLCSharpTypes
         }
     }
     
-    public static SelectionType GetSelectionType(string path, Renested<ISelection> selection, TypeRef type, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions)
+    public static SelectionType GetSelectionType(string path, Renested<ISelection> selection, TypeRef type, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions, HashSet<string> typesWritten, string? interfaceName)
     {
         if (type.Name == "NotNull")
         {
-            var x = GetSelectionType(path, selection, type.GenericArguments[0], metadata, jsonSerializerContextAttributes, typeDefinitions);
+            var x = GetSelectionType(path, selection, type.GenericArguments[0], metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
             var result = x.Name;
             if (result.EndsWith("?"))
             {
@@ -91,7 +95,7 @@ public static class GraphQLCSharpTypes
 
         if (type.Name == "List")
         {
-            var b = GetSelectionType(path, selection, type.GenericArguments[0], metadata, jsonSerializerContextAttributes, typeDefinitions);
+            var b = GetSelectionType(path, selection, type.GenericArguments[0], metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
             return new ($"List<{b.Name}>?", false);
         }
 
@@ -127,18 +131,37 @@ public static class GraphQLCSharpTypes
 
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
-                  public partial class {{path.Pascalize()}}
+                  public partial class {{path.Pascalize()}}{{CaretRef.New(out var extends)}}
                   {
                       {{CaretRef.New(out var properties)}}
                   }
 
                   """);
-            
+
+            if (interfaceName is not null)
+            {
+                GraphQLClient.AddText(extends.Id, $" : {interfaceName.Pascalize()}");
+                
+                if (!typesWritten.Contains(interfaceName.Pascalize()))
+                {
+                    typesWritten.Add(interfaceName.Pascalize());
+
+                    GraphQLClient.AddText(typeDefinitions.Id,
+                        $$"""
+                          public partial interface {{interfaceName.Pascalize()}}
+                          {
+                              {{properties}}
+                          }
+
+                          """);
+                }
+            }
+
             foreach (var subselection in selection.Children)
             {
                 if (subselection.Item.FieldSelection1 is not null)
                 {
-                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
                 }
                 else if (subselection.Item.FragmentSpreadSelection1 is not null)
                 {
@@ -155,12 +178,36 @@ public static class GraphQLCSharpTypes
                     }
                     else
                     {
+                        interfaceName = $"I{fragment.Name}";
+
+                        GraphQLClient.AddText(extends.Id, $" : {interfaceName}");
+                        CaretRef? interfaceProperties = null;
+
+                        if (!typesWritten.Contains(interfaceName))
+                        {
+                            typesWritten.Add(interfaceName);
+
+                            GraphQLClient.AddText(typeDefinitions.Id,
+                                $$"""
+                                  public partial interface {{interfaceName}}
+                                  {
+                                      {{CaretRef.New(out interfaceProperties)}}
+                                  }
+
+                                  """);
+                        }
+                        
                         var renested = fragment.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, ISelection>(x => x.Depth,
                             (item, children) => item);
                         foreach (var subsubselection in renested)
                         {
-                            AddSelectionText(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                            AddSelectionText(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                         }
+
+                        // if (interfaceProperties is not null)
+                        // {
+                        //     GraphQLClient.AddText(properties.Id, GraphQLClient.GetCaret(interfaceProperties.Id).Caret!.String);
+                        // }
                     }
                 }
             }
@@ -191,20 +238,36 @@ public static class GraphQLCSharpTypes
 
                  """);
 
+            interfaceName = $"I{fragmentType.Name}";
+
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
-                  public partial class {{path.Pascalize()}}
+                  public partial class {{path.Pascalize()}} : {{interfaceName}}
                   {
                       {{CaretRef.New(out var properties)}}
                   }
 
                   """);
             
+            if (!typesWritten.Contains(interfaceName))
+            {
+                typesWritten.Add(interfaceName);
+
+                GraphQLClient.AddText(typeDefinitions.Id,
+                    $$"""
+                      public partial interface {{interfaceName}}
+                      {
+                          {{properties}}
+                      }
+
+                      """);
+            }
+            
             foreach (var subselection in selection.Children)
             {
                 if (subselection.Item.FieldSelection1 is not null)
                 {
-                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
                 }
                 else if (subselection.Item.FragmentSpreadSelection1 is not null)
                 {
@@ -239,7 +302,7 @@ public static class GraphQLCSharpTypes
                                 (item, children) => item);
                             foreach (var subsubselection in renested)
                             {
-                                AddSelectionText(properties, path, fragmentObjectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                                AddSelectionText(properties, path, fragmentObjectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                             }
                         }
                     }
@@ -271,7 +334,7 @@ public static class GraphQLCSharpTypes
             {
                 if (subselection.Item.FieldSelection1 is not null)
                 {
-                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + subselection.Item.FieldSelection1.Name.Singularize());
                 }
                 else if (subselection.Item.FragmentSpreadSelection1 is not null)
                 {
@@ -292,7 +355,7 @@ public static class GraphQLCSharpTypes
                             (item, children) => item);
                         foreach (var subsubselection in renested)
                         {
-                            AddSelectionText(properties, path, interfaceType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                            AddSelectionText(properties, path, interfaceType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                         }
                     }
                 }

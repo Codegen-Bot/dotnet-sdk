@@ -134,3 +134,40 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
     }
   }
 }
+
+query Test($graphql: [AdditionalFileInput!]!) {
+  graphQL(additionalFiles: $graphql) {
+    fragments {
+      denestedSelections {
+        ...DenestedSelections
+      }
+    }
+    operations {
+      denestedSelections {
+        ...DenestedSelections
+      }
+    }
+  }
+}
+
+query GetCaret($caretId: String!) {
+  caret(caretId: $caretId) {
+    string
+  }
+}
+
+fragment DenestedSelections on DenestedOfSelectionItem {
+  depth
+  item {
+    fieldSelection {
+      name
+      alias
+    }
+    fragmentSpreadSelection {
+      fragmentName
+    }
+    inlineFragmentSelection {
+      typeName
+    }
+  }
+}

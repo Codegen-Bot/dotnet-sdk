@@ -69,11 +69,11 @@ public class GraphQLClientMiniBot : IMiniBot
             });
         }
 
-        var typeNames = new HashSet<string>();
+        var typesWritten = new HashSet<string>();
 
         bool TypeNameAlreadyExists(string name)
         {
-            if (typeNames.Contains(name))
+            if (typesWritten.Contains(name))
             {
                 Imports.Log(new LogEvent()
                 {
@@ -84,7 +84,7 @@ public class GraphQLClientMiniBot : IMiniBot
                 return true;
             }
 
-            typeNames.Add(name);
+            typesWritten.Add(name);
             return false;
         }
         
@@ -333,7 +333,7 @@ public class GraphQLClientMiniBot : IMiniBot
             
             foreach (var selection in selections)
             {
-                GraphQLCSharpTypes.AddSelectionText(properties, path, objectType, selection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                GraphQLCSharpTypes.AddSelectionText(properties, path, objectType, selection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, null);
             }
         }
     }
