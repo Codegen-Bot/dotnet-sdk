@@ -192,6 +192,7 @@ type GraphQLObjectType @source(name: "GraphQLObjectType", schema: "graphql") {
   name: String!
   fields: [GraphQLField!]!
   directives: [GraphQLDirective!]!
+  interfaces: [String!]!
 }
 
 type GraphQLObjectValue implements GraphQLValue @source(name: "GraphQLObjectValue", schema: "graphql") {
