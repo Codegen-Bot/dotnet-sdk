@@ -90,10 +90,6 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
           text
         }
       }
-      
-      selections {
-        ...Selection
-      }
       denestedSelections {
         depth
         item {
@@ -120,9 +116,6 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
           text
         }
       }
-      selections {
-        ...Selection
-      }
       denestedSelections {
         depth
         item {
@@ -138,25 +131,6 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
           }
         }
       }
-    }
-  }
-}
-
-fragment Selection on GraphQLSelection {
-  text
-  ...on GraphQLFieldSelection {
-    name
-    alias
-    selections {
-      ...Selection
-    }
-  }
-  ...on GraphQLFragmentSpreadSelection {
-    fragmentName
-  }
-  ...on GraphQLInlineFragmentSelection {
-    selections {
-      ...Selection
     }
   }
 }
