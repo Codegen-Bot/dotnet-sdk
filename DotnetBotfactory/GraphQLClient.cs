@@ -103,6 +103,7 @@ public partial class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragment))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentVariable))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentVariableType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentSelection))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentDenestedSelection))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragmentDenestedSelectionItem))]
 [JsonSerializable(
@@ -117,6 +118,7 @@ public partial class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperation))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationVariable))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationVariableType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationSelection))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelection))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItem))]
 [JsonSerializable(
@@ -492,6 +494,9 @@ public static partial class GraphQLClient
                           text
                         }
                       }
+                      selections {
+                        ... Selection
+                      }
                       denestedSelections {
                         depth
                         item {
@@ -517,6 +522,9 @@ public static partial class GraphQLClient
                         type {
                           text
                         }
+                      }
+                      selections {
+                        ... Selection
                       }
                       denestedSelections {
                         depth
@@ -1191,6 +1199,9 @@ public partial class ParseGraphQLSchemaAndOperationsFragment
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentVariable> Variables { get; set; }
 
+    [JsonPropertyName("selections")]
+    public required List<ParseGraphQLSchemaAndOperationsFragmentSelection> Selections { get; set; }
+
     [JsonPropertyName("denestedSelections")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection> DenestedSelections { get; set; }
 }
@@ -1205,6 +1216,12 @@ public partial class ParseGraphQLSchemaAndOperationsFragmentVariable
 }
 
 public partial class ParseGraphQLSchemaAndOperationsFragmentVariableType
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
+public partial interface ParseGraphQLSchemaAndOperationsFragmentSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -1266,6 +1283,9 @@ public partial class ParseGraphQLSchemaAndOperationsOperation
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsOperationVariable> Variables { get; set; }
 
+    [JsonPropertyName("selections")]
+    public required List<ParseGraphQLSchemaAndOperationsOperationSelection> Selections { get; set; }
+
     [JsonPropertyName("denestedSelections")]
     public required List<ParseGraphQLSchemaAndOperationsOperationDenestedSelection> DenestedSelections { get; set; }
 }
@@ -1280,6 +1300,12 @@ public partial class ParseGraphQLSchemaAndOperationsOperationVariable
 }
 
 public partial class ParseGraphQLSchemaAndOperationsOperationVariableType
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
+public partial interface ParseGraphQLSchemaAndOperationsOperationSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
