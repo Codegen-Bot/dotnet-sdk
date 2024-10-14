@@ -93,6 +93,9 @@ public partial class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypeField))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeField))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumeration))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerationValue))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragment))]
@@ -456,6 +459,15 @@ public static partial class GraphQLClient
                         }
                       }
                     }
+                    interfaceTypes {
+                      name
+                      fields {
+                        name
+                        type {
+                          text
+                        }
+                      }
+                    }
                     enumerations {
                       name
                       values {
@@ -470,6 +482,9 @@ public static partial class GraphQLClient
                         type {
                           text
                         }
+                      }
+                      selections {
+                        ... Selection
                       }
                       denestedSelections {
                         depth
@@ -496,6 +511,9 @@ public static partial class GraphQLClient
                         type {
                           text
                         }
+                      }
+                      selections {
+                        ... Selection
                       }
                       denestedSelections {
                         depth
@@ -1003,6 +1021,9 @@ public partial class ParseGraphQLSchemaAndOperations
     [JsonPropertyName("inputObjectTypes")]
     public required List<ParseGraphQLSchemaAndOperationsInputObjectType> InputObjectTypes { get; set; }
 
+    [JsonPropertyName("interfaceTypes")]
+    public required List<ParseGraphQLSchemaAndOperationsInterfaceType> InterfaceTypes { get; set; }
+
     [JsonPropertyName("enumerations")]
     public required List<ParseGraphQLSchemaAndOperationsEnumeration> Enumerations { get; set; }
 
@@ -1079,6 +1100,30 @@ public partial class ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType
     public required string Text { get; set; }
 }
 
+public partial class ParseGraphQLSchemaAndOperationsInterfaceType
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("fields")]
+    public required List<ParseGraphQLSchemaAndOperationsInterfaceTypeField> Fields { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeField
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType Type { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
 public partial class ParseGraphQLSchemaAndOperationsEnumeration
 {
     [JsonPropertyName("name")]
@@ -1104,6 +1149,9 @@ public partial class ParseGraphQLSchemaAndOperationsFragment
 
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentVariable> Variables { get; set; }
+
+    [JsonPropertyName("selections")]
+    public required List<object> Selections { get; set; }
 
     [JsonPropertyName("denestedSelections")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection> DenestedSelections { get; set; }
@@ -1179,6 +1227,9 @@ public partial class ParseGraphQLSchemaAndOperationsOperation
 
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsOperationVariable> Variables { get; set; }
+
+    [JsonPropertyName("selections")]
+    public required List<object> Selections { get; set; }
 
     [JsonPropertyName("denestedSelections")]
     public required List<ParseGraphQLSchemaAndOperationsOperationDenestedSelection> DenestedSelections { get; set; }
