@@ -13,7 +13,7 @@ public static class DenestExtensions
         return DenestInternal(items, children, 0);
     }
 
-    private static IEnumerable<Denested<TItem>> DenestInternal<TItem>(IEnumerable<TItem> items, Func<TItem, IEnumerable<TItem>> children, int depth)
+    private static IEnumerable<Denested<TItem>> DenestInternal<TItem>(this IEnumerable<TItem> items, Func<TItem, IEnumerable<TItem>> children, int depth)
     {
         foreach (var item in items)
         {
