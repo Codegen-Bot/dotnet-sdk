@@ -316,7 +316,7 @@ public class GraphQLClientMiniBot : IMiniBot
         void AddText(ParseGraphQLSchemaAndOperationsOperation operation, CaretRef properties, CaretRef jsonSerializerContextAttributes, string path,
             ParseGraphQLSchemaAndOperationsObjectType objectType)
         {
-            var selections = operation.DenestedSelections?.ToSelections() ?? [];
+            var selections = operation.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsOperationDenestedSelection, ISelection>(x => x.Depth, (x, _) => x.Item);
             
             foreach (var selection in selections)
             {

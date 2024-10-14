@@ -21,6 +21,12 @@ public static class RenestExtensions
             return new Renested<TValue>(valueFunc(Item, children.Select(x => x.Item).ToImmutableList()), children);
         }
     }
+
+    public static IReadOnlyList<Renested<TItem>> Renest<TItem>(this IEnumerable<TItem> denestedItems,
+        Func<TItem, int> depthFunc)
+    {
+        return denestedItems.Renest<TItem, TItem>(depthFunc, (x, _) => x);
+    }
     
     public static IReadOnlyList<Renested<TValue>> Renest<TItem, TValue>(this IEnumerable<TItem> denestedItems, Func<TItem, int> depthFunc, Func<TItem, ImmutableList<TValue>, TValue> valueFunc)
     {
