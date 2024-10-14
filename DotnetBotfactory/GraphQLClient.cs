@@ -1224,7 +1224,7 @@ public partial class ParseGraphQLSchemaAndOperationsFragmentVariableType
 public partial interface ParseGraphQLSchemaAndOperationsFragmentSelection
 {
     [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    public string Text { get; set; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelection
@@ -1308,7 +1308,7 @@ public partial class ParseGraphQLSchemaAndOperationsOperationVariableType
 public partial interface ParseGraphQLSchemaAndOperationsOperationSelection
 {
     [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    public string Text { get; set; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsOperationDenestedSelection

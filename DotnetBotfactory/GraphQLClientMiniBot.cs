@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using CodegenBot;
 using Humanizer;
 
@@ -194,7 +195,7 @@ public class GraphQLClientMiniBot : IMiniBot
                     $$"""
 
                       [JsonPropertyName("{{field.Name}}")]
-                      public {{GraphQLCSharpTypes.GetIsRequired(type)}} {{type}} {{field.Name.Pascalize()}} { get; set; }
+                      public {{GraphQLCSharpTypes.GetIsRequired(type, null)}} {{type}} {{field.Name.Pascalize()}} { get; set; }
 
                       """);
             }
@@ -255,6 +256,18 @@ public class GraphQLClientMiniBot : IMiniBot
 
             GraphQLClient.AddText(queryText.Id, operation.Text);
 
+            // TODO - only include the relevant fragments
+            foreach (var fragment in (metadata.Fragments ?? []).OrderBy(x => x.Name))
+            {
+                if (!operation.Text.Contains(fragment.Name))
+                {
+                    // This is yucky but quick, and at worst it will include unneeded fragments
+                    continue;
+                }
+                
+                GraphQLClient.AddText(queryText.Id, fragment.Text);
+            }
+            
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
                   public partial class {{operation.Name.Pascalize()}}Data
@@ -291,7 +304,7 @@ public class GraphQLClientMiniBot : IMiniBot
                                                           """);
                 GraphQLClient.AddText(variablePropertyDefinitions.Id, $$"""
                                                                             [JsonPropertyName("{{variable.Name}}")]
-                                                                            public {{GraphQLCSharpTypes.GetIsRequired(type)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
+                                                                            public {{GraphQLCSharpTypes.GetIsRequired(type, null)}} {{type}} {{variable.Name.Pascalize()}} { get; set; }
 
                                                                             """);
             }

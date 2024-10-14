@@ -59,6 +59,21 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
         }
       }
     }
+    interfaceTypes {
+      name
+      fields {
+        name
+        parameters {
+          name
+          type {
+            text
+          }
+        }
+        type {
+          text
+        }
+      }
+    }
     enumerations {
       name
       values {
@@ -67,11 +82,17 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
     }
     fragments {
       name
+      text
+      typeCondition
       variables {
         name
         type {
           text
         }
+      }
+      
+      selections {
+        ...Selection
       }
       denestedSelections {
         depth
@@ -99,6 +120,9 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
           text
         }
       }
+      selections {
+        ...Selection
+      }
       denestedSelections {
         depth
         item {
@@ -114,6 +138,25 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
           }
         }
       }
+    }
+  }
+}
+
+fragment Selection on GraphQLSelection {
+  text
+  ...on GraphQLFieldSelection {
+    name
+    alias
+    selections {
+      ...Selection
+    }
+  }
+  ...on GraphQLFragmentSpreadSelection {
+    fragmentName
+  }
+  ...on GraphQLInlineFragmentSelection {
+    selections {
+      ...Selection
     }
   }
 }

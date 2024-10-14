@@ -9,8 +9,13 @@ public static class GraphQLCSharpTypes
 {
     public record SelectionType(string Name, bool IsEnum);
     
-    public static string GetIsRequired(string typeRef)
+    public static string GetIsRequired(string typeRef, IObjectOrInterface? objectType)
     {
+        if (objectType is ParseGraphQLSchemaAndOperationsInterfaceType)
+        {
+            return "";
+        }
+        
         if (!typeRef.EndsWith("?"))
         {
             return "required ";
@@ -19,11 +24,11 @@ public static class GraphQLCSharpTypes
         return "";
     }
     
-    public static void AddSelectionText(CaretRef properties, string path, ParseGraphQLSchemaAndOperationsObjectType objectType, Renested<ISelection> selection, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions)
+    public static void AddSelectionText(CaretRef properties, string path, IObjectOrInterface objectType, Renested<ISelection> selection, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions)
     {
         if (selection.Item.FieldSelection1 is not null)
         {
-            var field = (objectType.Fields ?? []).FirstOrDefault(x => x.Name == selection.Item.FieldSelection1.Name);
+            var field = (objectType.Fields1 ?? []).FirstOrDefault(x => x.Name1 == selection.Item.FieldSelection1.Name);
 
             if (field is null)
             {
@@ -35,13 +40,13 @@ public static class GraphQLCSharpTypes
             }
             else
             {
-                var type = GetSelectionType(path, selection, field.Type.Text.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions);
+                var type = GetSelectionType(path, selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions);
 
                 GraphQLClient.AddText(properties.Id,
                     $$"""
 
                       [JsonPropertyName("{{selection.Item.FieldSelection1.Name}}")]
-                      public {{GetIsRequired(type.Name)}} {{type.Name}} {{selection.Item.FieldSelection1.Name.Pascalize()}} { get; set; }
+                      public {{GetIsRequired(type.Name, objectType)}} {{type.Name}} {{selection.Item.FieldSelection1.Name.Pascalize()}} { get; set; }
 
                       """);
             }
@@ -150,36 +155,155 @@ public static class GraphQLCSharpTypes
                     }
                     else
                     {
-                        throw new NotImplementedException("Nope");
-                        // var renested = fragment.DenestedSelections.Renest(x => x.Depth,
-                        //     (item, children) =>
-                        //     {
-                        //         return new Selection()
-                        //         {
-                        //             Item = new ParseGraphQLSchemaAndOperationsOperationDenestedSelectionItem()
-                        //             {
-                        //                 FieldSelection = item.Item.FieldSelection,
-                        //             },
-                        //         };
-                        //     });
-                        // foreach (var subsubselection in renested)
-                        // {
-                        //     AddSelectionText(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
-                        // }
+                        var renested = fragment.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, ISelection>(x => x.Depth,
+                            (item, children) => item);
+                        foreach (var subsubselection in renested)
+                        {
+                            AddSelectionText(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                        }
                     }
-                }
-                else if (subselection.Item.InlineFragmentSelection1 is not null)
-                {
-                    
                 }
             }
 
             return new (path.Pascalize() + "?", false);
         }
 
+        var fragmentType = (metadata.Fragments ?? []).FirstOrDefault(x => x.Name == type.Name);
+        if (fragmentType is not null)
+        {
+            var outerFragmentObjectType =
+                metadata.ObjectTypes?.FirstOrDefault(x => x.Name == fragmentType.TypeCondition);
+
+            if (outerFragmentObjectType is null)
+            {
+                Imports.Log(new LogEvent()
+                {
+                    Level = LogEventLevel.Critical,
+                    Message = "Cannot find type condition {TypeCondition} of fragment {FragmentName} (path {Path})",
+                    Args = [fragmentType.TypeCondition, fragmentType.Name, path],
+                });
+                throw new InvalidOperationException();
+            }
+            
+            GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
+                $"""
+                 [JsonSerializable(typeof({path.Pascalize()}))]
+
+                 """);
+
+            GraphQLClient.AddText(typeDefinitions.Id,
+                $$"""
+                  public partial class {{path.Pascalize()}}
+                  {
+                      {{CaretRef.New(out var properties)}}
+                  }
+
+                  """);
+            
+            foreach (var subselection in selection.Children)
+            {
+                if (subselection.Item.FieldSelection1 is not null)
+                {
+                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                }
+                else if (subselection.Item.FragmentSpreadSelection1 is not null)
+                {
+                    var fragment = metadata.Fragments!.FirstOrDefault(x =>
+                        x.Name == subselection.Item.FragmentSpreadSelection1.FragmentName);
+                    if (fragment is null)
+                    {
+                        Imports.Log(new LogEvent()
+                        {
+                            Level = LogEventLevel.Critical,
+                            Message = "Cannot find fragment {FragmentName} (path {Path}",
+                            Args = [subselection.Item.FragmentSpreadSelection1.FragmentName, path],
+                        });
+                    }
+                    else
+                    {
+                        var fragmentObjectType =
+                            metadata.ObjectTypes?.FirstOrDefault(x => x.Name == fragment.TypeCondition);
+
+                        if (fragmentObjectType is null)
+                        {
+                            Imports.Log(new LogEvent()
+                            {
+                                Level = LogEventLevel.Critical,
+                                Message = "Cannot find the type condition {TypeCondition} on fragment {FragmentName} (path {Path})",
+                                Args = [fragment.TypeCondition, subselection.Item.FragmentSpreadSelection1.FragmentName, path],
+                            });
+                        }
+                        else
+                        {
+                            var renested = fragment.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, ISelection>(x => x.Depth,
+                                (item, children) => item);
+                            foreach (var subsubselection in renested)
+                            {
+                                AddSelectionText(properties, path, fragmentObjectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return new (path.Pascalize() + "?", false);
+        }
+        
+        var interfaceType = (metadata.InterfaceTypes ?? []).FirstOrDefault(x => x.Name == type.Name);
+        if (interfaceType is not null)
+        {
+            GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
+                $"""
+                 [JsonSerializable(typeof({path.Pascalize()}))]
+
+                 """);
+
+            GraphQLClient.AddText(typeDefinitions.Id,
+                $$"""
+                  public partial interface {{path.Pascalize()}}
+                  {
+                      {{CaretRef.New(out var properties)}}
+                  }
+
+                  """);
+            
+            foreach (var subselection in selection.Children)
+            {
+                if (subselection.Item.FieldSelection1 is not null)
+                {
+                    AddSelectionText(properties, path + " " + subselection.Item.FieldSelection1.Name.Singularize(), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                }
+                else if (subselection.Item.FragmentSpreadSelection1 is not null)
+                {
+                    var fragment = metadata.Fragments!.FirstOrDefault(x =>
+                        x.Name == subselection.Item.FragmentSpreadSelection1.FragmentName);
+                    if (fragment is null)
+                    {
+                        Imports.Log(new LogEvent()
+                        {
+                            Level = LogEventLevel.Critical,
+                            Message = "Cannot find fragment {FragmentName} (path {Path}",
+                            Args = [subselection.Item.FragmentSpreadSelection1.FragmentName, path],
+                        });
+                    }
+                    else
+                    {
+                        var renested = fragment.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, ISelection>(x => x.Depth,
+                            (item, children) => item);
+                        foreach (var subsubselection in renested)
+                        {
+                            AddSelectionText(properties, path, interfaceType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions);
+                        }
+                    }
+                }
+            }
+
+            return new (path.Pascalize() + "?", false);
+        }
+        
         GraphQLClient.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
 
-        return new ("???", false);
+        return new ("object", false);
     }
     
     public static string GetVariableCSharpType(TypeRef type, out string? enumName, ParseGraphQLSchemaAndOperations metadata)
@@ -232,9 +356,16 @@ public static class GraphQLCSharpTypes
             return objectType.Name + "?";
         }
 
+        var interfaceType = metadata.InterfaceTypes.FirstOrDefault(x => x.Name == type.Name);
+        if (interfaceType is not null)
+        {
+            enumName = null;
+            return interfaceType.Name + "?";
+        }
+        
         GraphQLClient.Log(LogSeverity.ERROR, "Don't know how to process type {Type}", [type.Text]);
         
         enumName = null;
-        return "???";
+        return "object";
     }
 }
