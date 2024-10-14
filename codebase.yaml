@@ -1,0 +1,49 @@
+targetPath: .
+installs:
+  - botId: bot://core/output
+    botVersion: 1.0.0
+  - botId: bot://core/filesystem
+    botVersion: 1.0.0
+  - botId: bot://parse/graphql
+    botVersion: 1.0.0
+  - botId: bot://core/log
+    botVersion: 1.0.0
+  - botId: bot://core/schema
+    botVersion: 1.0.0
+  - botId: bot://core/random
+    botVersion: 1.0.0
+  - botId: bot://hub/.gitignore
+    botVersion: 0.0.1-alpha1
+    configuration:
+      outputPath:
+    dependencies:
+      - botId: bot://core/output
+      - botId: bot://core/filesystem
+      - botId: bot://core/log
+  - botId: bot://hub/dotnet/solution
+    botVersion: 0.0.1-alpha1
+    configuration:
+      outputPath: CodegenBotSdk.sln
+    dependencies:
+      - botId: bot://core/output
+      - botId: bot://core/filesystem
+      - botId: bot://core/log
+  - botId: bot://hub/dotnet/botfactory
+    botVersion: 0.0.1-alpha74
+    configuration:
+      id: bot://hub/dotnet/botfactory
+      outputPath: DotnetBotfactory
+      projectName: DotnetBotfactory
+      language: CSHARP
+      minimalWorkingExample: false
+      buildWithoutDocker: true
+      dotnetVersion: DotNet8
+      copybots: []
+      provideApi: false
+    dependencies:
+      - botId: bot://core/output
+      - botId: bot://core/filesystem
+      - botId: bot://core/log
+      - botId: bot://hub/.gitignore
+      - botId: bot://hub/dotnet/solution
+      - botId: bot://core/random
