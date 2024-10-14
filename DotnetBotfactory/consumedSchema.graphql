@@ -12,7 +12,7 @@ interface GraphQLValue @source(name: "GraphQLValue", schema: "graphql") {
 }
 
 type BotSpec @source(name: "BotSpec", schema: "schema") {
-  unparse: String!
+  unparseJson: String!
   readMePath: String
   configurationSchemaPath: String
   stitchSchemaPath: String
