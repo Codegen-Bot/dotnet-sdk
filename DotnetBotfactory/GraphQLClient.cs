@@ -499,6 +499,7 @@ public static partial class GraphQLClient
                       denestedSelections {
                         depth
                         item {
+                          ... Selection
                           fieldSelection {
                             name
                             alias
