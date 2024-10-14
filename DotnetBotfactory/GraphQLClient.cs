@@ -95,6 +95,8 @@ public partial class GraphQLError
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeField))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameter))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameterType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumeration))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerationValue))]
@@ -463,6 +465,12 @@ public static partial class GraphQLClient
                       name
                       fields {
                         name
+                        parameters {
+                          name
+                          type {
+                            text
+                          }
+                        }
                         type {
                           text
                         }
@@ -1114,8 +1122,26 @@ public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeField
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    [JsonPropertyName("parameters")]
+    public required List<ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameter> Parameters { get; set; }
+
     [JsonPropertyName("type")]
     public required ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType Type { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameter
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameterType Type { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameterType
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType
