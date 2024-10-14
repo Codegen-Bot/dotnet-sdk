@@ -535,6 +535,23 @@ public static partial class GraphQLClient
                       }
                     }
                   }
+                }fragment Selection on GraphQLSelection {
+                  text
+                  ... on GraphQLFieldSelection {
+                    name
+                    alias
+                    selections {
+                      ... Selection
+                    }
+                  }
+                  ... on GraphQLFragmentSpreadSelection {
+                    fragmentName
+                  }
+                  ... on GraphQLInlineFragmentSelection {
+                    selections {
+                      ... Selection
+                    }
+                  }
                 }
                 """,
             OperationName = "ParseGraphQLSchemaAndOperations",
