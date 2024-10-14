@@ -136,6 +136,23 @@ public partial class GraphQLError
 [JsonSerializable(typeof(ReadTextFileWithVersionData))]
 [JsonSerializable(typeof(GraphQLResponse<ReadTextFileWithVersionData>))]
 [JsonSerializable(typeof(GraphQLRequest<ReadTextFileWithVersionVariables>))]
+[JsonSerializable(typeof(TestVariables))]
+[JsonSerializable(typeof(TestData))]
+[JsonSerializable(typeof(GraphQLResponse<TestData>))]
+[JsonSerializable(typeof(GraphQLRequest<TestVariables>))]
+[JsonSerializable(typeof(Test))]
+[JsonSerializable(typeof(TestFragment))]
+[JsonSerializable(typeof(TestFragmentDenestedSelection))]
+[JsonSerializable(typeof(TestFragmentDenestedSelection))]
+[JsonSerializable(typeof(TestFragmentDenestedSelectionFieldSelection))]
+[JsonSerializable(typeof(TestFragmentDenestedSelectionFragmentSpreadSelection))]
+[JsonSerializable(typeof(TestFragmentDenestedSelectionInlineFragmentSelection))]
+[JsonSerializable(typeof(TestOperation))]
+[JsonSerializable(typeof(TestOperationDenestedSelection))]
+[JsonSerializable(typeof(TestOperationDenestedSelection))]
+[JsonSerializable(typeof(TestOperationDenestedSelectionFieldSelection))]
+[JsonSerializable(typeof(TestOperationDenestedSelectionFragmentSpreadSelection))]
+[JsonSerializable(typeof(TestOperationDenestedSelectionInlineFragmentSelection))]
 public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLClient
@@ -620,6 +637,56 @@ public static partial class GraphQLClient
             ?? throw new InvalidOperationException(
                 "Received null data for request ReadTextFileWithVersion."
             );
+    }
+
+    public static TestData Test(List<AdditionalFileInput> graphql)
+    {
+        var request = new GraphQLRequest<TestVariables>
+        {
+            Query = """
+                query Test($graphql: [AdditionalFileInput!]!) {
+                  graphQL(additionalFiles: $graphql) {
+                    fragments {
+                      denestedSelections {
+                        ... DenestedSelections
+                      }
+                    }
+                    operations {
+                      denestedSelections {
+                        ... DenestedSelections
+                      }
+                    }
+                  }
+                }fragment DenestedSelections on DenestedOfSelectionItem {
+                  depth
+                  item {
+                    fieldSelection {
+                      name
+                      alias
+                    }
+                    fragmentSpreadSelection {
+                      fragmentName
+                    }
+                    inlineFragmentSelection {
+                      typeName
+                    }
+                  }
+                }
+                """,
+            OperationName = "Test",
+            Variables = new TestVariables() { Graphql = graphql },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestTestVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<TestData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseTestData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request Test.");
     }
 }
 
@@ -1335,4 +1402,121 @@ public partial class ReadTextFileWithVersionVariables
 
     [JsonPropertyName("fileVersion")]
     public FileVersion? FileVersion { get; set; }
+}
+
+public partial class TestData
+{
+    [JsonPropertyName("graphQL")]
+    public required Test GraphQL { get; set; }
+}
+
+public partial class TestVariables
+{
+    [JsonPropertyName("graphql")]
+    public required List<AdditionalFileInput> Graphql { get; set; }
+}
+
+public partial class Test
+{
+    [JsonPropertyName("fragments")]
+    public required List<TestFragment> Fragments { get; set; }
+
+    [JsonPropertyName("operations")]
+    public required List<TestOperation> Operations { get; set; }
+}
+
+public partial class TestFragment
+{
+    [JsonPropertyName("denestedSelections")]
+    public required List<TestFragmentDenestedSelection> DenestedSelections { get; set; }
+}
+
+public partial class TestFragmentDenestedSelection
+{
+    [JsonPropertyName("depth")]
+    public required int Depth { get; set; }
+
+    [JsonPropertyName("item")]
+    public required TestFragmentDenestedSelection Item { get; set; }
+}
+
+public partial class TestFragmentDenestedSelection
+{
+    [JsonPropertyName("fieldSelection")]
+    public TestFragmentDenestedSelectionFieldSelection? FieldSelection { get; set; }
+
+    [JsonPropertyName("fragmentSpreadSelection")]
+    public TestFragmentDenestedSelectionFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
+
+    [JsonPropertyName("inlineFragmentSelection")]
+    public TestFragmentDenestedSelectionInlineFragmentSelection? InlineFragmentSelection { get; set; }
+}
+
+public partial class TestFragmentDenestedSelectionFieldSelection
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+}
+
+public partial class TestFragmentDenestedSelectionFragmentSpreadSelection
+{
+    [JsonPropertyName("fragmentName")]
+    public required string FragmentName { get; set; }
+}
+
+public partial class TestFragmentDenestedSelectionInlineFragmentSelection
+{
+    [JsonPropertyName("typeName")]
+    public required string TypeName { get; set; }
+}
+
+public partial class TestOperation
+{
+    [JsonPropertyName("denestedSelections")]
+    public required List<TestOperationDenestedSelection> DenestedSelections { get; set; }
+}
+
+public partial class TestOperationDenestedSelection
+{
+    [JsonPropertyName("depth")]
+    public required int Depth { get; set; }
+
+    [JsonPropertyName("item")]
+    public required TestOperationDenestedSelection Item { get; set; }
+}
+
+public partial class TestOperationDenestedSelection
+{
+    [JsonPropertyName("fieldSelection")]
+    public TestOperationDenestedSelectionFieldSelection? FieldSelection { get; set; }
+
+    [JsonPropertyName("fragmentSpreadSelection")]
+    public TestOperationDenestedSelectionFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
+
+    [JsonPropertyName("inlineFragmentSelection")]
+    public TestOperationDenestedSelectionInlineFragmentSelection? InlineFragmentSelection { get; set; }
+}
+
+public partial class TestOperationDenestedSelectionFieldSelection
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+}
+
+public partial class TestOperationDenestedSelectionFragmentSpreadSelection
+{
+    [JsonPropertyName("fragmentName")]
+    public required string FragmentName { get; set; }
+}
+
+public partial class TestOperationDenestedSelectionInlineFragmentSelection
+{
+    [JsonPropertyName("typeName")]
+    public required string TypeName { get; set; }
 }
