@@ -464,6 +464,7 @@ public static partial class GraphQLClient
                     }
                     fragments {
                       name
+                      typeCondition
                       variables {
                         name
                         type {
@@ -499,7 +500,6 @@ public static partial class GraphQLClient
                       denestedSelections {
                         depth
                         item {
-                          ... Selection
                           fieldSelection {
                             name
                             alias
@@ -1098,6 +1098,9 @@ public partial class ParseGraphQLSchemaAndOperationsFragment
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
+
+    [JsonPropertyName("typeCondition")]
+    public required string TypeCondition { get; set; }
 
     [JsonPropertyName("variables")]
     public required List<ParseGraphQLSchemaAndOperationsFragmentVariable> Variables { get; set; }
