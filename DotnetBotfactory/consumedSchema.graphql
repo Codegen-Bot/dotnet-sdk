@@ -119,6 +119,7 @@ type GraphQLFloatValue implements GraphQLValue @source(name: "GraphQLFloatValue"
 
 type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
   name: String!
+  text: String!
   typeCondition: String!
   variables: [GraphQLVariable!]!
   selections: [GraphQLSelection!]!
