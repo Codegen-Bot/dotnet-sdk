@@ -149,15 +149,11 @@ public partial class GraphQLError
 [JsonSerializable(typeof(TestFragment))]
 [JsonSerializable(typeof(TestFragmentDenestedSelection))]
 [JsonSerializable(typeof(TestFragmentDenestedSelection))]
-[JsonSerializable(typeof(TestFragmentDenestedSelectionFieldSelection))]
-[JsonSerializable(typeof(TestFragmentDenestedSelectionFragmentSpreadSelection))]
-[JsonSerializable(typeof(TestFragmentDenestedSelectionInlineFragmentSelection))]
+[JsonSerializable(typeof(TestFragmentDenestedSelectionSelection))]
 [JsonSerializable(typeof(TestOperation))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
-[JsonSerializable(typeof(TestOperationDenestedSelectionFieldSelection))]
-[JsonSerializable(typeof(TestOperationDenestedSelectionFragmentSpreadSelection))]
-[JsonSerializable(typeof(TestOperationDenestedSelectionInlineFragmentSelection))]
+[JsonSerializable(typeof(TestOperationDenestedSelectionSelection))]
 public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLClient
@@ -692,15 +688,18 @@ public static partial class GraphQLClient
                 }fragment DenestedSelections on DenestedOfSelectionItem {
                   depth
                   item {
-                    fieldSelection {
-                      name
-                      alias
-                    }
-                    fragmentSpreadSelection {
-                      fragmentName
-                    }
-                    inlineFragmentSelection {
-                      typeName
+                    selection {
+                      text
+                      ... on GraphQLFieldSelection {
+                        name
+                        alias
+                      }
+                      ... on GraphQLFragmentSpreadSelection {
+                        fragmentName
+                      }
+                      ... on GraphQLInlineFragmentSelection {
+                        typeName
+                      }
                     }
                   }
                 }
@@ -1494,58 +1493,13 @@ public partial interface IDenestedSelections { }
 
 public partial class TestFragmentDenestedSelection : IDenestedSelections
 {
-    [JsonPropertyName("fieldSelection")]
-    public TestFragmentDenestedSelectionFieldSelection? FieldSelection { get; set; }
-
-    [JsonPropertyName("fragmentSpreadSelection")]
-    public TestFragmentDenestedSelectionFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
-
-    [JsonPropertyName("inlineFragmentSelection")]
-    public TestFragmentDenestedSelectionInlineFragmentSelection? InlineFragmentSelection { get; set; }
+    [JsonPropertyName("selection")]
+    public required TestFragmentDenestedSelectionSelection Selection { get; set; }
 }
 
-public partial class TestFragmentDenestedSelectionFieldSelection : IDenestedSelectionsFieldSelection
+public partial interface TestFragmentDenestedSelectionSelection
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("alias")]
-    public string? Alias { get; set; }
-}
-
-public partial interface IDenestedSelectionsFieldSelection
-{
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("alias")]
-    public string? Alias { get; set; }
-}
-
-public partial class TestFragmentDenestedSelectionFragmentSpreadSelection
-    : IDenestedSelectionsFragmentSpreadSelection
-{
-    [JsonPropertyName("fragmentName")]
-    public required string FragmentName { get; set; }
-}
-
-public partial interface IDenestedSelectionsFragmentSpreadSelection
-{
-    [JsonPropertyName("fragmentName")]
-    public required string FragmentName { get; set; }
-}
-
-public partial class TestFragmentDenestedSelectionInlineFragmentSelection
-    : IDenestedSelectionsInlineFragmentSelection
-{
-    [JsonPropertyName("typeName")]
-    public required string TypeName { get; set; }
-}
-
-public partial interface IDenestedSelectionsInlineFragmentSelection
-{
-    [JsonPropertyName("typeName")]
-    public required string TypeName { get; set; }
+    string Text { get; set; }
 }
 
 public partial class TestOperation
@@ -1565,36 +1519,11 @@ public partial class TestOperationDenestedSelection : IDenestedSelections
 
 public partial class TestOperationDenestedSelection : IDenestedSelections
 {
-    [JsonPropertyName("fieldSelection")]
-    public TestOperationDenestedSelectionFieldSelection? FieldSelection { get; set; }
-
-    [JsonPropertyName("fragmentSpreadSelection")]
-    public TestOperationDenestedSelectionFragmentSpreadSelection? FragmentSpreadSelection { get; set; }
-
-    [JsonPropertyName("inlineFragmentSelection")]
-    public TestOperationDenestedSelectionInlineFragmentSelection? InlineFragmentSelection { get; set; }
+    [JsonPropertyName("selection")]
+    public required TestOperationDenestedSelectionSelection Selection { get; set; }
 }
 
-public partial class TestOperationDenestedSelectionFieldSelection
-    : IDenestedSelectionsFieldSelection
+public partial interface TestOperationDenestedSelectionSelection
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("alias")]
-    public string? Alias { get; set; }
-}
-
-public partial class TestOperationDenestedSelectionFragmentSpreadSelection
-    : IDenestedSelectionsFragmentSpreadSelection
-{
-    [JsonPropertyName("fragmentName")]
-    public required string FragmentName { get; set; }
-}
-
-public partial class TestOperationDenestedSelectionInlineFragmentSelection
-    : IDenestedSelectionsInlineFragmentSelection
-{
-    [JsonPropertyName("typeName")]
-    public required string TypeName { get; set; }
+    string Text { get; set; }
 }
