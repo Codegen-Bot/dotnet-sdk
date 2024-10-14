@@ -59,6 +59,11 @@ public partial class GraphQLError
 [JsonSerializable(typeof(GraphQLResponse<AddTextByTagsData>))]
 [JsonSerializable(typeof(GraphQLRequest<AddTextByTagsVariables>))]
 [JsonSerializable(typeof(AddTextByTags))]
+[JsonSerializable(typeof(GetCaretVariables))]
+[JsonSerializable(typeof(GetCaretData))]
+[JsonSerializable(typeof(GraphQLResponse<GetCaretData>))]
+[JsonSerializable(typeof(GraphQLRequest<GetCaretVariables>))]
+[JsonSerializable(typeof(GetCaret))]
 [JsonSerializable(typeof(GetConfigurationVariables))]
 [JsonSerializable(typeof(GetConfigurationData))]
 [JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
@@ -310,6 +315,33 @@ public static partial class GraphQLClient
         );
         return result?.Data
             ?? throw new InvalidOperationException("Received null data for request AddTextByTags.");
+    }
+
+    public static GetCaretData GetCaret(string caretId)
+    {
+        var request = new GraphQLRequest<GetCaretVariables>
+        {
+            Query = """
+                query GetCaret($caretId: String!) {
+                  caret(caretId: $caretId) {
+                    string
+                  }
+                }
+                """,
+            OperationName = "GetCaret",
+            Variables = new GetCaretVariables() { CaretId = caretId },
+        };
+
+        var response = Imports.GraphQL(
+            request,
+            GraphQLClientJsonSerializerContext.Default.GraphQLRequestGetCaretVariables
+        );
+        var result = JsonSerializer.Deserialize<GraphQLResponse<GetCaretData>>(
+            response,
+            GraphQLClientJsonSerializerContext.Default.GraphQLResponseGetCaretData
+        );
+        return result?.Data
+            ?? throw new InvalidOperationException("Received null data for request GetCaret.");
     }
 
     public static GetConfigurationData GetConfiguration()
@@ -938,6 +970,24 @@ public partial class AddTextByTags
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
+}
+
+public partial class GetCaretData
+{
+    [JsonPropertyName("caret")]
+    public GetCaret? Caret { get; set; }
+}
+
+public partial class GetCaretVariables
+{
+    [JsonPropertyName("caretId")]
+    public required string CaretId { get; set; }
+}
+
+public partial class GetCaret
+{
+    [JsonPropertyName("string")]
+    public required string String { get; set; }
 }
 
 public partial class GetConfigurationData
