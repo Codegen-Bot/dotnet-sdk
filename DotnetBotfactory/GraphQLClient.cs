@@ -484,6 +484,7 @@ public static partial class GraphQLClient
                   graphQL(additionalFiles: $graphql) {
                     objectTypes {
                       name
+                      interfaces
                       fields {
                         name
                         parameters {
@@ -690,6 +691,7 @@ public static partial class GraphQLClient
                   item {
                     selection {
                       text
+                      __typename
                       ... on GraphQLFieldSelection {
                         name
                         alias
@@ -1157,6 +1159,9 @@ public partial class ParseGraphQLSchemaAndOperationsObjectType
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
+
+    [JsonPropertyName("interfaces")]
+    public required List<string> Interfaces { get; set; }
 
     [JsonPropertyName("fields")]
     public required List<ParseGraphQLSchemaAndOperationsObjectTypeField> Fields { get; set; }
