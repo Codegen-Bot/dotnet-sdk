@@ -484,6 +484,7 @@ public static partial class GraphQLClient
                     }
                     fragments {
                       name
+                      text
                       typeCondition
                       variables {
                         name
@@ -1169,6 +1170,9 @@ public partial class ParseGraphQLSchemaAndOperationsFragment
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
+
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 
     [JsonPropertyName("typeCondition")]
     public required string TypeCondition { get; set; }
