@@ -8,7 +8,7 @@ public class Denested<TItem>
 
 public static class DenestExtensions
 {
-    public static IEnumerable<Denested<TItem>> Denest<TItem>(IEnumerable<TItem> items, Func<TItem, IEnumerable<TItem>> children)
+    public static IEnumerable<Denested<TItem>> Denest<TItem>(this IEnumerable<TItem> items, Func<TItem, IEnumerable<TItem>> children)
     {
         return DenestInternal(items, children, 0);
     }
