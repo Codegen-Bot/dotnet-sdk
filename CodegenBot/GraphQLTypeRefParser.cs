@@ -2,13 +2,13 @@ namespace CodegenBot;
 
 public static class GraphQLTypeRefParser
 {
-    public static TypeRef ToTypeRef(this string str)
+    public static GraphQLTypeRef ToTypeRef(this string str)
     {
         var typeRef = str.Trim();
         
         if (typeRef.EndsWith("!"))
         {
-            return new TypeRef()
+            return new GraphQLTypeRef()
             {
                 Name = "NotNull",
                 Text = typeRef,
@@ -21,7 +21,7 @@ public static class GraphQLTypeRefParser
 
         if (typeRef.StartsWith("[") && typeRef.EndsWith("]"))
         {
-            return new TypeRef()
+            return new GraphQLTypeRef()
             {
                 Name = "List",
                 Text = typeRef,
@@ -32,7 +32,7 @@ public static class GraphQLTypeRefParser
             };
         }
 
-        return new TypeRef()
+        return new GraphQLTypeRef()
         {
             Name = typeRef,
             Text = typeRef,
@@ -41,9 +41,9 @@ public static class GraphQLTypeRefParser
     }
 }
 
-public class TypeRef
+public class GraphQLTypeRef
 {
-    public TypeRef Skip(Func<TypeRef, bool> predicate)
+    public GraphQLTypeRef Skip(Func<GraphQLTypeRef, bool> predicate)
     {
         if (GenericArguments.Count > 0 && predicate(this))
         {
@@ -55,5 +55,5 @@ public class TypeRef
     
     public required string Name { get; set; }
     public required string Text { get; set; }
-    public required List<TypeRef> GenericArguments { get; set; }
+    public required List<GraphQLTypeRef> GenericArguments { get; set; }
 }
