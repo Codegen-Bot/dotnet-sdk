@@ -1502,6 +1502,7 @@ public partial class TestFragmentDenestedSelection : IDenestedSelections
     public required ITestFragmentDenestedSelectionSelection Selection { get; set; }
 }
 
+[JsonPolymorphic]
 [JsonDerivedType(typeof(TestFragmentDenestedSelectionSelectionGraphQLFieldSelection))]
 [JsonDerivedType(typeof(TestFragmentDenestedSelectionSelectionGraphQLFragmentSpreadSelection))]
 [JsonDerivedType(typeof(TestFragmentDenestedSelectionSelectionGraphQLInlineFragmentSelection))]
@@ -1575,6 +1576,7 @@ public partial class TestOperationDenestedSelection : IDenestedSelections
     public required ITestOperationDenestedSelectionSelection Selection { get; set; }
 }
 
+[JsonPolymorphic]
 [JsonDerivedType(typeof(TestOperationDenestedSelectionSelectionGraphQLFieldSelection))]
 [JsonDerivedType(typeof(TestOperationDenestedSelectionSelectionGraphQLFragmentSpreadSelection))]
 [JsonDerivedType(typeof(TestOperationDenestedSelectionSelectionGraphQLInlineFragmentSelection))]
