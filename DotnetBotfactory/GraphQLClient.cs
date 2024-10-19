@@ -1505,11 +1505,19 @@ public partial class TestFragmentDenestedSelection : IDenestedSelections
 public partial interface ITestFragmentDenestedSelectionSelection
 {
     string Text { get; set; }
+
+    string _Typename { get; set; }
 }
 
 public partial class TestFragmentDenestedSelectionSelectionGraphQLFieldSelection
     : ITestFragmentDenestedSelectionSelection
 {
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+
+    [JsonPropertyName("__typename")]
+    public required string _Typename { get; set; }
+
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
@@ -1520,6 +1528,12 @@ public partial class TestFragmentDenestedSelectionSelectionGraphQLFieldSelection
 public partial class TestFragmentDenestedSelectionSelectionGraphQLFragmentSpreadSelection
     : ITestFragmentDenestedSelectionSelection
 {
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+
+    [JsonPropertyName("__typename")]
+    public required string _Typename { get; set; }
+
     [JsonPropertyName("fragmentName")]
     public required string FragmentName { get; set; }
 }
@@ -1527,6 +1541,12 @@ public partial class TestFragmentDenestedSelectionSelectionGraphQLFragmentSpread
 public partial class TestFragmentDenestedSelectionSelectionGraphQLInlineFragmentSelection
     : ITestFragmentDenestedSelectionSelection
 {
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+
+    [JsonPropertyName("__typename")]
+    public required string _Typename { get; set; }
+
     [JsonPropertyName("typeName")]
     public required string TypeName { get; set; }
 }
@@ -1555,11 +1575,19 @@ public partial class TestOperationDenestedSelection : IDenestedSelections
 public partial interface ITestOperationDenestedSelectionSelection
 {
     string Text { get; set; }
+
+    string _Typename { get; set; }
 }
 
 public partial class TestOperationDenestedSelectionSelectionGraphQLFieldSelection
     : ITestOperationDenestedSelectionSelection
 {
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+
+    [JsonPropertyName("__typename")]
+    public required string _Typename { get; set; }
+
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
@@ -1570,6 +1598,12 @@ public partial class TestOperationDenestedSelectionSelectionGraphQLFieldSelectio
 public partial class TestOperationDenestedSelectionSelectionGraphQLFragmentSpreadSelection
     : ITestOperationDenestedSelectionSelection
 {
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+
+    [JsonPropertyName("__typename")]
+    public required string _Typename { get; set; }
+
     [JsonPropertyName("fragmentName")]
     public required string FragmentName { get; set; }
 }
@@ -1577,6 +1611,12 @@ public partial class TestOperationDenestedSelectionSelectionGraphQLFragmentSprea
 public partial class TestOperationDenestedSelectionSelectionGraphQLInlineFragmentSelection
     : ITestOperationDenestedSelectionSelection
 {
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+
+    [JsonPropertyName("__typename")]
+    public required string _Typename { get; set; }
+
     [JsonPropertyName("typeName")]
     public required string TypeName { get; set; }
 }
