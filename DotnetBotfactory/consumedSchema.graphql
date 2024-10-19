@@ -104,10 +104,8 @@ type GraphQLFieldSelection implements GraphQLSelection @source(name: "GraphQLFie
   name: String!
   text: String!
   alias: String
-  selections: [GraphQLSelection!]!
-  fieldSelections: [GraphQLFieldSelection!]!
-  fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
-  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
+  selections: [SelectionItem!]!
+  denestedSelections: [DenestedOfSelectionItem!]!
   directives: [GraphQLDirective!]!
   arguments: [GraphQLArgument!]!
 }
@@ -122,11 +120,8 @@ type GraphQLFragment @source(name: "GraphQLFragment", schema: "graphql") {
   text: String!
   typeCondition: String!
   variables: [GraphQLVariable!]!
-  selections: [GraphQLSelection!]!
+  selections: [SelectionItem!]!
   denestedSelections: [DenestedOfSelectionItem!]!
-  fieldSelections: [GraphQLFieldSelection!]!
-  fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
-  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
   directives: [GraphQLDirective!]!
 }
 
@@ -138,10 +133,8 @@ type GraphQLFragmentSpreadSelection implements GraphQLSelection @source(name: "G
 type GraphQLInlineFragmentSelection implements GraphQLSelection @source(name: "GraphQLInlineFragmentSelection", schema: "graphql") {
   typeName: String!
   text: String!
-  selections: [GraphQLSelection!]!
-  fieldSelections: [GraphQLFieldSelection!]!
-  fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
-  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
+  selections: [SelectionItem!]!
+  denestedSelections: [DenestedOfSelectionItem!]!
 }
 
 type GraphQLInputField @source(name: "GraphQLInputField", schema: "graphql") {
@@ -204,11 +197,8 @@ type GraphQLOperation @source(name: "GraphQLOperation", schema: "graphql") {
   name: String
   text: String!
   operationType: GraphQLOperationType!
-  selections: [GraphQLSelection!]!
+  selections: [SelectionItem!]!
   denestedSelections: [DenestedOfSelectionItem!]!
-  fieldSelections: [GraphQLFieldSelection!]!
-  fragmentSpreadSelections: [GraphQLFragmentSpreadSelection!]!
-  inlineFragmentSelections: [GraphQLInlineFragmentSelection!]!
   directives: [GraphQLDirective!]!
   variables: [GraphQLVariable!]!
 }
