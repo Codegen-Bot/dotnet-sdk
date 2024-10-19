@@ -1502,6 +1502,9 @@ public partial class TestFragmentDenestedSelection : IDenestedSelections
     public required ITestFragmentDenestedSelectionSelection Selection { get; set; }
 }
 
+[JsonDerivedType(typeof(TestFragmentDenestedSelectionSelectionGraphQLFieldSelection))]
+[JsonDerivedType(typeof(TestFragmentDenestedSelectionSelectionGraphQLFragmentSpreadSelection))]
+[JsonDerivedType(typeof(TestFragmentDenestedSelectionSelectionGraphQLInlineFragmentSelection))]
 public partial interface ITestFragmentDenestedSelectionSelection
 {
     string Text { get; set; }
@@ -1572,6 +1575,9 @@ public partial class TestOperationDenestedSelection : IDenestedSelections
     public required ITestOperationDenestedSelectionSelection Selection { get; set; }
 }
 
+[JsonDerivedType(typeof(TestOperationDenestedSelectionSelectionGraphQLFieldSelection))]
+[JsonDerivedType(typeof(TestOperationDenestedSelectionSelectionGraphQLFragmentSpreadSelection))]
+[JsonDerivedType(typeof(TestOperationDenestedSelectionSelectionGraphQLInlineFragmentSelection))]
 public partial interface ITestOperationDenestedSelectionSelection
 {
     string Text { get; set; }
