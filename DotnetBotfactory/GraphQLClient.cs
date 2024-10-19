@@ -1508,13 +1508,28 @@ public partial interface ITestFragmentDenestedSelectionSelection
 }
 
 public partial class TestFragmentDenestedSelectionSelectionGraphQLFieldSelection
-    : ITestFragmentDenestedSelectionSelection { }
+    : ITestFragmentDenestedSelectionSelection
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+}
 
 public partial class TestFragmentDenestedSelectionSelectionGraphQLFragmentSpreadSelection
-    : ITestFragmentDenestedSelectionSelection { }
+    : ITestFragmentDenestedSelectionSelection
+{
+    [JsonPropertyName("fragmentName")]
+    public required string FragmentName { get; set; }
+}
 
 public partial class TestFragmentDenestedSelectionSelectionGraphQLInlineFragmentSelection
-    : ITestFragmentDenestedSelectionSelection { }
+    : ITestFragmentDenestedSelectionSelection
+{
+    [JsonPropertyName("typeName")]
+    public required string TypeName { get; set; }
+}
 
 public partial class TestOperation
 {
@@ -1543,10 +1558,25 @@ public partial interface ITestOperationDenestedSelectionSelection
 }
 
 public partial class TestOperationDenestedSelectionSelectionGraphQLFieldSelection
-    : ITestOperationDenestedSelectionSelection { }
+    : ITestOperationDenestedSelectionSelection
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+}
 
 public partial class TestOperationDenestedSelectionSelectionGraphQLFragmentSpreadSelection
-    : ITestOperationDenestedSelectionSelection { }
+    : ITestOperationDenestedSelectionSelection
+{
+    [JsonPropertyName("fragmentName")]
+    public required string FragmentName { get; set; }
+}
 
 public partial class TestOperationDenestedSelectionSelectionGraphQLInlineFragmentSelection
-    : ITestOperationDenestedSelectionSelection { }
+    : ITestOperationDenestedSelectionSelection
+{
+    [JsonPropertyName("typeName")]
+    public required string TypeName { get; set; }
+}
