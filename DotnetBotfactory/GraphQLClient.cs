@@ -149,11 +149,11 @@ public partial class GraphQLError
 [JsonSerializable(typeof(TestFragment))]
 [JsonSerializable(typeof(TestFragmentDenestedSelection))]
 [JsonSerializable(typeof(TestFragmentDenestedSelection))]
-[JsonSerializable(typeof(TestFragmentDenestedSelectionSelection))]
+[JsonSerializable(typeof(ITestFragmentDenestedSelectionSelection))]
 [JsonSerializable(typeof(TestOperation))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
-[JsonSerializable(typeof(TestOperationDenestedSelectionSelection))]
+[JsonSerializable(typeof(ITestOperationDenestedSelectionSelection))]
 public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLClient
