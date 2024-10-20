@@ -1503,13 +1503,13 @@ public partial class TestFragmentDenestedSelection : IDenestedSelections
 }
 
 [JsonPolymorphic]
-[JsonDerivedType(typeof(IGraphQLSelectionGraphQLFieldSelection), "GraphQLFieldSelection")]
+[JsonDerivedType(typeof(GraphQLSelectionGraphQLFieldSelection), "GraphQLFieldSelection")]
 [JsonDerivedType(
-    typeof(IGraphQLSelectionGraphQLFragmentSpreadSelection),
+    typeof(GraphQLSelectionGraphQLFragmentSpreadSelection),
     "GraphQLFragmentSpreadSelection"
 )]
 [JsonDerivedType(
-    typeof(IGraphQLSelectionGraphQLInlineFragmentSelection),
+    typeof(GraphQLSelectionGraphQLInlineFragmentSelection),
     "GraphQLInlineFragmentSelection"
 )]
 public partial interface IGraphQLSelection
@@ -1519,7 +1519,7 @@ public partial interface IGraphQLSelection
     string _Typename { get; set; }
 }
 
-public partial class IGraphQLSelectionGraphQLFieldSelection : IGraphQLSelection
+public partial class GraphQLSelectionGraphQLFieldSelection : IGraphQLSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -1534,7 +1534,7 @@ public partial class IGraphQLSelectionGraphQLFieldSelection : IGraphQLSelection
     public string? Alias { get; set; }
 }
 
-public partial class IGraphQLSelectionGraphQLFragmentSpreadSelection : IGraphQLSelection
+public partial class GraphQLSelectionGraphQLFragmentSpreadSelection : IGraphQLSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -1546,7 +1546,7 @@ public partial class IGraphQLSelectionGraphQLFragmentSpreadSelection : IGraphQLS
     public required string FragmentName { get; set; }
 }
 
-public partial class IGraphQLSelectionGraphQLInlineFragmentSelection : IGraphQLSelection
+public partial class GraphQLSelectionGraphQLInlineFragmentSelection : IGraphQLSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
