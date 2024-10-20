@@ -149,11 +149,11 @@ public partial class GraphQLError
 [JsonSerializable(typeof(TestFragment))]
 [JsonSerializable(typeof(TestFragmentDenestedSelection))]
 [JsonSerializable(typeof(TestFragmentDenestedSelection))]
-[JsonSerializable(typeof(ITestFragmentDenestedSelectionSelection))]
+[JsonSerializable(typeof(IGraphQLSelection))]
 [JsonSerializable(typeof(TestOperation))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
-[JsonSerializable(typeof(ITestOperationDenestedSelectionSelection))]
+[JsonSerializable(typeof(IGraphQLSelection))]
 public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLClient
@@ -1499,7 +1499,7 @@ public partial interface IDenestedSelections { }
 public partial class TestFragmentDenestedSelection : IDenestedSelections
 {
     [JsonPropertyName("selection")]
-    public required ITestFragmentDenestedSelectionSelection Selection { get; set; }
+    public required IGraphQLSelection Selection { get; set; }
 }
 
 [JsonPolymorphic]
@@ -1515,7 +1515,7 @@ public partial class TestFragmentDenestedSelection : IDenestedSelections
     typeof(TestFragmentDenestedSelectionSelectionGraphQLInlineFragmentSelection),
     "GraphQLInlineFragmentSelection"
 )]
-public partial interface ITestFragmentDenestedSelectionSelection
+public partial interface IGraphQLSelection
 {
     string Text { get; set; }
 
@@ -1582,7 +1582,7 @@ public partial class TestOperationDenestedSelection : IDenestedSelections
 public partial class TestOperationDenestedSelection : IDenestedSelections
 {
     [JsonPropertyName("selection")]
-    public required ITestOperationDenestedSelectionSelection Selection { get; set; }
+    public required IGraphQLSelection Selection { get; set; }
 }
 
 [JsonPolymorphic]
@@ -1598,7 +1598,7 @@ public partial class TestOperationDenestedSelection : IDenestedSelections
     typeof(TestOperationDenestedSelectionSelectionGraphQLInlineFragmentSelection),
     "GraphQLInlineFragmentSelection"
 )]
-public partial interface ITestOperationDenestedSelectionSelection
+public partial interface IGraphQLSelection
 {
     string Text { get; set; }
 
