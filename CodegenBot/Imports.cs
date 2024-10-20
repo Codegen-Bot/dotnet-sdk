@@ -22,6 +22,7 @@ public class Imports
         using var block = Pdk.Allocate(json);
         var ptr = ExternGraphQL(block.Offset);
         var response = MemoryBlock.Find(ptr).ReadString();
+        response = JsonUtility.EnsureTypeDiscriminatorPropertiesComeFirst(response);
         return response;
     }
 
