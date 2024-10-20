@@ -3,6 +3,11 @@ schema {
   mutation: Mutation
 }
 
+interface GraphQLObjectOrInterfaceType @source(name: "GraphQLObjectOrInterfaceType", schema: "graphql") {
+  name: String!
+  fields: [GraphQLField!]!
+}
+
 interface GraphQLSelection @source(name: "GraphQLSelection", schema: "graphql") {
   text: String!
 }
@@ -155,7 +160,7 @@ type GraphQLIntValue implements GraphQLValue @source(name: "GraphQLIntValue", sc
   text: String!
 }
 
-type GraphQLInterfaceType @source(name: "GraphQLInterfaceType", schema: "graphql") {
+type GraphQLInterfaceType implements GraphQLObjectOrInterfaceType @source(name: "GraphQLInterfaceType", schema: "graphql") {
   name: String!
   fields: [GraphQLField!]!
   directives: [GraphQLDirective!]!
@@ -181,7 +186,7 @@ type GraphQLNullValue implements GraphQLValue @source(name: "GraphQLNullValue", 
   text: String!
 }
 
-type GraphQLObjectType @source(name: "GraphQLObjectType", schema: "graphql") {
+type GraphQLObjectType implements GraphQLObjectOrInterfaceType @source(name: "GraphQLObjectType", schema: "graphql") {
   name: String!
   fields: [GraphQLField!]!
   directives: [GraphQLDirective!]!
