@@ -61,7 +61,7 @@ public class CSharpBot : IMiniBot
                 </PropertyGroup>
                 <ItemGroup>
                   <PackageReference Include="Extism.Pdk" Version="1.0.3" />
-                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.324" />
+                  <PackageReference Include="CodegenBot" Version="1.1.0-alpha.328" />
                   <!-- This is used by the GraphQL client to properly serialize enums -->
                   <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
                   <PackageReference Include="Humanizer" Version="2.14.1" />

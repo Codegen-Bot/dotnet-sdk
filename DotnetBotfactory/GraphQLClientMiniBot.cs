@@ -232,6 +232,8 @@ public class GraphQLClientMiniBot : IMiniBot
 
                  """);
 
+            // TODO - add the __typename field for types that have fragments, either inline or named
+            
             GraphQLClient.AddText(operations.Id,
                 $$""""
                    public static {{operation.Name.Pascalize()}}Data {{operation.Name}}({{CaretRef.New(out var parameters, separator: ", ")}})
