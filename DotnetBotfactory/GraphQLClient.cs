@@ -1503,16 +1503,13 @@ public partial class TestFragmentDenestedSelection : IDenestedSelections
 }
 
 [JsonPolymorphic]
+[JsonDerivedType(typeof(IGraphQLSelectionGraphQLFieldSelection), "GraphQLFieldSelection")]
 [JsonDerivedType(
-    typeof(TestFragmentDenestedSelectionSelectionGraphQLFieldSelection),
-    "GraphQLFieldSelection"
-)]
-[JsonDerivedType(
-    typeof(TestFragmentDenestedSelectionSelectionGraphQLFragmentSpreadSelection),
+    typeof(IGraphQLSelectionGraphQLFragmentSpreadSelection),
     "GraphQLFragmentSpreadSelection"
 )]
 [JsonDerivedType(
-    typeof(TestFragmentDenestedSelectionSelectionGraphQLInlineFragmentSelection),
+    typeof(IGraphQLSelectionGraphQLInlineFragmentSelection),
     "GraphQLInlineFragmentSelection"
 )]
 public partial interface IGraphQLSelection
@@ -1522,8 +1519,7 @@ public partial interface IGraphQLSelection
     string _Typename { get; set; }
 }
 
-public partial class TestFragmentDenestedSelectionSelectionGraphQLFieldSelection
-    : ITestFragmentDenestedSelectionSelection
+public partial class IGraphQLSelectionGraphQLFieldSelection : IGraphQLSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -1538,8 +1534,7 @@ public partial class TestFragmentDenestedSelectionSelectionGraphQLFieldSelection
     public string? Alias { get; set; }
 }
 
-public partial class TestFragmentDenestedSelectionSelectionGraphQLFragmentSpreadSelection
-    : ITestFragmentDenestedSelectionSelection
+public partial class IGraphQLSelectionGraphQLFragmentSpreadSelection : IGraphQLSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -1551,8 +1546,7 @@ public partial class TestFragmentDenestedSelectionSelectionGraphQLFragmentSpread
     public required string FragmentName { get; set; }
 }
 
-public partial class TestFragmentDenestedSelectionSelectionGraphQLInlineFragmentSelection
-    : ITestFragmentDenestedSelectionSelection
+public partial class IGraphQLSelectionGraphQLInlineFragmentSelection : IGraphQLSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -1583,66 +1577,4 @@ public partial class TestOperationDenestedSelection : IDenestedSelections
 {
     [JsonPropertyName("selection")]
     public required IGraphQLSelection Selection { get; set; }
-}
-
-[JsonPolymorphic]
-[JsonDerivedType(
-    typeof(TestOperationDenestedSelectionSelectionGraphQLFieldSelection),
-    "GraphQLFieldSelection"
-)]
-[JsonDerivedType(
-    typeof(TestOperationDenestedSelectionSelectionGraphQLFragmentSpreadSelection),
-    "GraphQLFragmentSpreadSelection"
-)]
-[JsonDerivedType(
-    typeof(TestOperationDenestedSelectionSelectionGraphQLInlineFragmentSelection),
-    "GraphQLInlineFragmentSelection"
-)]
-public partial interface IGraphQLSelection
-{
-    string Text { get; set; }
-
-    string _Typename { get; set; }
-}
-
-public partial class TestOperationDenestedSelectionSelectionGraphQLFieldSelection
-    : ITestOperationDenestedSelectionSelection
-{
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
-
-    [JsonPropertyName("__typename")]
-    public required string _Typename { get; set; }
-
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    [JsonPropertyName("alias")]
-    public string? Alias { get; set; }
-}
-
-public partial class TestOperationDenestedSelectionSelectionGraphQLFragmentSpreadSelection
-    : ITestOperationDenestedSelectionSelection
-{
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
-
-    [JsonPropertyName("__typename")]
-    public required string _Typename { get; set; }
-
-    [JsonPropertyName("fragmentName")]
-    public required string FragmentName { get; set; }
-}
-
-public partial class TestOperationDenestedSelectionSelectionGraphQLInlineFragmentSelection
-    : ITestOperationDenestedSelectionSelection
-{
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
-
-    [JsonPropertyName("__typename")]
-    public required string _Typename { get; set; }
-
-    [JsonPropertyName("typeName")]
-    public required string TypeName { get; set; }
 }
