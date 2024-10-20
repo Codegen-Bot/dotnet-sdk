@@ -91,18 +91,18 @@ public partial class GraphQLError
 [JsonSerializable(typeof(GraphQLRequest<ParseGraphQLSchemaAndOperationsVariables>))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperations))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeField))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeFieldType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeParameter))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeParameterType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsObjectTypeType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypeField))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeField))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameter))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameterType))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeParameter))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeParameterType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsInterfaceTypeType))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumeration))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsEnumerationValue))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsFragment))]
@@ -467,20 +467,8 @@ public static partial class GraphQLClient
                 query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
                   graphQL(additionalFiles: $graphql) {
                     objectTypes {
-                      name
                       interfaces
-                      fields {
-                        name
-                        parameters {
-                          name
-                          type {
-                            text
-                          }
-                        }
-                        type {
-                          text
-                        }
-                      }
+                      ... GraphQLObjectOrInterface
                     }
                     inputObjectTypes {
                       name
@@ -492,19 +480,7 @@ public static partial class GraphQLClient
                       }
                     }
                     interfaceTypes {
-                      name
-                      fields {
-                        name
-                        parameters {
-                          name
-                          type {
-                            text
-                          }
-                        }
-                        type {
-                          text
-                        }
-                      }
+                      ... GraphQLObjectOrInterface
                     }
                     enumerations {
                       name
@@ -557,6 +533,20 @@ public static partial class GraphQLClient
                       ... on GraphQLInlineFragmentSelection {
                         typeName
                       }
+                    }
+                  }
+                }fragment GraphQLObjectOrInterface on GraphQLObjectOrInterfaceType {
+                  name
+                  fields {
+                    name
+                    parameters {
+                      name
+                      type {
+                        text
+                      }
+                    }
+                    type {
+                      text
                     }
                   }
                 }
@@ -1133,46 +1123,71 @@ public partial class ParseGraphQLSchemaAndOperations
     public required List<ParseGraphQLSchemaAndOperationsOperation> Operations { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsObjectType
+public partial class ParseGraphQLSchemaAndOperationsObjectType : IGraphQLObjectOrInterface
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
     [JsonPropertyName("interfaces")]
     public required List<string> Interfaces { get; set; }
 
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
     [JsonPropertyName("fields")]
-    public required List<ParseGraphQLSchemaAndOperationsObjectTypeField> Fields { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsObjectType> Fields { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsObjectTypeField
+public partial interface IGraphQLObjectOrInterface { }
+
+public partial class ParseGraphQLSchemaAndOperationsObjectType : IGraphQLObjectOrInterface
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("parameters")]
-    public required List<ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter> Parameters { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsObjectTypeParameter> Parameters { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsObjectTypeFieldType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsObjectTypeType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter
+public partial class ParseGraphQLSchemaAndOperationsObjectTypeParameter
+    : IGraphQLObjectOrInterfaceParameter
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsObjectTypeParameterType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType
+public partial interface IGraphQLObjectOrInterfaceParameter
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public required ParseGraphQLSchemaAndOperationsObjectTypeParameterType Type { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsObjectTypeParameterType
+    : IGraphQLObjectOrInterfaceParameterType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldType
+public partial interface IGraphQLObjectOrInterfaceParameterType
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
+public partial class ParseGraphQLSchemaAndOperationsObjectTypeType : IGraphQLObjectOrInterfaceType
+{
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
+}
+
+public partial interface IGraphQLObjectOrInterfaceType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
@@ -1202,43 +1217,46 @@ public partial class ParseGraphQLSchemaAndOperationsInputObjectTypeFieldType
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsInterfaceType
+public partial class ParseGraphQLSchemaAndOperationsInterfaceType : IGraphQLObjectOrInterface
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("fields")]
-    public required List<ParseGraphQLSchemaAndOperationsInterfaceTypeField> Fields { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsInterfaceType> Fields { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeField
+public partial class ParseGraphQLSchemaAndOperationsInterfaceType : IGraphQLObjectOrInterface
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("parameters")]
-    public required List<ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameter> Parameters { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsInterfaceTypeParameter> Parameters { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsInterfaceTypeType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameter
+public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeParameter
+    : IGraphQLObjectOrInterfaceParameter
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameterType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsInterfaceTypeParameterType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameterType
+public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeParameterType
+    : IGraphQLObjectOrInterfaceParameterType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType
+public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeType
+    : IGraphQLObjectOrInterfaceType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
