@@ -6,6 +6,15 @@ using Humanizer;
 
 namespace DotnetBotfactory;
 
+public record PathPart(string Value, PathPartType Type);
+
+public enum PathPartType
+{
+    Field,
+    Interface,
+    Operation
+}
+
 public static class GraphQLCSharpTypes
 {
     public record SelectionType(string Name, bool IsEnum);
@@ -20,7 +29,7 @@ public static class GraphQLCSharpTypes
         return "";
     }
     
-    public static void AddProperty(CaretRef properties, string path, IObjectOrInterface objectType,
+    public static void AddProperty(CaretRef properties, Path path, IObjectOrInterface objectType,
         Renested<IGraphQLSelection> selection, ParseGraphQLSchemaAndOperations metadata,
         CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions, HashSet<string> typesWritten,
         string? interfaceName, CaretRef? jsonDerivedType = null)
@@ -52,7 +61,7 @@ public static class GraphQLCSharpTypes
             }
             else
             {
-                var type = GetSelectionType($"{path} {field.Name1}", selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
+                var type = GetSelectionType(path + new PathPart(field.Name1, PathPartType.Field), selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                 
                 if (objectType is ParseGraphQLSchemaAndOperationsInterfaceType)
                 {
@@ -100,7 +109,7 @@ public static class GraphQLCSharpTypes
         }
     }
     
-    public static SelectionType GetSelectionType(string path, Renested<IGraphQLSelection> selection, TypeRef type, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions, HashSet<string> typesWritten, string? interfaceName)
+    public static SelectionType GetSelectionType(Path path, Renested<IGraphQLSelection> selection, TypeRef type, ParseGraphQLSchemaAndOperations metadata, CaretRef jsonSerializerContextAttributes, CaretRef typeDefinitions, HashSet<string> typesWritten, string? interfaceName)
     {
         if (type.Name == "NotNull")
         {
@@ -146,13 +155,13 @@ public static class GraphQLCSharpTypes
         {
             GraphQLClient.AddText(jsonSerializerContextAttributes.Id,
                 $"""
-                 [JsonSerializable(typeof({path.Pascalize()}))]
+                 [JsonSerializable(typeof({path.ToString().Pascalize()}))]
 
                  """);
 
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
-                  public partial class {{path.Pascalize()}}{{CaretRef.New(out var extends)}}
+                  public partial class {{path.ToString().Pascalize()}}{{CaretRef.New(out var extends)}}
                   {
                       {{CaretRef.New(out var properties)}}
                   }
@@ -182,7 +191,7 @@ public static class GraphQLCSharpTypes
             {
                 if (subselection.Item is GraphQLSelectionGraphQLFieldSelection fieldSelection)
                 {
-                    AddProperty(properties, path + " " + fieldSelection.Name.Singularize(), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
+                    AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
                 }
                 else if (subselection.Item is GraphQLSelectionGraphQLFragmentSpreadSelection fragmentSpreadSelection)
                 {
@@ -194,7 +203,7 @@ public static class GraphQLCSharpTypes
                         {
                             Level = LogEventLevel.Critical,
                             Message = "Cannot find fragment {FragmentName} (path {Path}",
-                            Args = [fragmentSpreadSelection.FragmentName, path],
+                            Args = [fragmentSpreadSelection.FragmentName, path.ToString()],
                         });
                     }
                     else
@@ -233,7 +242,7 @@ public static class GraphQLCSharpTypes
                 }
             }
 
-            return new (path.Pascalize() + "?", false);
+            return new (path.ToString().Pascalize() + "?", false);
         }
 
         var fragmentType = (metadata.Fragments ?? []).FirstOrDefault(x => x.Name == type.Name);
@@ -248,7 +257,7 @@ public static class GraphQLCSharpTypes
                 {
                     Level = LogEventLevel.Critical,
                     Message = "Cannot find type condition {TypeCondition} of fragment {FragmentName} (path {Path})",
-                    Args = [fragmentType.TypeCondition, fragmentType.Name, path],
+                    Args = [fragmentType.TypeCondition, fragmentType.Name, path.ToString()],
                 });
                 throw new InvalidOperationException();
             }
@@ -263,7 +272,7 @@ public static class GraphQLCSharpTypes
 
             GraphQLClient.AddText(typeDefinitions.Id,
                 $$"""
-                  public partial class {{path.Pascalize()}} : {{interfaceName}}
+                  public partial class {{path.ToString().Pascalize()}} : {{interfaceName}}
                   {
                       {{CaretRef.New(out var properties)}}
                   }
@@ -288,7 +297,7 @@ public static class GraphQLCSharpTypes
             {
                 if (subselection.Item is GraphQLSelectionGraphQLFieldSelection fieldSelection)
                 {
-                    AddProperty(properties, path + " " + fieldSelection.Name.Singularize(), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
+                    AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
                 }
                 else if (subselection.Item is GraphQLSelectionGraphQLFragmentSpreadSelection fragmentSpreadSelection)
                 {
@@ -300,7 +309,7 @@ public static class GraphQLCSharpTypes
                         {
                             Level = LogEventLevel.Critical,
                             Message = "Cannot find fragment {FragmentName} (path {Path}",
-                            Args = [fragmentSpreadSelection.FragmentName, path],
+                            Args = [fragmentSpreadSelection.FragmentName, path.ToString()],
                         });
                     }
                     else
@@ -314,7 +323,7 @@ public static class GraphQLCSharpTypes
                             {
                                 Level = LogEventLevel.Critical,
                                 Message = "Cannot find the type condition {TypeCondition} on fragment {FragmentName} (path {Path})",
-                                Args = [fragment.TypeCondition, fragmentSpreadSelection.FragmentName, path],
+                                Args = [fragment.TypeCondition, fragmentSpreadSelection.FragmentName, path.ToString()],
                             });
                         }
                         else
@@ -358,13 +367,13 @@ public static class GraphQLCSharpTypes
 
                       """);
 
-                path = interfaceName.Substring(1);
+                path = new Path(new PathPart(interfaceName.Substring(1), PathPartType.Interface));
                 
                 foreach (var subselection in selection.Children)
                 {
                     if (subselection.Item is GraphQLSelectionGraphQLFieldSelection fieldSelection)
                     {
-                        AddProperty(properties, path + " " + fieldSelection.Name.Singularize(), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
+                        AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
                     }
                     else if (subselection.Item is GraphQLSelectionGraphQLFragmentSpreadSelection fragmentSpreadSelection)
                     {
@@ -376,7 +385,7 @@ public static class GraphQLCSharpTypes
                             {
                                 Level = LogEventLevel.Critical,
                                 Message = "Cannot find fragment {FragmentName} (path {Path}",
-                                Args = [fragmentSpreadSelection.FragmentName, path],
+                                Args = [fragmentSpreadSelection.FragmentName, path.ToString()],
                             });
                         }
                         else
@@ -400,7 +409,7 @@ public static class GraphQLCSharpTypes
                             {
                                 Level = LogEventLevel.Critical,
                                 Message = "Cannot find object type {ObjectType} (path {Path})",
-                                Args = [inlineFragmentSelection.TypeName, path],
+                                Args = [inlineFragmentSelection.TypeName, path.ToString()],
                             });
                             throw new InvalidOperationException();
                         }
@@ -424,7 +433,7 @@ public static class GraphQLCSharpTypes
                         {
                             if (othersubselection.Item is GraphQLSelectionGraphQLFieldSelection innerFieldSelection)
                             {
-                                AddProperty(innerProperties, path + " " + innerFieldSelection.Name.Singularize(),
+                                AddProperty(innerProperties, path + new PathPart(innerFieldSelection.Name.Singularize(), PathPartType.Field),
                                     inlineObjectType, othersubselection, metadata, jsonSerializerContextAttributes, typeDefinitions,
                                     typesWritten,
                                     null);

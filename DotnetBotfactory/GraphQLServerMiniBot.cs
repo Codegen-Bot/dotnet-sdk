@@ -33,7 +33,7 @@ public class GraphQLServerMiniBot : IMiniBot
             return;
         }
 
-        var schema = GraphQLClient.ReadTextFile(Path.Combine(configuration.OutputPath, schemaFilePath).Replace("\\", "/")).ReadTextFile;
+        var schema = GraphQLClient.ReadTextFile(System.IO.Path.Combine(configuration.OutputPath, schemaFilePath).Replace("\\", "/")).ReadTextFile;
 
         if (schema is null)
         {

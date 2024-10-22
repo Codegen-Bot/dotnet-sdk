@@ -23,7 +23,7 @@ public class GraphQLClientMiniBot : IMiniBot
         string? schemaPath = null;
         if (schema.BotSpec?.ConsumedSchemaPath is not null && schema.BotSchema is not null)
         {
-            schemaPath = Path.Combine(configuration.OutputPath, schema.BotSpec?.ConsumedSchemaPath!)
+            schemaPath = System.IO.Path.Combine(configuration.OutputPath, schema.BotSpec?.ConsumedSchemaPath!)
                 .Replace("\\", "/");
             GraphQLClient.AddFile(schemaPath,
                 schema.BotSchema!);
@@ -330,11 +330,11 @@ public class GraphQLClientMiniBot : IMiniBot
             }
             else
             {
-                AddText(operation, properties, jsonSerializerContextAttributes, operation.Name, rootType);
+                AddText(operation, properties, jsonSerializerContextAttributes, new Path(new PathPart(operation.Name, PathPartType.Operation)), rootType);
             }
         }
         
-        void AddText(ParseGraphQLSchemaAndOperationsOperation operation, CaretRef properties, CaretRef jsonSerializerContextAttributes, string path,
+        void AddText(ParseGraphQLSchemaAndOperationsOperation operation, CaretRef properties, CaretRef jsonSerializerContextAttributes, Path path,
             ParseGraphQLSchemaAndOperationsObjectType objectType)
         {
             var selections = operation.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsOperationDenestedSelection, IGraphQLSelection>(x => x.Depth, (x, _) => x.Item.Selection);
