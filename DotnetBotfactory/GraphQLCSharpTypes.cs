@@ -52,7 +52,7 @@ public static class GraphQLCSharpTypes
             }
             else
             {
-                var type = GetSelectionType(path, selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
+                var type = GetSelectionType($"{path} {field.Name1}", selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                 
                 if (objectType is ParseGraphQLSchemaAndOperationsInterfaceType)
                 {
@@ -87,7 +87,7 @@ public static class GraphQLCSharpTypes
             else
             {
                 var renestedSelections = fragment.DenestedSelections
-                    .Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, IGraphQLSelection>(x => x.Depth, (x, _) => x.Selection);
+                    .Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, IGraphQLSelection>(x => x.Depth, (x, _) => x.Item.Selection);
                 foreach (var fragmentSelection in renestedSelections)
                 {
                     AddProperty(properties, path, objectType, fragmentSelection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
@@ -219,7 +219,7 @@ public static class GraphQLCSharpTypes
                         }
                         
                         var renested = fragment.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, IGraphQLSelection>(x => x.Depth,
-                            (item, children) => item.Selection);
+                            (item, children) => item.Item.Selection);
                         foreach (var subsubselection in renested)
                         {
                             AddProperty(properties, path, objectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
@@ -320,7 +320,7 @@ public static class GraphQLCSharpTypes
                         else
                         {
                             var renested = fragment.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, IGraphQLSelection>(x => x.Depth,
-                                (item, children) => item.Selection);
+                                (item, children) => item.Item.Selection);
                             foreach (var subsubselection in renested)
                             {
                                 AddProperty(properties, path, fragmentObjectType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
@@ -382,7 +382,7 @@ public static class GraphQLCSharpTypes
                         else
                         {
                             var renested = fragment.DenestedSelections.Renest<ParseGraphQLSchemaAndOperationsFragmentDenestedSelection, IGraphQLSelection>(x => x.Depth,
-                                (item, children) => item.Selection);
+                                (item, children) => item.Item.Selection);
                             foreach (var subsubselection in renested)
                             {
                                 AddProperty(properties, path, interfaceType, subsubselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
