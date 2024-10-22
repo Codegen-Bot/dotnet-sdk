@@ -11,7 +11,12 @@ public record Path(ImmutableList<PathPart> Parts)
     
     public static Path operator +(Path a, PathPart b)
     {
-        return new Path(a.Parts.Add(b));
+        if (b.Enabled)
+        {
+            return new Path(a.Parts.Add(b));
+        }
+
+        return a;
     }
     
     public override string ToString()

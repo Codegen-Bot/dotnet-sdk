@@ -6,7 +6,7 @@ using Humanizer;
 
 namespace DotnetBotfactory;
 
-public record PathPart(string Value, PathPartType Type);
+public record PathPart(string Value, PathPartType Type, bool Enabled = true);
 
 public enum PathPartType
 {
@@ -191,7 +191,7 @@ public static class GraphQLCSharpTypes
             {
                 if (subselection.Item is GraphQLSelectionGraphQLFieldSelection fieldSelection)
                 {
-                    AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
+                    AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field, false), objectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
                 }
                 else if (subselection.Item is GraphQLSelectionGraphQLFragmentSpreadSelection fragmentSpreadSelection)
                 {
@@ -297,7 +297,7 @@ public static class GraphQLCSharpTypes
             {
                 if (subselection.Item is GraphQLSelectionGraphQLFieldSelection fieldSelection)
                 {
-                    AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
+                    AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field, false), outerFragmentObjectType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
                 }
                 else if (subselection.Item is GraphQLSelectionGraphQLFragmentSpreadSelection fragmentSpreadSelection)
                 {
@@ -373,7 +373,7 @@ public static class GraphQLCSharpTypes
                 {
                     if (subselection.Item is GraphQLSelectionGraphQLFieldSelection fieldSelection)
                     {
-                        AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
+                        AddProperty(properties, path + new PathPart(fieldSelection.Name.Singularize(), PathPartType.Field, false), interfaceType, subselection, metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName is null ? null : interfaceName + " " + fieldSelection.Name.Singularize());
                     }
                     else if (subselection.Item is GraphQLSelectionGraphQLFragmentSpreadSelection fragmentSpreadSelection)
                     {
@@ -433,7 +433,7 @@ public static class GraphQLCSharpTypes
                         {
                             if (othersubselection.Item is GraphQLSelectionGraphQLFieldSelection innerFieldSelection)
                             {
-                                AddProperty(innerProperties, path + new PathPart(innerFieldSelection.Name.Singularize(), PathPartType.Field),
+                                AddProperty(innerProperties, path + new PathPart(innerFieldSelection.Name.Singularize(), PathPartType.Field, false),
                                     inlineObjectType, othersubselection, metadata, jsonSerializerContextAttributes, typeDefinitions,
                                     typesWritten,
                                     null);
