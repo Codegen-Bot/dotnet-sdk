@@ -11,7 +11,9 @@
     "bot://core/output": "1.0.0",
     "bot://core/filesystem": "1.0.0",
     "bot://core/log": "1.0.0",
-    "bot://parse/graphql": "1.0.0"
+    "bot://parse/graphql": "1.0.0",
+    "bot://hub/dotnet/solution": "0.0.1-alpha2",
+    "bot://hub/.gitignore": "0.0.1-alpha2"
   },
   "exec": {
     "devenv": "dotnet workload install wasi-experimental",
