@@ -190,6 +190,11 @@ public class GraphQLClientMiniBot : IMiniBot
 
             foreach (var field in inputObjectType.Fields ?? [])
             {
+                if (field.Name == "__typename")
+                {
+                    continue;
+                }
+                
                 var type = GraphQLCSharpTypes.GetVariableCSharpType(field.Type.Text.ToTypeRef(), out var _, metadata);
                 GraphQLClient.AddText(properties.Id,
                     $$"""
@@ -251,6 +256,7 @@ public class GraphQLClientMiniBot : IMiniBot
                        };
                    
                        var response = Imports.GraphQL(request, GraphQLClientJsonSerializerContext.Default.GraphQLRequest{{operation.Name.Pascalize()}}Variables);
+                       response = JsonUtility.EnsureTypeDiscriminatorPropertiesComeFirst(response);
                        var result = JsonSerializer.Deserialize<GraphQLResponse<{{operation.Name.Pascalize()}}Data>>(response, GraphQLClientJsonSerializerContext.Default.GraphQLResponse{{operation.Name.Pascalize()}}Data);
                        return result?.Data ?? throw new InvalidOperationException("Received null data for request {{operation.Name.Pascalize()}}.");
                    }

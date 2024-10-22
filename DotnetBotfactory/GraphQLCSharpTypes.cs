@@ -59,6 +59,7 @@ public static class GraphQLCSharpTypes
                     GraphQLClient.AddText(properties.Id,
                         $$"""
 
+                          [JsonPropertyName("{{fieldSelection.Name}}")]
                           {{type.Name}} {{fieldSelection.Name.Pascalize()}} { get; set; }
 
                           """);
@@ -348,7 +349,7 @@ public static class GraphQLCSharpTypes
                 typesWritten.Add(interfaceName);
                 GraphQLClient.AddText(typeDefinitions.Id,
                     $$"""
-                      [JsonPolymorphic]
+                      [JsonPolymorphic(TypeDiscriminatorPropertyName = "__typename")]
                       {{CaretRef.New(out var jsonDeriveTypes)}}
                       public partial interface {{interfaceName}}
                       {

@@ -137,7 +137,14 @@ public partial class GraphQLError
 [JsonSerializable(typeof(TestOperation))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
 [JsonSerializable(typeof(TestOperationDenestedSelection))]
-[JsonSerializable(typeof(IGraphQLSelection))]
+//[JsonSerializable(typeof(IGraphQLSelection))]
+[JsonSerializable(typeof(GraphQLSelectionGraphQLFieldSelection))]
+[JsonSerializable(
+    typeof(GraphQLSelectionGraphQLFragmentSpreadSelection)
+)]
+[JsonSerializable(
+    typeof(GraphQLSelectionGraphQLInlineFragmentSelection)
+)]
 public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext { }
 
 public static partial class GraphQLClient
@@ -545,8 +552,8 @@ public static partial class GraphQLClient
                   depth
                   item {
                     selection {
+                __typename
                       text
-                      __typename
                       ... on GraphQLFieldSelection {
                         name
                         alias
@@ -571,6 +578,9 @@ public static partial class GraphQLClient
                 .Default
                 .GraphQLRequestParseGraphQLSchemaAndOperationsVariables
         );
+        
+        GraphQLClient.AddFile("test.json", response);
+        
         var result = JsonSerializer.Deserialize<
             GraphQLResponse<ParseGraphQLSchemaAndOperationsData>
         >(
@@ -668,8 +678,8 @@ public static partial class GraphQLClient
                   depth
                   item {
                     selection {
+                __typename
                       text
-                      __typename
                       ... on GraphQLFieldSelection {
                         name
                         alias
@@ -1309,7 +1319,7 @@ public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelection : 
     public required IGraphQLSelection Selection { get; set; }
 }
 
-[JsonPolymorphic]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "__typename")]
 [JsonDerivedType(typeof(GraphQLSelectionGraphQLFieldSelection), "GraphQLFieldSelection")]
 [JsonDerivedType(
     typeof(GraphQLSelectionGraphQLFragmentSpreadSelection),
@@ -1322,17 +1332,12 @@ public partial class ParseGraphQLSchemaAndOperationsFragmentDenestedSelection : 
 public partial interface IGraphQLSelection
 {
     string Text { get; set; }
-
-    string _Typename { get; set; }
 }
 
 public partial class GraphQLSelectionGraphQLFieldSelection : IGraphQLSelection
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
-
-    [JsonPropertyName("__typename")]
-    public required string _Typename { get; set; }
 
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1346,9 +1351,6 @@ public partial class GraphQLSelectionGraphQLFragmentSpreadSelection : IGraphQLSe
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 
-    [JsonPropertyName("__typename")]
-    public required string _Typename { get; set; }
-
     [JsonPropertyName("fragmentName")]
     public required string FragmentName { get; set; }
 }
@@ -1357,9 +1359,6 @@ public partial class GraphQLSelectionGraphQLInlineFragmentSelection : IGraphQLSe
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
-
-    [JsonPropertyName("__typename")]
-    public required string _Typename { get; set; }
 
     [JsonPropertyName("typeName")]
     public required string TypeName { get; set; }
