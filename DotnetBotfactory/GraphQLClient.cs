@@ -579,8 +579,6 @@ public static partial class GraphQLClient
                 .GraphQLRequestParseGraphQLSchemaAndOperationsVariables
         );
         
-        GraphQLClient.AddFile("test.json", response);
-        
         var result = JsonSerializer.Deserialize<
             GraphQLResponse<ParseGraphQLSchemaAndOperationsData>
         >(
