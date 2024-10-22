@@ -1957,6 +1957,124 @@
       ],
       "fragments": [
         {
+          "name": "ObjectOrInterface",
+          "text": "fragment ObjectOrInterface on GraphQLObjectOrInterfaceType {\n  __typename\n  name\n  fields {\n    name\n    parameters {\n      name\n      type {\n        text\n      }\n    }\n    type {\n      text\n    }\n  }\n}",
+          "typeCondition": "GraphQLObjectOrInterfaceType",
+          "variables": [],
+          "denestedSelections": [
+            {
+              "depth": 0,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "__typename",
+                  "name": "__typename",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 0,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "name",
+                  "name": "name",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 0,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "fields {\n  name\n  parameters {\n    name\n    type {\n      text\n    }\n  }\n  type {\n    text\n  }\n}",
+                  "name": "fields",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 1,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "name",
+                  "name": "name",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 1,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "parameters {\n  name\n  type {\n    text\n  }\n}",
+                  "name": "parameters",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 2,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "name",
+                  "name": "name",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 2,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "type {\n  text\n}",
+                  "name": "type",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 3,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "text",
+                  "name": "text",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 1,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "type {\n  text\n}",
+                  "name": "type",
+                  "alias": null
+                }
+              }
+            },
+            {
+              "depth": 2,
+              "item": {
+                "selection": {
+                  "__typename": "GraphQLFieldSelection",
+                  "text": "text",
+                  "name": "text",
+                  "alias": null
+                }
+              }
+            }
+          ]
+        },
+        {
           "name": "DenestedSelections",
           "text": "fragment DenestedSelections on DenestedOfSelectionItem {\n  depth\n  item {\n    selection {\n      text\n      __typename\n      ... on GraphQLFieldSelection {\n        name\n        alias\n      }\n      ... on GraphQLFragmentSpreadSelection {\n        fragmentName\n      }\n      ... on GraphQLInlineFragmentSelection {\n        typeName\n      }\n    }\n  }\n}",
           "typeCondition": "DenestedOfSelectionItem",
@@ -2729,7 +2847,7 @@
         {
           "name": "ParseGraphQLSchemaAndOperations",
           "operationType": "QUERY",
-          "text": "query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {\n  graphQL(additionalFiles: $graphql) {\n    objectTypes {\n      interfaces\n      name\n      fields {\n        name\n        parameters {\n          name\n          type {\n            text\n          }\n        }\n        type {\n          text\n        }\n      }\n    }\n    inputObjectTypes {\n      name\n      fields {\n        name\n        type {\n          text\n        }\n      }\n    }\n    interfaceTypes {\n      name\n      fields {\n        name\n        parameters {\n          name\n          type {\n            text\n          }\n        }\n        type {\n          text\n        }\n      }\n    }\n    enumerations {\n      name\n      values {\n        name\n      }\n    }\n    fragments {\n      name\n      text\n      typeCondition\n      variables {\n        name\n        type {\n          text\n        }\n      }\n      denestedSelections {\n        ... DenestedSelections\n      }\n    }\n    operations {\n      name\n      operationType\n      text\n      variables {\n        name\n        type {\n          text\n        }\n      }\n      denestedSelections {\n        ... DenestedSelections\n      }\n    }\n  }\n}",
+          "text": "query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {\n  graphQL(additionalFiles: $graphql) {\n    objectTypes {\n      interfaces\n      ... ObjectOrInterface\n    }\n    inputObjectTypes {\n      name\n      fields {\n        name\n        type {\n          text\n        }\n      }\n    }\n    interfaceTypes {\n      ... ObjectOrInterface\n    }\n    enumerations {\n      name\n      values {\n        name\n      }\n    }\n    fragments {\n      name\n      text\n      typeCondition\n      variables {\n        name\n        type {\n          text\n        }\n      }\n      denestedSelections {\n        ... DenestedSelections\n      }\n    }\n    operations {\n      name\n      operationType\n      text\n      variables {\n        name\n        type {\n          text\n        }\n      }\n      denestedSelections {\n        ... DenestedSelections\n      }\n    }\n  }\n}",
           "variables": [
             {
               "name": "graphql",
@@ -2744,7 +2862,7 @@
               "item": {
                 "selection": {
                   "__typename": "GraphQLFieldSelection",
-                  "text": "graphQL(additionalFiles: $graphql) {\n  objectTypes {\n    interfaces\n    name\n    fields {\n      name\n      parameters {\n        name\n        type {\n          text\n        }\n      }\n      type {\n        text\n      }\n    }\n  }\n  inputObjectTypes {\n    name\n    fields {\n      name\n      type {\n        text\n      }\n    }\n  }\n  interfaceTypes {\n    name\n    fields {\n      name\n      parameters {\n        name\n        type {\n          text\n        }\n      }\n      type {\n        text\n      }\n    }\n  }\n  enumerations {\n    name\n    values {\n      name\n    }\n  }\n  fragments {\n    name\n    text\n    typeCondition\n    variables {\n      name\n      type {\n        text\n      }\n    }\n    denestedSelections {\n      ... DenestedSelections\n    }\n  }\n  operations {\n    name\n    operationType\n    text\n    variables {\n      name\n      type {\n        text\n      }\n    }\n    denestedSelections {\n      ... DenestedSelections\n    }\n  }\n}",
+                  "text": "graphQL(additionalFiles: $graphql) {\n  objectTypes {\n    interfaces\n    ... ObjectOrInterface\n  }\n  inputObjectTypes {\n    name\n    fields {\n      name\n      type {\n        text\n      }\n    }\n  }\n  interfaceTypes {\n    ... ObjectOrInterface\n  }\n  enumerations {\n    name\n    values {\n      name\n    }\n  }\n  fragments {\n    name\n    text\n    typeCondition\n    variables {\n      name\n      type {\n        text\n      }\n    }\n    denestedSelections {\n      ... DenestedSelections\n    }\n  }\n  operations {\n    name\n    operationType\n    text\n    variables {\n      name\n      type {\n        text\n      }\n    }\n    denestedSelections {\n      ... DenestedSelections\n    }\n  }\n}",
                   "name": "graphQL",
                   "alias": null
                 }
@@ -2755,7 +2873,7 @@
               "item": {
                 "selection": {
                   "__typename": "GraphQLFieldSelection",
-                  "text": "objectTypes {\n  interfaces\n  name\n  fields {\n    name\n    parameters {\n      name\n      type {\n        text\n      }\n    }\n    type {\n      text\n    }\n  }\n}",
+                  "text": "objectTypes {\n  interfaces\n  ... ObjectOrInterface\n}",
                   "name": "objectTypes",
                   "alias": null
                 }
@@ -2776,98 +2894,9 @@
               "depth": 2,
               "item": {
                 "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "name",
-                  "name": "name",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 2,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "fields {\n  name\n  parameters {\n    name\n    type {\n      text\n    }\n  }\n  type {\n    text\n  }\n}",
-                  "name": "fields",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 3,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "name",
-                  "name": "name",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 3,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "parameters {\n  name\n  type {\n    text\n  }\n}",
-                  "name": "parameters",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 4,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "name",
-                  "name": "name",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 4,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "type {\n  text\n}",
-                  "name": "type",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 5,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "text",
-                  "name": "text",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 3,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "type {\n  text\n}",
-                  "name": "type",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 4,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "text",
-                  "name": "text",
-                  "alias": null
+                  "__typename": "GraphQLFragmentSpreadSelection",
+                  "text": "... ObjectOrInterface",
+                  "fragmentName": "ObjectOrInterface"
                 }
               }
             },
@@ -2942,7 +2971,7 @@
               "item": {
                 "selection": {
                   "__typename": "GraphQLFieldSelection",
-                  "text": "interfaceTypes {\n  name\n  fields {\n    name\n    parameters {\n      name\n      type {\n        text\n      }\n    }\n    type {\n      text\n    }\n  }\n}",
+                  "text": "interfaceTypes {\n  ... ObjectOrInterface\n}",
                   "name": "interfaceTypes",
                   "alias": null
                 }
@@ -2952,98 +2981,9 @@
               "depth": 2,
               "item": {
                 "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "name",
-                  "name": "name",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 2,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "fields {\n  name\n  parameters {\n    name\n    type {\n      text\n    }\n  }\n  type {\n    text\n  }\n}",
-                  "name": "fields",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 3,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "name",
-                  "name": "name",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 3,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "parameters {\n  name\n  type {\n    text\n  }\n}",
-                  "name": "parameters",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 4,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "name",
-                  "name": "name",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 4,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "type {\n  text\n}",
-                  "name": "type",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 5,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "text",
-                  "name": "text",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 3,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "type {\n  text\n}",
-                  "name": "type",
-                  "alias": null
-                }
-              }
-            },
-            {
-              "depth": 4,
-              "item": {
-                "selection": {
-                  "__typename": "GraphQLFieldSelection",
-                  "text": "text",
-                  "name": "text",
-                  "alias": null
+                  "__typename": "GraphQLFragmentSpreadSelection",
+                  "text": "... ObjectOrInterface",
+                  "fragmentName": "ObjectOrInterface"
                 }
               }
             },
