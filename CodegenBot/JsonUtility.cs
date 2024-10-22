@@ -46,10 +46,13 @@ public class JsonUtility
                 // Write the rest of the properties, except the type discriminator
                 foreach (var property in element.EnumerateObject())
                 {
-                    if (property.Name != typeDiscriminatorProperty)
+                    if (property.Name == typeDiscriminatorProperty)
                     {
-                        property.WriteTo(writer);
+                        continue;
                     }
+
+                    writer.WritePropertyName(property.Name);
+                    ProcessElement(property.Value, writer, typeDiscriminatorProperty);
                 }
 
                 writer.WriteEndObject();
