@@ -69,10 +69,8 @@ public partial class GraphQLError
 [JsonSerializable(typeof(GraphQLResponse<GetConfigurationData>))]
 [JsonSerializable(typeof(GraphQLRequest<GetConfigurationVariables>))]
 [JsonSerializable(typeof(GetConfigurationConfiguration))]
-[JsonSerializable(typeof(GetConfigurationConfigurationCopybotCopybots))]
-[JsonSerializable(
-    typeof(GetConfigurationConfigurationCopybotCopybotsFieldDefinitionFieldDefinitions)
-)]
+[JsonSerializable(typeof(GetConfigurationConfigurationCopybots))]
+[JsonSerializable(typeof(GetConfigurationConfigurationCopybotsFieldDefinitions))]
 [JsonSerializable(typeof(GetFilesVariables))]
 [JsonSerializable(typeof(GetFilesData))]
 [JsonSerializable(typeof(GraphQLResponse<GetFilesData>))]
@@ -92,64 +90,32 @@ public partial class GraphQLError
 [JsonSerializable(typeof(GraphQLResponse<ParseGraphQLSchemaAndOperationsData>))]
 [JsonSerializable(typeof(GraphQLRequest<ParseGraphQLSchemaAndOperationsVariables>))]
 [JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQL))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypes))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFields))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsParameterParameters)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsParameterParametersTypeType)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsTypeType)
-)]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypes))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypesFieldFields)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypesFieldFieldsTypeType)
-)]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypes))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFields)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsParameterParameters)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsParameterParametersTypeType)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsTypeType)
-)]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLEnumerationEnumerations))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLEnumerationEnumerationsValueValues))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentFragments))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsVariableVariables))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsVariableVariablesTypeType)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsDenestedSelectionDenestedSelections)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsDenestedSelectionDenestedSelectionsItem)
-)]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypes))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFields))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsParameters))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsParametersType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypes))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypesFields))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypesFieldsType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypes))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFields))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsParameters))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsParametersType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLEnumerations))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLEnumerationsValues))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLFragments))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentsVariables))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentsVariablesType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentsDenestedSelections))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLFragmentsDenestedSelectionsItem))]
 [JsonSerializable(typeof(IGraphQLSelection))]
-[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationOperations))]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsVariableVariables)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsVariableVariablesTypeType)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsDenestedSelectionDenestedSelections)
-)]
-[JsonSerializable(
-    typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsDenestedSelectionDenestedSelectionsItem)
-)]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLOperations))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationsVariables))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationsVariablesType))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationsDenestedSelections))]
+[JsonSerializable(typeof(ParseGraphQLSchemaAndOperationsGraphQLOperationsDenestedSelectionsItem))]
 [JsonSerializable(typeof(IGraphQLSelection))]
 [JsonSerializable(typeof(ReadTextFileVariables))]
 [JsonSerializable(typeof(ReadTextFileData))]
@@ -164,13 +130,13 @@ public partial class GraphQLError
 [JsonSerializable(typeof(GraphQLResponse<TestData>))]
 [JsonSerializable(typeof(GraphQLRequest<TestVariables>))]
 [JsonSerializable(typeof(TestGraphQL))]
-[JsonSerializable(typeof(TestGraphQLFragmentFragments))]
-[JsonSerializable(typeof(TestGraphQLFragmentFragmentsDenestedSelectionDenestedSelections))]
-[JsonSerializable(typeof(TestGraphQLFragmentFragmentsDenestedSelectionDenestedSelectionsItem))]
+[JsonSerializable(typeof(TestGraphQLFragments))]
+[JsonSerializable(typeof(TestGraphQLFragmentsDenestedSelections))]
+[JsonSerializable(typeof(TestGraphQLFragmentsDenestedSelectionsItem))]
 [JsonSerializable(typeof(IGraphQLSelection))]
-[JsonSerializable(typeof(TestGraphQLOperationOperations))]
-[JsonSerializable(typeof(TestGraphQLOperationOperationsDenestedSelectionDenestedSelections))]
-[JsonSerializable(typeof(TestGraphQLOperationOperationsDenestedSelectionDenestedSelectionsItem))]
+[JsonSerializable(typeof(TestGraphQLOperations))]
+[JsonSerializable(typeof(TestGraphQLOperationsDenestedSelections))]
+[JsonSerializable(typeof(TestGraphQLOperationsDenestedSelectionsItem))]
 [JsonSerializable(typeof(IGraphQLSelection))]
 public partial class GraphQLClientJsonSerializerContext : JsonSerializerContext { }
 
@@ -1049,10 +1015,10 @@ public partial class GetConfigurationConfiguration
     public required DotnetLanguage Language { get; set; }
 
     [JsonPropertyName("copybots")]
-    public required List<GetConfigurationConfigurationCopybotCopybots> Copybots { get; set; }
+    public required List<GetConfigurationConfigurationCopybots> Copybots { get; set; }
 }
 
-public partial class GetConfigurationConfigurationCopybotCopybots
+public partial class GetConfigurationConfigurationCopybots
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1064,10 +1030,10 @@ public partial class GetConfigurationConfigurationCopybotCopybots
     public required List<string> Whitelist { get; set; }
 
     [JsonPropertyName("fieldDefinitions")]
-    public required List<GetConfigurationConfigurationCopybotCopybotsFieldDefinitionFieldDefinitions> FieldDefinitions { get; set; }
+    public required List<GetConfigurationConfigurationCopybotsFieldDefinitions> FieldDefinitions { get; set; }
 }
 
-public partial class GetConfigurationConfigurationCopybotCopybotsFieldDefinitionFieldDefinitions
+public partial class GetConfigurationConfigurationCopybotsFieldDefinitions
 {
     [JsonPropertyName("needle")]
     public required string Needle { get; set; }
@@ -1163,25 +1129,25 @@ public partial class ParseGraphQLSchemaAndOperationsVariables
 public partial class ParseGraphQLSchemaAndOperationsGraphQL
 {
     [JsonPropertyName("objectTypes")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypes> ObjectTypes { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLObjectTypes> ObjectTypes { get; set; }
 
     [JsonPropertyName("inputObjectTypes")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypes> InputObjectTypes { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypes> InputObjectTypes { get; set; }
 
     [JsonPropertyName("interfaceTypes")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypes> InterfaceTypes { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypes> InterfaceTypes { get; set; }
 
     [JsonPropertyName("enumerations")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLEnumerationEnumerations> Enumerations { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLEnumerations> Enumerations { get; set; }
 
     [JsonPropertyName("fragments")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLFragmentFragments> Fragments { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLFragments> Fragments { get; set; }
 
     [JsonPropertyName("operations")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLOperationOperations> Operations { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLOperations> Operations { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypes
+public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypes
 {
     [JsonPropertyName("interfaces")]
     public required List<string> Interfaces { get; set; }
@@ -1190,124 +1156,124 @@ public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypes
     public required string Name { get; set; }
 
     [JsonPropertyName("fields")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFields> Fields { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFields> Fields { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFields
+public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFields
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("parameters")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsParameterParameters> Parameters { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsParameters> Parameters { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsTypeType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsParameterParameters
+public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsParameters
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsParameterParametersTypeType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsParametersType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsParameterParametersTypeType
+public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsParametersType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypeObjectTypesFieldFieldsTypeType
+public partial class ParseGraphQLSchemaAndOperationsGraphQLObjectTypesFieldsType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypes
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypes
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("fields")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypesFieldFields> Fields { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypesFields> Fields { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypesFieldFields
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypesFields
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypesFieldFieldsTypeType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypesFieldsType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypeInputObjectTypesFieldFieldsTypeType
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInputObjectTypesFieldsType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypes
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypes
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("fields")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFields> Fields { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFields> Fields { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFields
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFields
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("parameters")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsParameterParameters> Parameters { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsParameters> Parameters { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsTypeType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsParameterParameters
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsParameters
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsParameterParametersTypeType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsParametersType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsParameterParametersTypeType
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsParametersType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypeInterfaceTypesFieldFieldsTypeType
+public partial class ParseGraphQLSchemaAndOperationsGraphQLInterfaceTypesFieldsType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLEnumerationEnumerations
+public partial class ParseGraphQLSchemaAndOperationsGraphQLEnumerations
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("values")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLEnumerationEnumerationsValueValues> Values { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLEnumerationsValues> Values { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLEnumerationEnumerationsValueValues
+public partial class ParseGraphQLSchemaAndOperationsGraphQLEnumerationsValues
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentFragments
+public partial class ParseGraphQLSchemaAndOperationsGraphQLFragments
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -1319,40 +1285,40 @@ public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentFragments
     public required string TypeCondition { get; set; }
 
     [JsonPropertyName("variables")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsVariableVariables> Variables { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLFragmentsVariables> Variables { get; set; }
 
     [JsonPropertyName("denestedSelections")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsDenestedSelectionDenestedSelections> DenestedSelections { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLFragmentsDenestedSelections> DenestedSelections { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsVariableVariables
+public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentsVariables
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsVariableVariablesTypeType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLFragmentsVariablesType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsVariableVariablesTypeType
+public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentsVariablesType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsDenestedSelectionDenestedSelections
+public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentsDenestedSelections
     : IDenestedSelections
 {
     [JsonPropertyName("depth")]
     public required int Depth { get; set; }
 
     [JsonPropertyName("item")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsDenestedSelectionDenestedSelectionsItem Item { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLFragmentsDenestedSelectionsItem Item { get; set; }
 }
 
 public partial interface IDenestedSelections { }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentFragmentsDenestedSelectionDenestedSelectionsItem
+public partial class ParseGraphQLSchemaAndOperationsGraphQLFragmentsDenestedSelectionsItem
     : IDenestedSelections
 {
     [JsonPropertyName("selection")]
@@ -1417,7 +1383,7 @@ public partial class GraphQLSelectionGraphQLInlineFragmentSelection : IGraphQLSe
     public required string TypeName { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationOperations
+public partial class ParseGraphQLSchemaAndOperationsGraphQLOperations
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }
@@ -1429,38 +1395,38 @@ public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationOperations
     public required string Text { get; set; }
 
     [JsonPropertyName("variables")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsVariableVariables> Variables { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLOperationsVariables> Variables { get; set; }
 
     [JsonPropertyName("denestedSelections")]
-    public required List<ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsDenestedSelectionDenestedSelections> DenestedSelections { get; set; }
+    public required List<ParseGraphQLSchemaAndOperationsGraphQLOperationsDenestedSelections> DenestedSelections { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsVariableVariables
+public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationsVariables
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("type")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsVariableVariablesTypeType Type { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLOperationsVariablesType Type { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsVariableVariablesTypeType
+public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationsVariablesType
 {
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsDenestedSelectionDenestedSelections
+public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationsDenestedSelections
     : IDenestedSelections
 {
     [JsonPropertyName("depth")]
     public required int Depth { get; set; }
 
     [JsonPropertyName("item")]
-    public required ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsDenestedSelectionDenestedSelectionsItem Item { get; set; }
+    public required ParseGraphQLSchemaAndOperationsGraphQLOperationsDenestedSelectionsItem Item { get; set; }
 }
 
-public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationOperationsDenestedSelectionDenestedSelectionsItem
+public partial class ParseGraphQLSchemaAndOperationsGraphQLOperationsDenestedSelectionsItem
     : IDenestedSelections
 {
     [JsonPropertyName("selection")]
@@ -1509,53 +1475,49 @@ public partial class TestVariables
 public partial class TestGraphQL
 {
     [JsonPropertyName("fragments")]
-    public required List<TestGraphQLFragmentFragments> Fragments { get; set; }
+    public required List<TestGraphQLFragments> Fragments { get; set; }
 
     [JsonPropertyName("operations")]
-    public required List<TestGraphQLOperationOperations> Operations { get; set; }
+    public required List<TestGraphQLOperations> Operations { get; set; }
 }
 
-public partial class TestGraphQLFragmentFragments
+public partial class TestGraphQLFragments
 {
     [JsonPropertyName("denestedSelections")]
-    public required List<TestGraphQLFragmentFragmentsDenestedSelectionDenestedSelections> DenestedSelections { get; set; }
+    public required List<TestGraphQLFragmentsDenestedSelections> DenestedSelections { get; set; }
 }
 
-public partial class TestGraphQLFragmentFragmentsDenestedSelectionDenestedSelections
-    : IDenestedSelections
+public partial class TestGraphQLFragmentsDenestedSelections : IDenestedSelections
 {
     [JsonPropertyName("depth")]
     public required int Depth { get; set; }
 
     [JsonPropertyName("item")]
-    public required TestGraphQLFragmentFragmentsDenestedSelectionDenestedSelectionsItem Item { get; set; }
+    public required TestGraphQLFragmentsDenestedSelectionsItem Item { get; set; }
 }
 
-public partial class TestGraphQLFragmentFragmentsDenestedSelectionDenestedSelectionsItem
-    : IDenestedSelections
+public partial class TestGraphQLFragmentsDenestedSelectionsItem : IDenestedSelections
 {
     [JsonPropertyName("selection")]
     public required IGraphQLSelection Selection { get; set; }
 }
 
-public partial class TestGraphQLOperationOperations
+public partial class TestGraphQLOperations
 {
     [JsonPropertyName("denestedSelections")]
-    public required List<TestGraphQLOperationOperationsDenestedSelectionDenestedSelections> DenestedSelections { get; set; }
+    public required List<TestGraphQLOperationsDenestedSelections> DenestedSelections { get; set; }
 }
 
-public partial class TestGraphQLOperationOperationsDenestedSelectionDenestedSelections
-    : IDenestedSelections
+public partial class TestGraphQLOperationsDenestedSelections : IDenestedSelections
 {
     [JsonPropertyName("depth")]
     public required int Depth { get; set; }
 
     [JsonPropertyName("item")]
-    public required TestGraphQLOperationOperationsDenestedSelectionDenestedSelectionsItem Item { get; set; }
+    public required TestGraphQLOperationsDenestedSelectionsItem Item { get; set; }
 }
 
-public partial class TestGraphQLOperationOperationsDenestedSelectionDenestedSelectionsItem
-    : IDenestedSelections
+public partial class TestGraphQLOperationsDenestedSelectionsItem : IDenestedSelections
 {
     [JsonPropertyName("selection")]
     public required IGraphQLSelection Selection { get; set; }
