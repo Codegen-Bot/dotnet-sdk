@@ -350,7 +350,7 @@ public class GraphQLServerMiniBot : IMiniBot
     
     private void AddObjectTypeResolver(ParseGraphQLSchemaAndOperations parsedSchema,
         ParseGraphQLSchemaAndOperationsObjectType type,
-        ParseGraphQLSchemaAndOperationsObjectTypeField? field, TypeRef typeRef,
+        IObjectOrInterfaceField? field, TypeRef typeRef,
         CaretRef parentBody,
         CaretRef typeDefinitions)
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net.Mime;
+using System.Threading;
 
 namespace DotnetBotfactory;
 
@@ -71,71 +72,66 @@ namespace DotnetBotfactory;
 //
 //
 //
-public interface IObjectOrInterface
+public partial interface IObjectOrInterface
 {
-    string Name1 { get; }
-    IReadOnlyList<IObjectOrInterfaceField> Fields1 { get; }
+    string Name { get; }
+    IReadOnlyList<IObjectOrInterfaceField> Fields { get; }
 }
 
 public interface IObjectOrInterfaceField
 {
-    string Name1 { get; }
-    IReadOnlyList<IParameter> Parameters1 { get; }
-    IType Type1 { get; }
+    string Name { get; }
+    IReadOnlyList<IParameter> Parameters { get; }
+    IType Type { get; }
 
 }
 
 public partial class ParseGraphQLSchemaAndOperationsObjectTypeField : IObjectOrInterfaceField
 {
-    public string Name1 => Name;
-    public IReadOnlyList<IParameter> Parameters1 => Parameters;
-    public IType Type1 => Type;
+    IReadOnlyList<IParameter> IObjectOrInterfaceField.Parameters => Parameters;
+    IType IObjectOrInterfaceField.Type => Type;
 }
 
 public partial class ParseGraphQLSchemaAndOperationsInterfaceType : IObjectOrInterface
 {
-    public string Name1 => Name;
-    public IReadOnlyList<IObjectOrInterfaceField> Fields1 => Fields;
+    IReadOnlyList<IObjectOrInterfaceField> IObjectOrInterface.Fields => Fields;
 }
 
 public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeField : IObjectOrInterfaceField
 {
-    public string Name1 => Name;
-    public IReadOnlyList<IParameter> Parameters1 => Parameters;
-    public IType Type1 => Type;
+    IReadOnlyList<IParameter> IObjectOrInterfaceField.Parameters => Parameters;
+    IType IObjectOrInterfaceField.Type => Type;
 }
 
 public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldType : IType
 {
-    public string Text1 => Text;
+    
 }
 
 public interface IParameter
 {
-    string Name1 { get; }
-    IType Type1 { get; }
+    string Name { get; }
+    IType Type { get; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameter : IParameter
 {
-    public string Name1 => Name;
-    public IType Type1 => Type;
+    IType IParameter.Type => Type;
 }
 
 public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameter : IParameter
 {
-    public string Name1 => Name;
-    public IType Type1 => Type;
+    IType IParameter.Type => Type;
 }
 
 public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldParameterType : IType
 {
-    public string Text1 => Text;
+    
 }
 
 public partial class ParseGraphQLSchemaAndOperationsInterfaceTypeFieldParameterType : IType
 {
-    public string Text1 => Text;
+    
 }
 
 public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldType : IType
@@ -145,11 +141,10 @@ public partial class ParseGraphQLSchemaAndOperationsObjectTypeFieldType : IType
 
 public interface IType
 {
-    string Text1 { get; }
+    string Text { get; }
 }
 
 public partial class ParseGraphQLSchemaAndOperationsObjectType : IObjectOrInterface
 {
-    public string Name1 => Name;
-    public IReadOnlyList<IObjectOrInterfaceField> Fields1 => Fields;
+    IReadOnlyList<IObjectOrInterfaceField> IObjectOrInterface.Fields => Fields;
 }

@@ -37,19 +37,7 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
   graphQL(additionalFiles: $graphql) {
     objectTypes {
       interfaces
-      name
-      fields {
-        name
-        parameters {
-          name
-          type {
-            text
-          }
-        }
-        type {
-          text
-        }
-      }
+      ...ObjectOrInterface
     }
     inputObjectTypes {
       name
@@ -61,19 +49,7 @@ query ParseGraphQLSchemaAndOperations($graphql: [AdditionalFileInput!]!) {
       }
     }
     interfaceTypes {
-      name
-      fields {
-        name
-        parameters {
-          name
-          type {
-            text
-          }
-        }
-        type {
-          text
-        }
-      }
+      ...ObjectOrInterface
     }
     enumerations {
       name
@@ -130,6 +106,24 @@ query Test($graphql: [AdditionalFileInput!]!) {
 query GetCaret($caretId: String!) {
   caret(caretId: $caretId) {
     string
+  }
+}
+
+fragment ObjectOrInterface on GraphQLObjectOrInterfaceType
+{
+  __typename
+  name
+  fields {
+    name
+    parameters {
+      name
+      type {
+        text
+      }
+    }
+    type {
+      text
+    }
   }
 }
 

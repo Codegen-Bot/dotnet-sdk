@@ -36,19 +36,34 @@ public static class GraphQLCSharpTypes
     {
         if (selection.Item is GraphQLSelectionGraphQLFieldSelection fieldSelection)
         {
-            var field = (objectType.Fields1 ?? []).FirstOrDefault(x => x.Name1 == fieldSelection.Name);
+            var field = (objectType.Fields ?? []).FirstOrDefault(x => x.Name == fieldSelection.Name);
 
             if (fieldSelection.Name is "__typename")
             {
-                field = new ParseGraphQLSchemaAndOperationsObjectTypeField()
+                if (objectType is ParseGraphQLSchemaAndOperationsObjectType)
                 {
-                    Name = "__typename",
-                    Parameters = [],
-                    Type = new ParseGraphQLSchemaAndOperationsObjectTypeFieldType()
+                    field = new ParseGraphQLSchemaAndOperationsObjectTypeField()
                     {
-                        Text = "String!"
-                    },
-                };
+                        Name = "__typename",
+                        Parameters = [],
+                        Type = new()
+                        {
+                            Text = "String!"
+                        },
+                    };
+                }
+                else
+                {
+                    field = new ParseGraphQLSchemaAndOperationsInterfaceTypeField()
+                    {
+                        Name = "__typename",
+                        Parameters = [],
+                        Type = new()
+                        {
+                            Text = "String!"
+                        },
+                    };
+                }
             }
             
             if (field is null)
@@ -61,7 +76,7 @@ public static class GraphQLCSharpTypes
             }
             else
             {
-                var type = GetSelectionType(path + new PathPart(field.Name1, PathPartType.Field), selection, field.Type1.Text1.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
+                var type = GetSelectionType(path + new PathPart(field.Name, PathPartType.Field), selection, field.Type.Text.ToTypeRef(), metadata, jsonSerializerContextAttributes, typeDefinitions, typesWritten, interfaceName);
                 
                 if (objectType is ParseGraphQLSchemaAndOperationsInterfaceType)
                 {
