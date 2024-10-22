@@ -159,6 +159,11 @@ public static class GraphQLCSharpTypes
             return new ("int?", false);
         }
 
+        if (type.Name == "Float")
+        {
+            return new ("double?", false);
+        }
+
         var enumType = (metadata.Enumerations ?? []).FirstOrDefault(enumType => enumType.Name == type.Name);
         if (enumType is not null)
         {
@@ -505,6 +510,12 @@ public static class GraphQLCSharpTypes
         {
             enumName = null;
             return "int?";
+        }
+
+        if (type.Name == "Float")
+        {
+            enumName = null;
+            return "double?";
         }
 
         var enumType = (metadata.Enumerations ?? []).FirstOrDefault(enumType => enumType.Name == type.Name);
